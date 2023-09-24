@@ -87,7 +87,7 @@
 		840F49D42AB7101F00012C44 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		840F49D62AB7108200012C44 /* PluginListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginListView.swift; sourceTree = "<group>"; };
 		840F49D82AB710EA00012C44 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		842318822AB7053A000A0A09 /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		842318822AB7053A000A0A09 /* Intel Stack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Intel Stack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		842318852AB7053A000A0A09 /* IntelStackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntelStackApp.swift; sourceTree = "<group>"; };
 		842318872AB7053A000A0A09 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		842318892AB7053A000A0A09 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -211,7 +211,7 @@
 		842318832AB7053A000A0A09 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				842318822AB7053A000A0A09 /* App.app */,
+				842318822AB7053A000A0A09 /* Intel Stack.app */,
 				840F49B62AB70C3600012C44 /* Web Extension.appex */,
 			);
 			name = Products;
@@ -315,9 +315,9 @@
 			productReference = 840F49B62AB70C3600012C44 /* Web Extension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		842318812AB7053A000A0A09 /* App */ = {
+		842318812AB7053A000A0A09 /* Intel Stack */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 842318912AB7053A000A0A09 /* Build configuration list for PBXNativeTarget "App" */;
+			buildConfigurationList = 842318912AB7053A000A0A09 /* Build configuration list for PBXNativeTarget "Intel Stack" */;
 			buildPhases = (
 				8423187E2AB7053A000A0A09 /* Sources */,
 				8423187F2AB7053A000A0A09 /* Frameworks */,
@@ -329,9 +329,9 @@
 			dependencies = (
 				840F49CD2AB70C3600012C44 /* PBXTargetDependency */,
 			);
-			name = App;
+			name = "Intel Stack";
 			productName = "IITC-Stack";
-			productReference = 842318822AB7053A000A0A09 /* App.app */;
+			productReference = 842318822AB7053A000A0A09 /* Intel Stack.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -365,7 +365,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				842318812AB7053A000A0A09 /* App */,
+				842318812AB7053A000A0A09 /* Intel Stack */,
 				840F49B52AB70C3600012C44 /* Web Extension */,
 			);
 		};
@@ -670,7 +670,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.0.1;
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.lucka.IntelStack;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -712,7 +712,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.0.1;
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.lucka.IntelStack;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -744,7 +744,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		842318912AB7053A000A0A09 /* Build configuration list for PBXNativeTarget "App" */ = {
+		842318912AB7053A000A0A09 /* Build configuration list for PBXNativeTarget "Intel Stack" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				842318922AB7053A000A0A09 /* Debug */,
