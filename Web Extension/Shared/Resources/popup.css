@@ -1,0 +1,274 @@
+:root {
+    color-scheme: light dark;
+}
+
+body {
+    background: #F2F2F7;
+    display: flex;
+    flex-flow: column nowrap;
+    font-family: -apple-system-body, -apple-system;
+    gap: 1.2em;
+    min-width: 250px;
+    padding: 0.4em 1.2em;
+}
+
+section {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.4em;
+}
+
+section > header {
+    color: gray;
+    display: flex;
+    font-size: 0.6em;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    padding: 0 1em;
+    text-transform: uppercase;
+}
+
+section > footer {
+    color: gray;
+    font-size: 0.6em;
+    padding: 0 1em;
+}
+
+.list-content {
+    background-color: #FFF;
+    border-radius: 0.6em;
+    overflow: hidden;
+}
+
+.list-content > * {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 1em;
+    justify-content: space-between;
+    min-height: 3em;
+    padding: 0.4em 0.8em;
+    width: 100%;
+}
+
+.list-content:has(> * > label:first-child > i.icon:first-child) > :not(:has(> label:first-child > i.icon:first-child)) {
+    padding-left: 3.2em;
+}
+
+.list-content > * > label {
+    align-items: center;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.list-content > * > label > i.icon:first-child {
+    height: 1em;
+    padding: 0.3em;
+    margin-right: 0.8em;
+    width: 1em;
+}
+
+.list-content > :not(:last-child) {
+    border-image: linear-gradient(to right, transparent 0, transparent 0.8em, #C6C6C8 0.8em) 1;
+    border-bottom: 1px solid;
+}
+
+.list-content:has(> * > label:first-child > i.icon:first-child) > :not(:last-child) {
+    border-image: linear-gradient(to right, transparent 0, transparent 3.2em, #C6C6C8 3.2em) 1;
+}
+
+.list-content > a,
+.list-content > button {
+    background: none;
+    border: none;
+    text-decoration: none;
+}
+
+a, button {
+    align-items: center;
+    color: rgb(0, 122, 255);
+    font-size: 1em;
+    font-weight: normal;
+}
+
+.section-expand-toggle {
+    background: none;
+    border: none;
+}
+
+@media (hover:hover) {
+    .list-content > a:hover,
+    .list-content > a:button {
+        background-color: #D1D1D6;
+        transition-duration: 300ms;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #000;
+    }
+
+    .list-content {
+        background-color: #1C1C1E;
+    }
+
+    .list-content > :not(:last-child) {
+        border-image: linear-gradient(to right, transparent 0, transparent 0.8em, #3D3D41 0.8em) 1;
+        border-bottom: 1px solid;
+    }
+    
+    .list-content:has(> * > label:first-child > i.icon:first-child) > :not(:last-child) {
+        border-image: linear-gradient(to right, transparent 0, transparent 3.2em, #3D3D41 3.2em) 1;
+    }
+
+    a, button {
+        color: rgb(10, 132, 255);
+    }
+
+    @media (hover:hover) {
+        .list-content > a:hover {
+            background-color: #3A3A3C;
+        }
+    }
+}
+
+/* SF Symbols */
+i.icon {
+    background-color: #000;
+}
+
+.list-content i.icon,
+    a i.icon {
+    background-color: rgb(0, 122, 255);
+}
+
+i.icon.icon-power {
+    mask: url(./images/sf-symbols/power.svg) no-repeat center;
+    -webkit-mask: url(./images/sf-symbols/power.svg) no-repeat center;
+}
+
+i.icon.icon-arrow-up-forward {
+    mask: url(./images/sf-symbols/arrow.up.forward.svg) no-repeat center;
+    -webkit-mask: url(./images/sf-symbols/arrow.up.forward.svg) no-repeat center;
+}
+
+@media (prefers-color-scheme: dark) {
+    i.icon {
+        background-color: #FFF;
+    }
+
+    .list-content i.icon,
+    a i.icon,
+    button i.icon {
+        background-color: rgb(10, 132, 255);
+    }
+}
+
+/*! uiswitch v1.1.0 | MIT License | github.com/fnky/css3-uiswitch */
+.toggle {
+    height: 31px;
+    width: 51px;
+    min-width: 51px;
+    appearance: none;
+    box-sizing: border-box;
+    position: relative;
+    border-radius: 16px;
+    cursor: pointer;
+    outline: 0;
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: #e5e5e5
+}
+
+.toggle::after,
+.toggle::before {
+    box-sizing: border-box;
+    content: ' ';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    height: 27px
+}
+
+.toggle::before {
+    width: 47px;
+    border-radius: 16px;
+    z-index: 1;
+    transition-duration: .3s;
+    transform: scale(1);
+    background-color: #fff
+}
+
+.toggle::after {
+    width: 27px;
+    border-radius: 27px;
+    z-index: 2;
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, .25),
+                0 4px 11px 0 rgba(0, 0, 0, .08),
+                -1px 3px 3px 0 rgba(0, 0, 0, .14);
+    transition: width 280ms, -webkit-transform .3s;
+    transition: transform .3s, width 280ms;
+    transition: transform .3s, width 280ms, -webkit-transform .3s;
+    transform: translate3d(0, 0, 0);
+    transition-timing-function: cubic-bezier(.42, .8, .58, 1.2);
+    background: #fff
+}
+
+.toggle:checked::after {
+    transform: translate3d(16px, 0, 0);
+    right: 18px;
+    left: inherit
+}
+
+.toggle:active::after {
+    width: 35px
+}
+
+.toggle:active::before,
+.toggle:checked::before {
+    transform: scale(0)
+}
+
+.toggle:disabled {
+    opacity: .5;
+    cursor: default;
+    transition: none
+}
+
+.toggle:disabled:active::after,
+.toggle:disabled:active::before,
+.toggle:disabled:checked::before,
+.toggle:disabled:checked:active::before {
+    width: 27px;
+    transition: none
+}
+
+.toggle:disabled:active::before {
+    height: 27px;
+    width: 47px;
+    transform: translate3d(6px, 0, 0)
+}
+
+.toggle:disabled:checked:active::before {
+    height: 27px;
+    width: 27px;
+    transform: scale(0)
+}
+
+.toggle:checked {
+    background-image: linear-gradient(-180deg, #4CD964 0, #4dd865 100%)
+}
+
+@media (prefers-color-scheme: dark) {
+    .toggle {
+        background-color: #444;
+    }
+
+    .toggle::before {
+        background-color: #444;
+    }
+}
