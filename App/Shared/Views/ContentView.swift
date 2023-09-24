@@ -80,6 +80,8 @@ struct ContentView: View {
             }
         } header: {
             Text("IITC Script")
+        } footer: {
+            Text("Pull to downlaod / update scripts.")
         }
         
         Section {
