@@ -113,7 +113,7 @@ fileprivate struct BuildChannelSection: View {
 fileprivate struct AboutSection: View {
     var body: some View {
         Section {
-            Link(destination: .init(string: "https://github.com/lucka-me/IntelStack")!) {
+            Link(destination: .init(string: "https://github.com/lucka-me/intel-stack")!) {
                 Label("Source Code", systemImage: "swift")
             }
             
