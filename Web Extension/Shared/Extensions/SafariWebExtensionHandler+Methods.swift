@@ -20,20 +20,45 @@ extension SafariWebExtensionHandler {
             scripts.append(content)
         }
         
-        let container = ModelContainer.default
-        let context = ModelContext(container)
-        var descriptor = FetchDescriptor(predicate: #Predicate<Plugin> { $0.enabled && $0.isInternal })
-        descriptor.propertiesToFetch = [ \.filename ]
+        let context = ModelContext(.default)
+        var descriptor = FetchDescriptor(predicate: #Predicate<Plugin> { $0.enabled })
+        descriptor.propertiesToFetch = [ \.filename, \.isInternal ]
         guard let plugins = try? context.fetch(descriptor) else { return scripts }
         
-        let pluginScripts: [ String ] = plugins.compactMap { plugin in
-            let fileURL = FileConstants.internalPluginsDirectoryURL
-                .appending(path: plugin.filename)
-                .appendingPathExtension(FileConstants.userScriptExtension)
-            guard fileManager.fileExists(at: fileURL) else { return nil }
-            return try? .init(contentsOf: fileURL)
+        let externalURL: URL?
+        let accessingSecurityScopedResource: Bool
+        if plugins.contains(where: { !$0.isInternal }) {
+            externalURL = UserDefaults.shared.externalScriptsBookmarkURL
+            accessingSecurityScopedResource = externalURL?.startAccessingSecurityScopedResource() ?? false
+        } else {
+            externalURL = nil
+            accessingSecurityScopedResource = false
         }
-        scripts.append(contentsOf: pluginScripts)
+        defer {
+            if let externalURL, accessingSecurityScopedResource {
+                externalURL.stopAccessingSecurityScopedResource()
+            }
+        }
+        
+        for plugin in plugins {
+            var fileURL: URL
+            if plugin.isInternal {
+                fileURL = FileConstants.internalPluginsDirectoryURL
+            } else if let externalURL {
+                fileURL = externalURL
+            } else {
+                continue
+            }
+            fileURL.append(path: plugin.filename)
+            fileURL.appendPathExtension(FileConstants.userScriptExtension)
+            guard fileManager.fileExists(at: fileURL) else { continue }
+            do {
+                let content = try String(contentsOf: fileURL)
+                scripts.append(content)
+            } catch {
+                print(error)
+            }
+        }
         
         return scripts
     }
@@ -41,8 +66,10 @@ extension SafariWebExtensionHandler {
 
 extension SafariWebExtensionHandler {
     func getPopupContentData() -> [ String : Any ] {
-        let container = ModelContainer.default
-        let context = ModelContext(container)
+        let context = ModelContext(.default)
+        
+        let _ = try? ScriptManager.sync(with: context)
+        
         var descriptor = FetchDescriptor<Plugin>(sortBy: [ .init(\.name, order: .forward) ])
         descriptor.propertiesToFetch = [ \.uuid, \.name, \.categoryValue, \.enabled ]
         guard let plugins = try? context.fetch(descriptor) else { return [ : ] }
@@ -78,8 +105,7 @@ extension SafariWebExtensionHandler {
         else {
             return [ : ]
         }
-        let container = ModelContainer.default
-        let context = ModelContext(container)
+        let context = ModelContext(.default)
         var descriptor = FetchDescriptor<Plugin>(predicate: #Predicate { $0.uuid == uuid })
         descriptor.fetchLimit = 1
         descriptor.propertiesToFetch = [ \.enabled ]

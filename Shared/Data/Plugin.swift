@@ -61,6 +61,10 @@ extension Plugin {
 }
 
 extension Plugin {
+    static let externalPredicate = #Predicate<Plugin> { !$0.isInternal }
+}
+
+extension Plugin {
     convenience init?(metadata: UserScriptMetadata, isInternal: Bool, filename: String) {
         guard
             let idendifier = metadata["id"],

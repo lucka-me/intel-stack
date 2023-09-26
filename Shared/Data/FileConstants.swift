@@ -10,6 +10,7 @@ import Foundation
 struct FileConstants {
     static let mainScriptFilename = "total-conversion-build"
     static let userScriptExtension = "user.js"
+    static let userScriptFilenameSuffix = "." + userScriptExtension
     
     static let internalScriptsDirectoryURL = FileManager.default
         .applicationGroupContainerURL

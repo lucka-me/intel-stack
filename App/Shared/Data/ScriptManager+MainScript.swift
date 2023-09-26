@@ -1,8 +1,8 @@
 //
-//  Persistence+MainScript.swift
-//  App
+//  ScriptManager+MainScript.swift
+//  Intel Stack
 //
-//  Created by Lucka on 2023-09-21.
+//  Created by Lucka on 2023-09-25.
 //
 
 import Foundation
