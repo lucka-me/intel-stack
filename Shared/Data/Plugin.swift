@@ -111,4 +111,8 @@ extension Plugin {
     var displayName: String {
         name.replacing(/^ *IITC +Plugin: */.ignoresCase()) { _ in "" }
     }
+    
+    var filenameWithExtension: String {
+        filename + FileConstants.userScriptFilenameSuffix
+    }
 }

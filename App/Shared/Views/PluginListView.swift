@@ -36,6 +36,8 @@ struct PluginListView: View {
 }
 
 fileprivate struct PluginCardView: View {
+    @Environment(\.openURL) private var openURL
+    
     @State private var enabled = false
     
     let plugin: Plugin
@@ -55,6 +57,10 @@ fileprivate struct PluginCardView: View {
                     if plugin.isInternal {
                         Text("Internal")
                             .capsule(.purple)
+                    } else {
+                        Label("External", systemImage: "arrow.up.right")
+                            .capsule(.purple)
+                            .onTapGesture(perform: openFile)
                     }
                 }
                 .font(.caption)
@@ -87,6 +93,20 @@ fileprivate struct PluginCardView: View {
             plugin.enabled = enabled
         }
         .groupBoxStyle(.automatic)
+    }
+    
+    private func openFile() {
+        guard
+            let url = UserDefaults.shared.externalScriptsBookmarkURL?
+                .appending(path: plugin.filename)
+                .appendingPathExtension(FileConstants.userScriptExtension),
+            var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        else {
+            return
+        }
+        components.scheme = "shareddocuments"
+        guard let url = components.url else { return }
+        openURL(url)
     }
 }
 
