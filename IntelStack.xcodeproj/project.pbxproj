@@ -46,6 +46,8 @@
 		84D8E9722AB88715000234A9 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9712AB88715000234A9 /* UserDefaults.swift */; };
 		84D8E9732AB88715000234A9 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9712AB88715000234A9 /* UserDefaults.swift */; };
 		84D8E9752AB88D60000234A9 /* ScriptManager+EnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9742AB88D60000234A9 /* ScriptManager+EnvironmentKey.swift */; };
+		84F3A1162AC1C85E00C1F4BE /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F3A1152AC1C85E00C1F4BE /* URL.swift */; };
+		84F3A1172AC1C85E00C1F4BE /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F3A1152AC1C85E00C1F4BE /* URL.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +113,7 @@
 		84F3A1082ABFDD0A00C1F4BE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		84F3A1092ABFDD0A00C1F4BE /* PRIVACY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PRIVACY.md; sourceTree = "<group>"; };
 		84F3A10A2ABFDD0A00C1F4BE /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		84F3A1152AC1C85E00C1F4BE /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,6 +283,7 @@
 			children = (
 				84D8E9602AB73CD9000234A9 /* FileManager.swift */,
 				84D068D82ABDB2EB00EC6E7E /* ModelContainer.swift */,
+				84F3A1152AC1C85E00C1F4BE /* URL.swift */,
 				84D8E9712AB88715000234A9 /* UserDefaults.swift */,
 				8437CD122ABB3D7D008AF3A5 /* UserDefaults+Bookmark.swift */,
 			);
@@ -434,6 +438,7 @@
 				84D068D92ABDB2EB00EC6E7E /* ModelContainer.swift in Sources */,
 				842318882AB7053A000A0A09 /* ContentView.swift in Sources */,
 				84D8E96A2AB87859000234A9 /* UserScriptMetadata.swift in Sources */,
+				84F3A1162AC1C85E00C1F4BE /* URL.swift in Sources */,
 				840F49D92AB710EA00012C44 /* OnboardingView.swift in Sources */,
 				8437CD162ABB3DEB008AF3A5 /* UserDefaults+Key.swift in Sources */,
 				84D8E9752AB88D60000234A9 /* ScriptManager+EnvironmentKey.swift in Sources */,

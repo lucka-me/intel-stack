@@ -12,24 +12,8 @@ extension UserDefaults {
         guard let bookmarkData = data(forKey: defaultName) else {
             return nil
         }
-        var bookmarkDataIsStale = false
-        #if os(macOS)
-        guard
-            let url = try? URL(
-                resolvingBookmarkData: bookmarkData,
-                options: .withSecurityScope,
-                bookmarkDataIsStale: &bookmarkDataIsStale
-            )
-        else {
-            return nil
-        }
-        #else
-        guard
-            let url = try? URL(resolvingBookmarkData: bookmarkData, bookmarkDataIsStale: &bookmarkDataIsStale)
-        else {
-            return nil
-        }
-        #endif
+        var bookmarkDataIsStale = true
+        let url = try? URL(resolvingSecurityScopedBookmarkData: bookmarkData, bookmarkDataIsStale: &bookmarkDataIsStale)
         if bookmarkDataIsStale {
             setBookmark(url, forKey: defaultName)
         }

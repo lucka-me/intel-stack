@@ -62,7 +62,13 @@ fileprivate struct ExternalScriptsSection: View {
             UserDefaults.shared.externalScriptsBookmarkURL = url
         }
         .task(id: bookmark) {
-            let url = UserDefaults.shared.externalScriptsBookmarkURL
+            // Just simply update the displaying url, other operations should be done in IntelStackApp
+            let url: URL?
+            if let bookmark {
+                url = try? URL(resolvingSecurityScopedBookmarkData: bookmark)
+            } else {
+                url = nil
+            }
             await MainActor.run {
                 self.url = url
             }
@@ -74,7 +80,6 @@ fileprivate struct ExternalScriptsSection: View {
         return url
             .standardizedFileURL
             .path(percentEncoded: false)
-            .replacing(/^\/var\/.+?AppGroup.+?File Provider Storage\//) { _ in "" }
     }
     
     private func openLocation() {
