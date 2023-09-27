@@ -27,13 +27,15 @@ struct UserScriptMetadata {
 
 extension UserScriptMetadata {
     init?(content: String) throws {
-        let metadataPattern = Regex {
-            /\/\/ +==UserScript== *\n/
-            Capture { OneOrMore(.any) }
-            /\/\/ +==\/UserScript== */
+        guard
+            content.hasPrefix("// ==UserScript==\n"),
+            let startIndex = content.firstIndex(of: "\n"),
+            let endIndex = content.firstRange(of: "\n// ==/UserScript==")?.lowerBound
+        else {
+            return nil
         }
-        guard let (_, metadata) = try metadataPattern.prefixMatch(in: content)?.output else { return nil }
-        self.items = try metadata.split(separator: "\n").reduce(into: [ : ]) { result, row in
+        self.items = try content[startIndex...endIndex].split(separator: "\n").reduce(into: [ : ]) { result, row in
+            guard !row.isEmpty else { return }
             let rowPattern = /\/\/ *@(.+?) +(.+?) */
             guard let (_, key, value) = try rowPattern.wholeMatch(in: row)?.output else { return }
             result[String(key)] = String(value)
