@@ -13,12 +13,11 @@ async function execute() {
         return;
     }
 
-    const scripts = response.scripts.map((item) => { return `(function() { ${item} })();` });
     if (document.readyState !== "loading") {
-        inject(scripts);
+        inject(response.scripts);
     } else {
         document.addEventListener("DOMContentLoaded", () => {
-            inject(scripts);
+            inject(response.scripts);
         });
     }
 }

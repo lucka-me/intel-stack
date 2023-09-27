@@ -12,17 +12,19 @@ extension SafariWebExtensionHandler {
     func getCodeForInjecting() -> [ String ] {
         guard UserDefaults.shared.scriptsEnabled else { return [ ] }
         
-        var scripts: [ String ] = [ ]
-        
         let fileManager = FileManager.default
-        if fileManager.fileExists(at: FileConstants.mainScriptURL),
-           let content = try? String(contentsOf: FileConstants.mainScriptURL) {
-            scripts.append(content)
+        guard
+            fileManager.fileExists(at: FileConstants.mainScriptURL),
+            let mainScriptContent = try? String(contentsOf: FileConstants.mainScriptURL),
+            let mainScriptMetadata = try? UserScriptMetadata(content: mainScriptContent)
+        else {
+            return [ ]
         }
-        
+        var scripts = [ mainScriptMetadata.wrap(code: mainScriptContent) ]
+
         let context = ModelContext(.default)
         var descriptor = FetchDescriptor(predicate: #Predicate<Plugin> { $0.enabled })
-        descriptor.propertiesToFetch = [ \.filename, \.isInternal ]
+        descriptor.propertiesToFetch = [ \.name, \.scriptDescription, \.filename, \.isInternal, \.version ]
         guard let plugins = try? context.fetch(descriptor) else { return scripts }
         
         let externalURL: URL?
@@ -54,7 +56,14 @@ extension SafariWebExtensionHandler {
             guard fileManager.fileExists(at: fileURL) else { continue }
             do {
                 let content = try String(contentsOf: fileURL)
-                scripts.append(content)
+                scripts.append(
+                    UserScriptMetadata.wrap(
+                        code: content,
+                        name: plugin.name,
+                        description: plugin.scriptDescription,
+                        version: plugin.version
+                    )
+                )
             } catch {
                 print(error)
             }
