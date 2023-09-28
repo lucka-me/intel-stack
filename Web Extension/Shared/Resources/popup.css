@@ -11,7 +11,9 @@ body {
     gap: 1.2em;
     margin: 0;
     min-width: 300px;
-    padding: 12em;
+    padding: 1.2em;
+    overflow-y: auto;
+    scroll-behavior: smooth;
 }
 
 section {
