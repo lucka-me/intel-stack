@@ -27,6 +27,7 @@ struct ContentView: View {
             }
             #if os(macOS)
             .listStyle(.sidebar)
+            .frame(minWidth: 150)
             #else
             .listStyle(.insetGrouped)
             #endif
@@ -45,6 +46,9 @@ struct ContentView: View {
                     OnboardingView()
                 }
             }
+            #if os(macOS)
+            .frame(minWidth: 450)
+            #endif
         }
         .navigationSplitViewStyle(.balanced)
         .onChange(of: scriptManager.status, initial: true) {
