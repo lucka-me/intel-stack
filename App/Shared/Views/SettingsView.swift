@@ -28,7 +28,9 @@ struct SettingsView: View {
 fileprivate struct ExternalScriptsSection: View {
     @AppStorage(UserDefaults.Key.externalScriptsBookmark) private var bookmark: Data?
     
+    #if !os(macOS)
     @Environment(\.openURL) private var openURL
+    #endif
     
     @State private var url: URL? = nil
     @State private var isLocationImporterPresented = false
@@ -37,6 +39,9 @@ fileprivate struct ExternalScriptsSection: View {
         Section {
             if let readableExternalScriptLocation {
                 Button(readableExternalScriptLocation, systemImage: "folder", action: openLocation)
+                    #if os(macOS)
+                    .buttonStyle(.borderless)
+                    #endif
                 Button("Change Location", systemImage: "folder.badge.gearshape", role: .destructive) {
                     isLocationImporterPresented = true
                 }
@@ -86,15 +91,19 @@ fileprivate struct ExternalScriptsSection: View {
     }
     
     private func openLocation() {
-        guard
-            let url,
-            var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        else {
-            return
+        guard let url else { return }
+        #if os(macOS)
+        let accessingSecurityScopedResource = url.startAccessingSecurityScopedResource()
+        NSWorkspace.shared.open(url)
+        if accessingSecurityScopedResource {
+            url.stopAccessingSecurityScopedResource()
         }
+        #else
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
         components.scheme = "shareddocuments"
-        guard let url = components.url else { return }
-        openURL(url)
+        guard let urlForFileApp = components.url else { return }
+        openURL(urlForFileApp)
+        #endif
     }
 }
 

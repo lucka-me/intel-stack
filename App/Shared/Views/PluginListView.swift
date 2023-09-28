@@ -36,7 +36,9 @@ struct PluginListView: View {
 }
 
 fileprivate struct PluginCardView: View {
+    #if !os(macOS)
     @Environment(\.openURL) private var openURL
+    #endif
     
     @State private var enabled = false
     
@@ -109,14 +111,18 @@ fileprivate struct PluginCardView: View {
         guard
             let url = UserDefaults.shared.externalScriptsBookmarkURL?
                 .appending(path: plugin.filename)
-                .appendingPathExtension(FileConstants.userScriptExtension),
-            var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+                .appendingPathExtension(FileConstants.userScriptExtension)
         else {
             return
         }
+        #if os(macOS)
+        NSWorkspace.shared.activateFileViewerSelecting([ url ])
+        #else
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
         components.scheme = "shareddocuments"
-        guard let url = components.url else { return }
-        openURL(url)
+        guard let urlForFileApp = components.url else { return }
+        openURL(urlForFileApp)
+        #endif
     }
 }
 
