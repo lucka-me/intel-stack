@@ -50,6 +50,9 @@ struct ContentView: View {
             .frame(minWidth: 450)
             #endif
         }
+        #if os(macOS)
+        .frame(minHeight: 450)
+        #endif
         .navigationSplitViewStyle(.balanced)
         .onChange(of: scriptManager.status, initial: true) {
             if scriptManager.status == .idle {
