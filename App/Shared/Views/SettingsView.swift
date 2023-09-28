@@ -9,11 +9,14 @@ import SwiftUI
 
 struct SettingsView: View {
     var body: some View {
-        List {
+        Form {
             ExternalScriptsSection()
             BuildChannelSection()
             AboutSection()
         }
+        #if os(macOS)
+        .formStyle(.grouped)
+        #endif
         .navigationTitle("Settings")
     }
 }

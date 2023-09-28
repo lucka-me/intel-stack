@@ -4,12 +4,14 @@
 
 body {
     background: #F2F2F7;
+    box-sizing: border-box;
     display: flex;
     flex-flow: column nowrap;
     font-family: -apple-system-body, -apple-system;
     gap: 1.2em;
-    min-width: 250px;
-    padding: 0.4em 1.2em;
+    margin: 0;
+    min-width: 300px;
+    padding: 12em;
 }
 
 section {

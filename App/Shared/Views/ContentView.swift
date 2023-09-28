@@ -59,6 +59,9 @@ struct ContentView: View {
         Section {
             if scriptManager.status == .idle, let mainScriptVersion {
                 Toggle("Enabled", systemImage: "power", isOn: $scriptsEnabled)
+                #if os(macOS)
+                    .toggleStyle(.switch)
+                #endif
                 Label(mainScriptVersion, systemImage: "scroll")
                     .monospaced()
             } else {

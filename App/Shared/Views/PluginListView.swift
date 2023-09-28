@@ -82,8 +82,16 @@ fileprivate struct PluginCardView: View {
                 }
             }
         } label: {
-            Toggle(plugin.displayName, isOn: $enabled)
-                .lineLimit(2)
+            Toggle(isOn: $enabled) {
+                Text(plugin.displayName)
+                    #if os(macOS)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    #endif
+            }
+            .lineLimit(2)
+            #if os(macOS)
+            .toggleStyle(.switch)
+            #endif
         }
         .fixedSize(horizontal: false, vertical: false)
         .onAppear {
@@ -92,7 +100,9 @@ fileprivate struct PluginCardView: View {
         .onChange(of: enabled) {
             plugin.enabled = enabled
         }
-        .groupBoxStyle(.automatic)
+        #if os(macOS)
+        .groupBoxStyle(.card)
+        #endif
     }
     
     private func openFile() {
