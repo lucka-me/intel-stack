@@ -25,7 +25,6 @@ extension ScriptManager {
         
         // TODO: Fetch external scripts
         
-        var doneCount = 0
         downloadProgress = .init(totalUnitCount: Int64(internalPlugins.count + 1))
         status = .downloading
         defer {
@@ -45,7 +44,6 @@ extension ScriptManager {
                 group.addTask {
                     try await self.downloadInternalPlugin(from: channel, filename: filename)
                     await MainActor.run {
-                        doneCount += 1
                         self.downloadProgress.completedUnitCount += 1
                     }
                 }
@@ -153,5 +151,9 @@ fileprivate extension ScriptManager {
         }
         
         succeed = true
+    }
+    
+    private func updateExternal(plugin: Plugin, in externalURL: URL) async throws {
+        
     }
 }

@@ -9,23 +9,11 @@ import Foundation
 import SwiftData
 
 extension ScriptManager {
-    @discardableResult
-    static func sync(with context: ModelContext = .init(.default)) throws -> URL? {
-        guard
-            let externalURL = UserDefaults.shared.externalScriptsBookmarkURL,
-            externalURL.startAccessingSecurityScopedResource()
-        else {
-            try context.delete(model: Plugin.self, where: Plugin.externalPredicate)
-            return nil
-        }
-        
-        defer {
-            externalURL.stopAccessingSecurityScopedResource()
-        }
+    static func sync(in externalURL: URL, with context: ModelContext = .init(.default)) throws {
         guard FileManager.default.fileExists(at: externalURL) else {
             UserDefaults.shared.externalScriptsBookmarkURL = nil
             try context.delete(model: Plugin.self, where: Plugin.externalPredicate)
-            return nil
+            return
         }
         
         var metadatas: [ String : (String, UserScriptMetadata) ] = try FileManager.default
@@ -46,15 +34,14 @@ extension ScriptManager {
                     metadata
                 )
             }
-        let scripts = try context.fetch(.init(predicate: Plugin.externalPredicate))
-        for script in scripts {
-            guard
-                let value = metadatas.removeValue(forKey: script.idendifier) else {
-                context.delete(script)
+        let plugins = try context.fetch(.init(predicate: Plugin.externalPredicate))
+        for plugin in plugins {
+            guard let value = metadatas.removeValue(forKey: plugin.idendifier) else {
+                context.delete(plugin)
                 continue
             }
-            script.filename = value.0
-            script.update(from: value.1)
+            plugin.filename = value.0
+            plugin.update(from: value.1)
         }
         for metadata in metadatas {
             guard
@@ -64,6 +51,23 @@ extension ScriptManager {
             }
             context.insert(plugin)
         }
+        try context.save()
+    }
+    
+    @discardableResult
+    static func sync(with context: ModelContext = .init(.default)) throws -> URL? {
+        guard
+            let externalURL = UserDefaults.shared.externalScriptsBookmarkURL,
+            externalURL.startAccessingSecurityScopedResource()
+        else {
+            try context.delete(model: Plugin.self, where: Plugin.externalPredicate)
+            return nil
+        }
+        
+        defer {
+            externalURL.stopAccessingSecurityScopedResource()
+        }
+        try sync(in: externalURL, with: context)
         
         return externalURL
     }

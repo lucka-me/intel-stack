@@ -13,6 +13,8 @@ struct IntelStackApp: App {
     @AppStorage(UserDefaults.Key.externalScriptsBookmark) private var bookmark: Data?
     @Environment(\.scenePhase) private var scenePhase
     
+    @State private var monitor: ExternalFileMonitor? = nil
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -22,10 +24,16 @@ struct IntelStackApp: App {
                 .task(id: bookmark) {
                     // TODO: Be ware of the scenePhase, task should not run if not active
                     guard let externalURL = try? ScriptManager.sync() else {
-                        // TODO: Stop monitoring
+                        monitor = nil
                         return
                     }
-                    // TODO: Monitor the external dictionary
+                    monitor = .init(url: externalURL) { url in
+                        do {
+                            try ScriptManager.sync(in: url)
+                        } catch {
+                            print(error)
+                        }
+                    }
                 }
         }
     }
