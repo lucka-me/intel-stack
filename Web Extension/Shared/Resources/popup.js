@@ -23,7 +23,7 @@ async function setupScriptsSection() {
     // };
 }
 
-function buildSection(category) {
+function buildSection(category, mainNode) {
     const sectionNode = document.createElement("section");
 
     const headerNode = document.createElement("header");
@@ -64,20 +64,26 @@ function buildSection(category) {
     }
     sectionNode.appendChild(contentNode);
 
-    document.body.appendChild(sectionNode);
+    mainNode.appendChild(sectionNode);
 }
 
-async function buildPluginSections() {
+async function setupContents() {
     const response = await browser.runtime.sendMessage({ method: "getPopupContentData" });
     if (!response || !response.categories) {
         console.error(`Invalid response: ${response}`);
         return;
     }
 
+    if (response.platform === "macOS") {
+        document.body.classList.add("desktop");
+    }
+
+    setupScriptsSection()
+
+    const mainNode = document.getElementById("main");
     for (const category of response.categories) {
-        buildSection(category);
+        buildSection(category, mainNode);
     }
 }
 
-setupScriptsSection();
-buildPluginSections();
+setupContents();

@@ -88,7 +88,9 @@ extension SafariWebExtensionHandler {
             result[item.categoryValue] = value
         }
         
-        let categories = Plugin.Category.allCases.map { category in
+        var response: [ String : Any ] = [ : ]
+        
+        response["categories"] =  Plugin.Category.allCases.map { category in
             [
                 "name" : category.rawValue,
                 "plugins": categoriedPlugins[category.rawValue]?.map { item in
@@ -101,7 +103,11 @@ extension SafariWebExtensionHandler {
             ]
         }
         
-        return [ "categories": categories ]
+        #if os(macOS)
+        response["platform"] = "macOS"
+        #endif
+        
+        return response
     }
 }
 

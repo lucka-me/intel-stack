@@ -5,14 +5,24 @@
 body {
     background: #F2F2F7;
     box-sizing: border-box;
-    display: flex;
-    flex-flow: column nowrap;
     font-family: -apple-system-body, -apple-system;
-    gap: 1.2em;
     margin: 0;
     min-width: 300px;
-    padding: 1.2em;
+}
+
+body.desktop {
+    height: 600px;
+}
+
+main {
+    display: flex;
+    box-sizing: border-box;
+    flex-flow: column nowrap;
+    gap: 1.2em;
+    height: 100%;
     overflow-y: auto;
+    padding: 1.2em;
+    margin: 0;
     scroll-behavior: smooth;
 }
 
