@@ -27,14 +27,24 @@ struct ContentView: View {
             }
             #if os(macOS)
             .listStyle(.sidebar)
-            .frame(minWidth: 150)
+            .frame(minWidth: 200)
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Refresh", systemImage: "arrow.clockwise") {
+                        Task {
+                            await tryDownloadScripts()
+                        }
+                    }
+                    .disabled(scriptManager.status != .idle)
+                }
+            }
             #else
             .listStyle(.insetGrouped)
-            #endif
-            .navigationTitle("Intel Stack")
             .refreshable {
                 await tryDownloadScripts()
             }
+            #endif
+            .navigationTitle("Intel Stack")
         } detail: {
             NavigationStack {
                 switch sidebarSelection {
