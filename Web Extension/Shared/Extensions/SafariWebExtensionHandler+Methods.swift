@@ -9,8 +9,8 @@ import Foundation
 import SwiftData
 
 extension SafariWebExtensionHandler {
-    func getCodeForInjecting() -> [ String ] {
-        guard UserDefaults.shared.scriptsEnabled else { return [ ] }
+    func getCodeForInjecting() -> [ String : Any ] {
+        guard UserDefaults.shared.scriptsEnabled else { return [ : ] }
         
         let fileManager = FileManager.default
         guard
@@ -18,14 +18,15 @@ extension SafariWebExtensionHandler {
             let mainScriptContent = try? String(contentsOf: FileConstants.mainScriptURL),
             let mainScriptMetadata = try? UserScriptMetadata(content: mainScriptContent)
         else {
-            return [ ]
+            return [ : ]
         }
-        var scripts = [ mainScriptMetadata.wrap(code: mainScriptContent) ]
 
         let context = ModelContext(.default)
         var descriptor = FetchDescriptor(predicate: #Predicate<Plugin> { $0.enabled })
         descriptor.propertiesToFetch = [ \.name, \.scriptDescription, \.filename, \.isInternal, \.version ]
-        guard let plugins = try? context.fetch(descriptor) else { return scripts }
+        guard let plugins = try? context.fetch(descriptor) else { return [ : ] }
+        
+        var scripts = [ mainScriptMetadata.wrap(code: mainScriptContent) ]
         
         let externalURL: URL?
         let accessingSecurityScopedResource: Bool
@@ -69,7 +70,10 @@ extension SafariWebExtensionHandler {
             }
         }
         
-        return scripts
+        var response: [ String : Any ] = [ : ]
+        response["scripts"] = scripts
+        
+        return response
     }
 }
 

@@ -28,7 +28,7 @@ class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
         
         switch method {
         case "getCodeForInjecting":
-            responseContent = [ "scripts" : getCodeForInjecting() ]
+            responseContent = getCodeForInjecting()
         case "getPopupContentData":
             responseContent = getPopupContentData()
         case "getScriptsEnabled":
