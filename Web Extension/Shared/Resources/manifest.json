@@ -15,12 +15,12 @@
     },
 
     "content_scripts": [{
-        "js": [ "content.js" ],
+        "js": [ "content/main.js" ],
         "matches": [ "https://intel.ingress.com/*" ]
     }],
 
     "action": {
-        "default_popup": "popup.html",
+        "default_popup": "popup/index.html",
         "default_icon": {
             "64": "images/icon.svg"
         }

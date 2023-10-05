@@ -1,8 +1,8 @@
 function inject(scripts) {
     for (const script of scripts) {
-        const element = document.createElement("script");
-        element.textContent = script;
-        document.head.appendChild(element);
+        const node = document.createElement("script");
+        node.textContent = script;
+        document.head.appendChild(node);
     }
 }
 
@@ -12,13 +12,14 @@ async function execute() {
         console.error(`Invalid response: ${response}`);
         return;
     }
+    if (response.scripts.length === 0) {
+        return;
+    }
 
     if (document.readyState !== "loading") {
         inject(response.scripts);
     } else {
-        document.addEventListener("DOMContentLoaded", () => {
-            inject(response.scripts);
-        });
+        document.addEventListener("DOMContentLoaded", () => { inject(response.scripts); }, { once: true });
     }
 }
 
