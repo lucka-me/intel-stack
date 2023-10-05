@@ -28,5 +28,12 @@
 
     "permissions": [
         "nativeMessaging"
+    ],
+
+    "web_accessible_resources": [
+        {
+            "resources": [ "content/inject.js" ],
+            "matches": [ "https://intel.ingress.com/*" ]
+        }
     ]
 }

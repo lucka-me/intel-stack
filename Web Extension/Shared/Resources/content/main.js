@@ -4,6 +4,10 @@ function inject(scripts) {
         node.textContent = script;
         document.head.appendChild(node);
     }
+
+    const extraScriptNode = document.createElement("script");
+    extraScriptNode.src = browser.runtime.getURL("content/inject.js");
+    document.head.appendChild(extraScriptNode);
 }
 
 async function execute() {
