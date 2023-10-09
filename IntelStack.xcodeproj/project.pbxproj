@@ -27,6 +27,7 @@
 		8437CD142ABB3D7D008AF3A5 /* UserDefaults+Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8437CD122ABB3D7D008AF3A5 /* UserDefaults+Bookmark.swift */; };
 		8437CD162ABB3DEB008AF3A5 /* UserDefaults+Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8437CD152ABB3DEB008AF3A5 /* UserDefaults+Key.swift */; };
 		843FCB2F2AB9C0FA00C93D1E /* ScriptManager+Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843FCB2E2AB9C0FA00C93D1E /* ScriptManager+Task.swift */; };
+		84424BE92ACEAB15009013A3 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84424BE82ACEAB15009013A3 /* SidebarView.swift */; };
 		844AF6952ABC64B800D90B0F /* SafariWebExtensionHandler+Methods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844AF6942ABC64B800D90B0F /* SafariWebExtensionHandler+Methods.swift */; };
 		844AF6972ABC882500D90B0F /* ScriptManager+ExternalScripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844AF6962ABC882500D90B0F /* ScriptManager+ExternalScripts.swift */; };
 		84D068D92ABDB2EB00EC6E7E /* ModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D068D82ABDB2EB00EC6E7E /* ModelContainer.swift */; };
@@ -101,6 +102,7 @@
 		8437CD122ABB3D7D008AF3A5 /* UserDefaults+Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Bookmark.swift"; sourceTree = "<group>"; };
 		8437CD152ABB3DEB008AF3A5 /* UserDefaults+Key.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Key.swift"; sourceTree = "<group>"; };
 		843FCB2E2AB9C0FA00C93D1E /* ScriptManager+Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptManager+Task.swift"; sourceTree = "<group>"; };
+		84424BE82ACEAB15009013A3 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		844AF6912ABC638500D90B0F /* Web Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Web Extension.entitlements"; sourceTree = "<group>"; };
 		844AF6942ABC64B800D90B0F /* SafariWebExtensionHandler+Methods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SafariWebExtensionHandler+Methods.swift"; sourceTree = "<group>"; };
 		844AF6962ABC882500D90B0F /* ScriptManager+ExternalScripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptManager+ExternalScripts.swift"; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 				840F49D82AB710EA00012C44 /* OnboardingView.swift */,
 				840F49D62AB7108200012C44 /* PluginListView.swift */,
 				840F49D42AB7101F00012C44 /* SettingsView.swift */,
+				84424BE82ACEAB15009013A3 /* SidebarView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -471,6 +474,7 @@
 				842F9D022AC47F80002E750B /* CardGroupBoxStyle.swift in Sources */,
 				84F3A1162AC1C85E00C1F4BE /* URL.swift in Sources */,
 				840F49D92AB710EA00012C44 /* OnboardingView.swift in Sources */,
+				84424BE92ACEAB15009013A3 /* SidebarView.swift in Sources */,
 				8437CD162ABB3DEB008AF3A5 /* UserDefaults+Key.swift in Sources */,
 				84D8E9752AB88D60000234A9 /* ScriptManager+EnvironmentKey.swift in Sources */,
 				842318862AB7053A000A0A09 /* IntelStackApp.swift in Sources */,
