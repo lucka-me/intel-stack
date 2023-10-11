@@ -10,7 +10,7 @@ import SwiftUI
 
 @main
 struct IntelStackApp: App {
-    @AppStorage(UserDefaults.Key.externalScriptsBookmark) private var bookmark: Data?
+    @AppStorage(UserDefaults.Key.externalScriptsBookmark, store: .shared) private var bookmark: Data?
     @Environment(\.scenePhase) private var scenePhase
     
     @State private var monitor: ExternalFileMonitor? = nil
