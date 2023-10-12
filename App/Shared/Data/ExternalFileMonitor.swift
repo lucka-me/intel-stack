@@ -33,6 +33,5 @@ class ExternalFileMonitor {
         if accessingSecurityScopedResource {
             url.stopAccessingSecurityScopedResource()
         }
-        
     }
 }

@@ -11,6 +11,7 @@ import SwiftUI
 @main
 struct IntelStackApp: App {
     @AppStorage(UserDefaults.Key.externalScriptsBookmark, store: .shared) private var bookmark: Data?
+    @Environment(\.scriptManager) private var scriptManager
     @Environment(\.scenePhase) private var scenePhase
     
     @State private var monitor: ExternalFileMonitor? = nil
@@ -18,9 +19,6 @@ struct IntelStackApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .defaultAppStorage(.shared)
-                .environment(\.scriptManager, .shared)
-                .modelContainer(.default)
                 .task(id: bookmark) {
                     // TODO: Be ware of the scenePhase, task should not run if not active
                     guard let externalURL = try? ScriptManager.sync() else {
@@ -38,5 +36,12 @@ struct IntelStackApp: App {
                     }
                 }
         }
+        .onChange(of: scriptManager.status) {
+            if scriptManager.status == .idle {
+                scriptManager.updateMainScriptVersion()
+            }
+        }
+        .modelContainer(.default)
+        .defaultAppStorage(.shared)
     }
 }

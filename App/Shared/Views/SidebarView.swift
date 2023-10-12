@@ -31,12 +31,8 @@ struct SidebarView: View {
     @State private var extensionEnabled: Bool? = nil
     #endif
     
-    private let mainScriptVersion: () -> String?
-    
-    init(selection: Binding<Selection?>, mainScriptVersion: @escaping () -> String?) {
+    init(selection: Binding<Selection?>) {
         self._selection = selection
-        
-        self.mainScriptVersion = mainScriptVersion
     }
     
     var body: some View {
@@ -108,7 +104,7 @@ struct SidebarView: View {
     
     @ViewBuilder
     private var scriptSectionContent: some View {
-        let version = mainScriptVersion()
+        let version = scriptManager.mainScriptVersion
         Toggle("Enabled", systemImage: "power", isOn: $scriptsEnabled)
             #if os(macOS)
             .toggleStyle(.switch)

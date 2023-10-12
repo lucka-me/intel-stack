@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.scriptManager) private var scriptManager
     
     @State private var mainScriptVersion: String? = nil
@@ -16,7 +15,7 @@ struct ContentView: View {
     
     var body: some View {
         NavigationSplitView {
-            SidebarView(selection: $sidebarSelection) { mainScriptVersion }
+            SidebarView(selection: $sidebarSelection)
         } detail: {
             NavigationStack {
                 switch sidebarSelection {
@@ -36,20 +35,10 @@ struct ContentView: View {
         .frame(minHeight: 450)
         #endif
         .navigationSplitViewStyle(.balanced)
-        .onChange(of: scriptManager.status) {
-            if scriptManager.status == .idle {
-                updateMainScriptVersion()
-            }
+        .onAppear {
+            scriptManager.updateMainScriptVersion()
+            isOnboardingSheetPresented = scriptManager.mainScriptVersion == nil
         }
-        .onChange(of: scenePhase, initial: true) {
-            if scenePhase == .active {
-                updateMainScriptVersion()
-            }
-        }
-    }
-    
-    private func updateMainScriptVersion() {
-        mainScriptVersion = ScriptManager.fetchMainScriptVersion()
     }
 }
 

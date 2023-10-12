@@ -8,20 +8,26 @@
 import Foundation
 
 extension ScriptManager {
-    static func fetchMainScriptVersion() -> String? {
+    @MainActor
+    func updateMainScriptVersion() {
+        var version: String? = nil
+        defer {
+            mainScriptVersion = version
+        }
+        
         let fileManager = FileManager.default
         guard fileManager.fileExists(at: FileConstants.internalScriptsDirectoryURL) else {
             try? fileManager.createDirectory(at: FileConstants.internalScriptsDirectoryURL, withIntermediateDirectories: true)
             try? fileManager.createDirectory(at: FileConstants.internalPluginsDirectoryURL, withIntermediateDirectories: true)
-            return nil
+            return
         }
         guard
             fileManager.fileExists(at: FileConstants.mainScriptURL),
             let content = try? String(contentsOf: FileConstants.mainScriptURL),
             let metadata = try? UserScriptMetadata(content: content)
         else {
-            return nil
+            return
         }
-        return metadata["version"]
+        version = metadata["version"]
     }
 }

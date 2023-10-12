@@ -13,9 +13,10 @@ import SwiftData
 class ScriptManager {
     static let shared = ScriptManager()
     
-    var status = Status.idle
+    let downloadProgress = Progress()
     
-    var downloadProgress = Progress()
+    var mainScriptVersion: String? = nil
+    var status = Status.idle
     
     private init() { }
 }
