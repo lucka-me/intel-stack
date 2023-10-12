@@ -14,38 +14,42 @@ extension ScriptManager {
         case beta = "beta"
     }
 
-    @MainActor
-    func downloadScripts() async throws {
-        guard let internalPluginsURL = Bundle.main.url(forResource: "InternalPlugins", withExtension: "json") else {
-            return
+    static var internalPluginNames: [ String ] {
+        get throws {
+            try JSONDecoder().decode(
+                [ String ].self,
+                from: try Data(
+                    contentsOf: Bundle.main.url(
+                        forResource: "InternalPlugins", withExtension: "json"
+                    )!
+                )
+            )
         }
-        let internalPluginsData = try Data(contentsOf: internalPluginsURL)
-        let decoder = JSONDecoder()
-        let internalPlugins = try decoder.decode([ String ].self, from: internalPluginsData)
-        
-        // TODO: Fetch external scripts
-        
-        downloadProgress = .init(totalUnitCount: Int64(internalPlugins.count + 1))
+    }
+}
+
+extension ScriptManager {
+    func updateScripts() async throws {
+        guard status == .idle else { return }
         status = .downloading
         defer {
             status = .idle
+            downloadProgress.completedUnitCount = 0
         }
+        
+        let internalPlugins = try Self.internalPluginNames
         
         let channel = UserDefaults.shared.buildChannel
         try await withThrowingTaskGroup(of: Void.self) { group in
             group.addTask {
-                try await self.downloadMainScript(from: channel)
-                await MainActor.run {
-                    self.downloadProgress.completedUnitCount += 1
-                }
+                try await Self.downloadMainScript(from: channel)
+                await MainActor.run { self.downloadProgress.completedUnitCount += 1 }
             }
             
             for filename in internalPlugins {
                 group.addTask {
-                    try await self.downloadInternalPlugin(from: channel, filename: filename)
-                    await MainActor.run {
-                        self.downloadProgress.completedUnitCount += 1
-                    }
+                    try await Self.downloadInternalPlugin(filename, from: channel)
+                    await MainActor.run { self.downloadProgress.completedUnitCount += 1 }
                 }
             }
             
@@ -54,10 +58,8 @@ extension ScriptManager {
     }
 }
 
-fileprivate extension ScriptManager {
-    static let websiteBuildURL = URL(string: "https://iitc.app/build/")!
-    
-    private func downloadMainScript(from channel: BuildChannel) async throws {
+extension ScriptManager {
+    static func downloadMainScript(from channel: BuildChannel) async throws {
         let downloadURL = Self.websiteBuildURL
             .appending(path: channel.rawValue)
             .appending(path: FileConstants.mainScriptFilename)
@@ -74,16 +76,19 @@ fileprivate extension ScriptManager {
         
         guard let httpResponse = response as? HTTPURLResponse else { return }
         guard httpResponse.statusCode == 200 else {
+            // TODO: Throw an error
             print("Download main script resulted in \(httpResponse.statusCode)")
             return
         }
         
         let content = try String(contentsOf: temporaryURL)
         guard let metadata = try UserScriptMetadata(content: content) else {
+            // TODO: Throw an error
             print("Unable to fetch metadata from main script")
             return
         }
         guard let _ = metadata["version"] else {
+            // TODO: Throw an error
             print("Unable to get version of main script")
             return
         }
@@ -95,7 +100,7 @@ fileprivate extension ScriptManager {
         succeed = true
     }
     
-    private func downloadInternalPlugin(from channel: BuildChannel, filename: String) async throws {
+    static func downloadInternalPlugin(_ filename: String, from channel: BuildChannel) async throws {
         let downloadURL = Self.websiteBuildURL
             .appending(path: channel.rawValue)
             .appending(path: "plugins")
@@ -114,6 +119,7 @@ fileprivate extension ScriptManager {
         
         guard let httpResponse = response as? HTTPURLResponse else { return }
         guard httpResponse.statusCode == 200 else {
+            // TODO: Throw an error
             print("Download plugin \(filename) resulted in \(httpResponse.statusCode)")
             return
         }
@@ -123,6 +129,7 @@ fileprivate extension ScriptManager {
             let metadata = try UserScriptMetadata(content: content),
             metadata.readyForPlugin
         else {
+            // TODO: Throw an error
             print("Unable to fetch metadata from \(downloadURL)")
             return
         }
@@ -135,25 +142,33 @@ fileprivate extension ScriptManager {
         }
         try fileManager.moveItem(at: temporaryURL, to: destinationURL)
         
-        try await MainActor.run {
+        try await ModelExecutor.shared.updateInternalPlugin(with: metadata, filename: filename)
+        
+        succeed = true
+    }
+}
+
+fileprivate extension ScriptManager {
+    static let websiteBuildURL = URL(string: "https://iitc.app/build/")!
+}
+
+fileprivate extension ModelExecutor {
+    func updateInternalPlugin(with metadata: UserScriptMetadata, filename: String) throws {
             let predicate = #Predicate<Plugin> {
                 $0.isInternal && $0.filename == filename
             }
             var descriptor = FetchDescriptor(predicate: predicate)
             descriptor.fetchLimit = 1
-            let context = ModelContainer.default.mainContext
-            if let item = try context.fetch(descriptor).first {
+        if let item = try modelContext.fetch(descriptor).first {
                 item.update(from: metadata)
             } else {
                 let item = Plugin(metadata: metadata, isInternal: true, filename: filename)!
-                context.insert(item)
-            }
+            modelContext.insert(item)
         }
-        
-        succeed = true
+        try modelContext.save()
     }
     
     private func updateExternal(plugin: Plugin, in externalURL: URL) async throws {
-        
+
     }
 }

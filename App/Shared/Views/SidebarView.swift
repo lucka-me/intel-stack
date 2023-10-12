@@ -47,7 +47,7 @@ struct SidebarView: View {
             ToolbarItem(placement: .primaryAction) {
                 Button("Refresh", systemImage: "arrow.clockwise") {
                     Task {
-                        await tryDownloadScripts()
+                        await tryUpdateScripts()
                     }
                 }
                 .disabled(scriptManager.status != .idle)
@@ -56,7 +56,7 @@ struct SidebarView: View {
         #else
         .listStyle(.insetGrouped)
         .refreshable {
-            await tryDownloadScripts()
+            await tryUpdateScripts()
         }
         #endif
         .navigationTitle("Intel Stack")
@@ -159,9 +159,9 @@ struct SidebarView: View {
     #endif
     
     @MainActor
-    private func tryDownloadScripts() async {
+    private func tryUpdateScripts() async {
         do {
-            try await scriptManager.downloadScripts()
+            try await scriptManager.updateScripts()
         } catch {
             print(error)
         }
