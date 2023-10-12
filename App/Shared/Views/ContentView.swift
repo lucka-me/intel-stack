@@ -24,7 +24,7 @@ struct ContentView: View {
                 case .plugins(let category):
                     PluginListView(category: category)
                 case nil:
-                    Text("Select from sidebar")
+                    Text("ContentView.EmptyHint")
                 }
             }
             #if os(macOS)

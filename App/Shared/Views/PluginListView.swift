@@ -57,10 +57,10 @@ fileprivate struct PluginCardView: View {
                             
                     }
                     if plugin.isInternal {
-                        Text("Internal")
+                        Text("PluginCardView.Internal")
                             .capsule(.purple)
                     } else {
-                        Label("External", systemImage: "arrow.up.right")
+                        Label("PluginCardView.External", systemImage: "arrow.up.right")
                             .capsule(.indigo)
                             .onTapGesture(perform: openFile)
                     }
@@ -70,7 +70,7 @@ fileprivate struct PluginCardView: View {
                 
                 Spacer()
                 
-                Text(plugin.scriptDescription ?? "No description")
+                Text(plugin.scriptDescription ?? .init(localized: "PluginCardView.NoDescriptions"))
                     .italic(plugin.scriptDescription == nil)
                     .font(.callout)
                     .foregroundStyle(.secondary)
@@ -78,16 +78,13 @@ fileprivate struct PluginCardView: View {
                 
                 HStack {
                     Spacer()
-                    if let author = plugin.author {
-                        Text("By \(author)")
-                    } else {
-                        Text("")
-                    }
-                }
+                    Text("PluginCardView.Author \(plugin.author ?? "")")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .italic()
-                .lineLimit(1, reservesSpace: true)
+                        .lineLimit(1, reservesSpace: true)
+                        .opacity(plugin.author != nil ? 1.0 : 0.0)
+                }
             }
         } label: {
             Toggle(isOn: $enabled) {

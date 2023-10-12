@@ -17,7 +17,7 @@ struct SettingsView: View {
         #if os(macOS)
         .formStyle(.grouped)
         #endif
-        .navigationTitle("Settings")
+        .navigationTitle("SettingsView.Title")
     }
 }
 
@@ -42,18 +42,18 @@ fileprivate struct ExternalScriptsSection: View {
                     #if os(macOS)
                     .buttonStyle(.borderless)
                     #endif
-                Button("Change Location", systemImage: "folder.badge.gearshape", role: .destructive) {
+                Button("SettingsView.ExternalScripts.ChangeLocation", systemImage: "folder.badge.gearshape", role: .destructive) {
                     isLocationImporterPresented = true
                 }
             } else {
-                Button("Select Location", systemImage: "folder.badge.plus") {
+                Button("SettingsView.ExternalScripts.SelectLocation", systemImage: "folder.badge.plus") {
                     isLocationImporterPresented = true
                 }
             }
         } header: {
-            Text("External Scripts")
+            Text("SettingsView.ExternalScripts.Title")
         } footer: {
-            Text("Feature under development.")
+            Text("SettingsView.ExternalScripts.Footer")
         }
         .fileImporter(
             isPresented: $isLocationImporterPresented, allowedContentTypes: [ .folder ]
@@ -112,7 +112,7 @@ fileprivate struct BuildChannelSection: View {
     
     var body: some View {
         Section {
-            Picker("Channel", selection: $channel) {
+            Picker("SettingsView.BuildChannel.Channel", selection: $channel) {
                 ForEach(ScriptManager.BuildChannel.allCases, id: \.rawValue) { item in
                     Text(item.rawValue)
                         .textCase(.uppercase)
@@ -120,9 +120,9 @@ fileprivate struct BuildChannelSection: View {
                 }
             }
         } header: {
-            Text("Build Channel")
+            Text("SettingsView.BuildChannel.Title")
         } footer: {
-            Text("In the next refresh, Intel Stack will download IITC main script and internal plugins from the selected channel.")
+            Text("SettingsView.BuildChannel.Footer")
         }
     }
 }
@@ -131,11 +131,11 @@ fileprivate struct AboutSection: View {
     var body: some View {
         Section {
             Link(destination: .init(string: "https://github.com/lucka-me/intel-stack")!) {
-                Label("Source Code", systemImage: "swift")
+                Label("SettingsView.About.SourceCode", systemImage: "swift")
             }
             
             Link(destination: .init(string: "https://iitc.app")!) {
-                Label("IITC-CE Website", systemImage: "link")
+                Label("SettingsView.About.IITCWebsite", systemImage: "link")
             }
             
             if
@@ -147,9 +147,9 @@ fileprivate struct AboutSection: View {
             }
             
         } header: {
-            Text("About")
+            Text("SettingsView.About.Title")
         } footer: {
-            Text("Made by Lucka with \(Image(systemName: "heart.fill"))")
+            Text("SettingsView.About.Footer \(Image(systemName: "heart.fill"))")
         }
     }
 }

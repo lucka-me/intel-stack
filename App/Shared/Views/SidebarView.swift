@@ -44,7 +44,7 @@ struct SidebarView: View {
         .frame(minWidth: 200)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button("Refresh", systemImage: "arrow.clockwise") {
+                Button("SidebarView.Refresh", systemImage: "arrow.clockwise") {
                     Task {
                         await tryUpdateScripts()
                     }
@@ -65,7 +65,7 @@ struct SidebarView: View {
                 }
             }
         }
-        .navigationTitle("Intel Stack")
+        .navigationTitle("SidebarView.Title")
     }
     
     @ViewBuilder
@@ -73,9 +73,9 @@ struct SidebarView: View {
         Section {
             scriptSectionContent
         } header: {
-            Text("IITC Script")
+            Text("SidebarView.Script")
         } footer: {
-            Text("Pull to downlaod / update scripts.")
+            Text("SidebarView.Script.Footer")
         }
         
         #if os(macOS)
@@ -87,7 +87,7 @@ struct SidebarView: View {
             .foregroundStyle(extensionSateColor)
             .onChange(of: scenePhase, initial: true, fetchExtensionState)
         } header: {
-            Text("Safari Extension")
+            Text("SidebarView.Extension")
         }
         #endif
         
@@ -98,20 +98,20 @@ struct SidebarView: View {
                 }
             }
         } header: {
-            Text("Plugins")
+            Text("SidebarView.Plugins")
         }
     }
     
     @ViewBuilder
     private var scriptSectionContent: some View {
         let version = scriptManager.mainScriptVersion
-        Toggle("Enabled", systemImage: "power", isOn: $scriptsEnabled)
+        Toggle("SidebarView.Script.Enabled", systemImage: "power", isOn: $scriptsEnabled)
             #if os(macOS)
             .toggleStyle(.switch)
             #endif
             .disabled(version == nil)
         if scriptManager.status == .downloading {
-            Label("Downloading", systemImage: "arrow.down.circle.dotted")
+            Label("SidebarView.Script.Downloading", systemImage: "arrow.down.circle.dotted")
                 .symbolRenderingMode(.multicolor)
                 .symbolEffect(.pulse, options: .repeating)
         } else if let version {
@@ -120,21 +120,21 @@ struct SidebarView: View {
                     .monospaced()
             }
         } else {
-            Label("Unavailable", systemImage: "xmark.octagon")
+            Label("SidebarView.Script.Unavailable", systemImage: "xmark.octagon")
                 .symbolRenderingMode(.multicolor)
         }
         
         NavigationLink(value: Selection.settings) {
-            Label("Settings", systemImage: "gear")
+            Label("SidebarView.Settings", systemImage: "gear")
         }
     }
     
     #if os(macOS)
     private var extensionStateTextKey: LocalizedStringKey {
         switch extensionEnabled {
-        case true: "Enabled"
-        case false: "Disabled"
-        default: "Unknown"
+        case true: "SidebarView.Extension.Enabled"
+        case false: "SidebarView.Extension.Disabled"
+        default: "SidebarView.Extension.Unknown"
         }
     }
 

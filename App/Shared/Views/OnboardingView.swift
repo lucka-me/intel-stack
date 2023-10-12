@@ -32,7 +32,7 @@ struct OnboardingView: View {
                 .frame(width: 96, height: 96, alignment: .center)
                 .padding(.top, 40)
             
-            Text("Welcome to Intel Stack")
+            Text("OnboardingView.Title")
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding(.bottom, 40)
@@ -65,13 +65,13 @@ struct OnboardingView: View {
     
     @ViewBuilder
     private var downloadRow: some View {
-        row("Download Scripts") {
+        row("OnboardingView.Download") {
             if isDownloading {
                 ProgressView(downloadProgress)
             } else if downloadProgress.isFinished {
-                Text("The main IITC script and internal plugins are downloaded.")
+                Text("OnboardingView.Download.Content.Done")
             } else {
-                Text("Intel Stack need to download the main IITC script and internal plugins.")
+                Text("OnboardingView.Download.Content")
             }
         } icon: {
             if isDownloading {
@@ -98,7 +98,11 @@ struct OnboardingView: View {
                 Task { await tryDownload() }
             }
         } label: {
-            Text(downloadProgress.isFinished ? "Continue" : "Download")
+            Text(
+                downloadProgress.isFinished
+                ? "OnboardingView.Action.Continue"
+                : "OnboardingView.Action.Download"
+            )
 #if os(iOS)
                 .frame(maxWidth: 640)
 #endif
