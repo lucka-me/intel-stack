@@ -63,6 +63,10 @@ fileprivate struct PluginCardView: View {
                         Label("PluginCardView.External", systemImage: "arrow.up.right")
                             .capsule(.indigo)
                             .onTapGesture(perform: openFile)
+                        if scriptManager.updatingPluginIds.contains(plugin.uuid) {
+                            Text("PluginCardView.Updating")
+                                .capsule(.pink)
+                        }
                     }
                 }
                 .font(.caption)

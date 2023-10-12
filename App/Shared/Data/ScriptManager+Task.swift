@@ -13,7 +13,7 @@ extension ScriptManager {
         case release = "release"
         case beta = "beta"
     }
-
+    
     static var internalPluginNames: [ String ] {
         get throws {
             try JSONDecoder().decode(
@@ -43,6 +43,9 @@ extension ScriptManager {
             !self.updatingPluginIds.contains($0.uuid)
         }
         
+        let uuids = Set(externalPlugins.map { $0.uuid })
+        self.updatingPluginIds.formUnion(uuids)
+        
         downloadProgress.completedUnitCount = 0
         downloadProgress.totalUnitCount = .init(1 + internalPlugins.count + externalPlugins.count)
         
@@ -53,6 +56,8 @@ extension ScriptManager {
                 externalURL?.stopAccessingSecurityScopedResource()
             }
         }
+        
+        defer { updatingPluginIds.subtract(uuids) }
         
         let channel = UserDefaults.shared.buildChannel
         try await withThrowingTaskGroup(of: Void.self) { group in
@@ -231,15 +236,15 @@ fileprivate extension ModelExecutor {
     }
     
     func updateInternalPlugin(with metadata: UserScriptMetadata, filename: String) throws {
-            let predicate = #Predicate<Plugin> {
-                $0.isInternal && $0.filename == filename
-            }
-            var descriptor = FetchDescriptor(predicate: predicate)
-            descriptor.fetchLimit = 1
+        let predicate = #Predicate<Plugin> {
+            $0.isInternal && $0.filename == filename
+        }
+        var descriptor = FetchDescriptor(predicate: predicate)
+        descriptor.fetchLimit = 1
         if let item = try modelContext.fetch(descriptor).first {
-                item.update(from: metadata)
-            } else {
-                let item = Plugin(metadata: metadata, isInternal: true, filename: filename)!
+            item.update(from: metadata)
+        } else {
+            let item = Plugin(metadata: metadata, isInternal: true, filename: filename)!
             modelContext.insert(item)
         }
         try modelContext.save()

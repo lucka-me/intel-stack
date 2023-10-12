@@ -17,6 +17,7 @@ class ScriptManager {
     
     var mainScriptVersion: String? = nil
     var status = Status.idle
+    var updatingPluginIds: Set<UUID> = [ ]
     
     private init() { }
 }
