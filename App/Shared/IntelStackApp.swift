@@ -19,19 +19,21 @@ struct IntelStackApp: App {
         WindowGroup {
             ContentView()
                 .defaultAppStorage(.shared)
-                .environment(\.scriptManager, ScriptManager.shared)
+                .environment(\.scriptManager, .shared)
                 .modelContainer(.default)
                 .task(id: bookmark) {
                     // TODO: Be ware of the scenePhase, task should not run if not active
                     guard let externalURL = try? ScriptManager.sync() else {
-                        monitor = nil
+                        await MainActor.run { monitor = nil }
                         return
                     }
-                    monitor = .init(url: externalURL) { url in
-                        do {
-                            try ScriptManager.sync(in: url)
-                        } catch {
-                            print(error)
+                    await MainActor.run {
+                        monitor = .init(url: externalURL) { url in
+                            do {
+                                try ScriptManager.sync(in: url)
+                            } catch {
+                                print(error)
+                            }
                         }
                     }
                 }
