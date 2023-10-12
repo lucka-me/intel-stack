@@ -417,6 +417,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 842318792AB7053A000A0A09;
 			productRefGroup = 842318832AB7053A000A0A09 /* Products */;
