@@ -36,6 +36,8 @@ struct PluginListView: View {
 }
 
 fileprivate struct PluginCardView: View {
+    @Environment(\.scriptManager) private var scriptManager
+    
     #if !os(macOS)
     @Environment(\.openURL) private var openURL
     #endif
@@ -47,8 +49,6 @@ fileprivate struct PluginCardView: View {
     var body: some View {
         GroupBox {
             VStack(alignment: .leading) {
-                Spacer()
-                
                 HStack(alignment: .firstTextBaseline) {
                     if let version = plugin.version {
                         Text(version)
@@ -61,12 +61,14 @@ fileprivate struct PluginCardView: View {
                             .capsule(.purple)
                     } else {
                         Label("External", systemImage: "arrow.up.right")
-                            .capsule(.purple)
+                            .capsule(.indigo)
                             .onTapGesture(perform: openFile)
                     }
                 }
                 .font(.caption)
                 .lineLimit(1)
+                
+                Spacer()
                 
                 Text(plugin.scriptDescription ?? "No description")
                     .italic(plugin.scriptDescription == nil)
@@ -76,12 +78,16 @@ fileprivate struct PluginCardView: View {
                 
                 HStack {
                     Spacer()
-                    Text("By \(plugin.author ?? "Anonymous")")
+                    if let author = plugin.author {
+                        Text("By \(author)")
+                    } else {
+                        Text("")
+                    }
+                }
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .italic()
-                        .lineLimit(1)
-                }
+                .lineLimit(1, reservesSpace: true)
             }
         } label: {
             Toggle(isOn: $enabled) {
