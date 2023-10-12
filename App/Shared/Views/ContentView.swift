@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @Environment(\.scriptManager) private var scriptManager
     
-    @State private var mainScriptVersion: String? = nil
+    @State private var isOnboardingSheetPresented = false
     @State private var sidebarSelection: SidebarView.Selection? = nil
     
     var body: some View {
@@ -24,7 +24,7 @@ struct ContentView: View {
                 case .plugins(let category):
                     PluginListView(category: category)
                 case nil:
-                    OnboardingView()
+                    Text("Select from sidebar")
                 }
             }
             #if os(macOS)
@@ -35,6 +35,12 @@ struct ContentView: View {
         .frame(minHeight: 450)
         #endif
         .navigationSplitViewStyle(.balanced)
+        .sheet(isPresented: $isOnboardingSheetPresented) {
+            scriptManager.updateMainScriptVersion()
+        } content: {
+            OnboardingView()
+                .interactiveDismissDisabled()
+        }
         .onAppear {
             scriptManager.updateMainScriptVersion()
             isOnboardingSheetPresented = scriptManager.mainScriptVersion == nil

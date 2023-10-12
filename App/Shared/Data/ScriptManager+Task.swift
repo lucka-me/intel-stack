@@ -38,6 +38,8 @@ extension ScriptManager {
         }
         
         let internalPlugins = try Self.internalPluginNames
+        downloadProgress.completedUnitCount = 0
+        downloadProgress.totalUnitCount = .init(1 + internalPlugins.count + externalPlugins.count)
         
         let channel = UserDefaults.shared.buildChannel
         try await withThrowingTaskGroup(of: Void.self) { group in
