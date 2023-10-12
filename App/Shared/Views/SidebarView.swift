@@ -27,13 +27,16 @@ struct SidebarView: View {
     @Environment(\.scenePhase) private var scenePhase : ScenePhase
     #endif
     
-    @State private var mainScriptVersion: String? = nil
     #if os(macOS)
     @State private var extensionEnabled: Bool? = nil
     #endif
     
-    init(selection: Binding<Selection?>) {
+    private let mainScriptVersion: () -> String?
+    
+    init(selection: Binding<Selection?>, mainScriptVersion: @escaping () -> String?) {
         self._selection = selection
+        
+        self.mainScriptVersion = mainScriptVersion
     }
     
     var body: some View {
@@ -59,12 +62,14 @@ struct SidebarView: View {
             await tryUpdateScripts()
         }
         #endif
-        .navigationTitle("Intel Stack")
-        .onChange(of: scriptManager.status, initial: true) {
-            if scriptManager.status == .idle {
-                mainScriptVersion = ScriptManager.fetchMainScriptVersion()
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                if scriptManager.status == .downloading {
+                    ProgressView(scriptManager.downloadProgress)
+                }
             }
         }
+        .navigationTitle("Intel Stack")
     }
     
     @ViewBuilder
@@ -91,11 +96,9 @@ struct SidebarView: View {
         #endif
         
         Section {
-            if mainScriptVersion != nil {
-                ForEach(Plugin.Category.allCases, id: \.rawValue) { category in
-                    NavigationLink(value: Selection.plugins(category: category)) {
-                        Label(category.rawValue, systemImage: category.icon)
-                    }
+            ForEach(Plugin.Category.allCases, id: \.rawValue) { category in
+                NavigationLink(value: Selection.plugins(category: category)) {
+                    Label(category.rawValue, systemImage: category.icon)
                 }
             }
         } header: {
@@ -105,14 +108,19 @@ struct SidebarView: View {
     
     @ViewBuilder
     private var scriptSectionContent: some View {
+        let version = mainScriptVersion()
         Toggle("Enabled", systemImage: "power", isOn: $scriptsEnabled)
             #if os(macOS)
             .toggleStyle(.switch)
             #endif
-            .disabled(mainScriptVersion == nil)
-        if let mainScriptVersion {
+            .disabled(version == nil)
+        if scriptManager.status == .downloading {
+            Label("Downloading", systemImage: "arrow.down.circle.dotted")
+                .symbolRenderingMode(.multicolor)
+                .symbolEffect(.pulse, options: .repeating)
+        } else if let version {
             if scriptManager.status == .idle {
-                Label(mainScriptVersion, systemImage: "scroll")
+                Label(version, systemImage: "scroll")
                     .monospaced()
             }
         } else {
@@ -122,13 +130,6 @@ struct SidebarView: View {
         
         NavigationLink(value: Selection.settings) {
             Label("Settings", systemImage: "gear")
-        }
-        
-        if scriptManager.status == .downloading {
-            Label("Downloading", systemImage: "arrow.down.circle.dotted")
-                .symbolRenderingMode(.multicolor)
-                .symbolEffect(.pulse, options: .repeating)
-            ProgressView(scriptManager.downloadProgress)
         }
     }
     
