@@ -3,9 +3,9 @@
         "message": "Intel Stack"
     },
     "extension_description": {
-        "message": "Manage IITC script and plugin"
+        "message": "管理IITC脚本和插件"
     },
     "popup_scripts_enabled": {
-        "message": "Enabled"
+        "message": "启用"
     }
 }

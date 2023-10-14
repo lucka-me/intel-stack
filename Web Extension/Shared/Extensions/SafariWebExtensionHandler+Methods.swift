@@ -81,6 +81,10 @@ extension SafariWebExtensionHandler {
     func getPopupContentData() -> [ String : Any ] {
         let context = ModelContext(.default)
         
+        var response: [ String : Any ] = [
+            "scriptsEnabled" : UserDefaults.shared.scriptsEnabled
+        ]
+        
         let _ = try? ScriptManager.sync(with: context)
         
         var descriptor = FetchDescriptor<Plugin>(sortBy: [ .init(\.name, order: .forward) ])
@@ -91,8 +95,6 @@ extension SafariWebExtensionHandler {
             value.append(item)
             result[item.categoryValue] = value
         }
-        
-        var response: [ String : Any ] = [ : ]
         
         response["categories"] =  Plugin.Category.allCases.map { category in
             [

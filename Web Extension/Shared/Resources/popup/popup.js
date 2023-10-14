@@ -1,13 +1,34 @@
-async function setupScriptsSection() {
-    const scriptsToggle = document.getElementById("toggle-scripts");
+function buildScriptsSection(scriptsEnabled, mainNode) {
+    const sectionNode = document.createElement("section");
 
-    const scriptsEnabledResponse = await browser.runtime.sendMessage({ method: "getScriptsEnabled" });
-    if (scriptsEnabledResponse && typeof(scriptsEnabledResponse.enabled) === "boolean") {
-        scriptsToggle.checked = scriptsEnabledResponse.enabled;
-    }
+    const contentNode = document.createElement("div");
+    contentNode.className = "list-content";
 
-    scriptsToggle.addEventListener("change", async (event) => {
-        const enable = event.currentTarget.checked;
+    {
+        const rowNode = document.createElement("div");
+
+        const toggleId = `toggle-scripts`;
+
+        const labelNode = document.createElement("label");
+        labelNode.htmlFor = toggleId;
+
+        const iconNode = document.createElement("i");
+        iconNode.className = "icon icon-power";
+        labelNode.appendChild(iconNode);
+
+        const spanNode = document.createElement("span");
+        spanNode.textContent = browser.i18n.getMessage("popup_scripts_enabled");
+        labelNode.appendChild(spanNode);
+
+        rowNode.appendChild(labelNode);
+
+        const toggleNode = document.createElement("input");
+        toggleNode.type = "checkbox";
+        toggleNode.id = toggleId;
+        toggleNode.className = "toggle";
+        toggleNode.checked = scriptsEnabled;
+        toggleNode.addEventListener("change", async (event) => {
+            const enable = event.currentTarget.checked;
             const response = await browser.runtime.sendMessage({
                 method: "setScriptsEnabled",
                 arguments: { enable }
@@ -15,12 +36,15 @@ async function setupScriptsSection() {
             if (!response || !response.succeed) {
                 event.currentTarget.checked = !checked;
             }
-    });
+        });
+        rowNode.appendChild(toggleNode);
 
-    // const openAppButton = document.getElementById("button-open-app");
-    // openAppButton.onclick = () => {
-    //     /// TODO: Try something to open the app
-    // };
+        contentNode.appendChild(rowNode);
+    }
+
+    sectionNode.appendChild(contentNode);
+
+    mainNode.appendChild(sectionNode);
 }
 
 function buildSection(category, mainNode) {
@@ -78,12 +102,15 @@ async function setupContents() {
         document.body.classList.add("desktop");
     }
 
-    setupScriptsSection()
+    const mainNode = document.createElement("main");
 
-    const mainNode = document.getElementById("main");
+    buildScriptsSection(response.scriptsEnabled, mainNode);
+
     for (const category of response.categories) {
         buildSection(category, mainNode);
     }
+
+    document.body.appendChild(mainNode);
 }
 
 setupContents();

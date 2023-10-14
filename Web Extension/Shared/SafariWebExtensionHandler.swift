@@ -31,8 +31,6 @@ class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
             responseContent = getCodeForInjecting()
         case "getPopupContentData":
             responseContent = getPopupContentData()
-        case "getScriptsEnabled":
-            responseContent = [ "enabled" : UserDefaults.shared.scriptsEnabled ]
         case "setPluginEnabled":
             guard let arguments else {
                 responseContent = [ "error" : "[arguments] is missing" ]
