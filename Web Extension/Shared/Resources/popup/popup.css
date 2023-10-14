@@ -32,10 +32,11 @@ section {
     gap: 0.4em;
 }
 
-section > header {
+section > header,
+section.expandable > label {
     color: gray;
     display: flex;
-    font-size: 0.6em;
+    font-size: 0.8em;
     flex-flow: row nowrap;
     justify-content: space-between;
     padding: 0 1em;
@@ -44,7 +45,7 @@ section > header {
 
 section > footer {
     color: gray;
-    font-size: 0.6em;
+    font-size: 0.8em;
     padding: 0 1em;
 }
 
@@ -148,24 +149,50 @@ a, button {
     }
 }
 
+/* Expandable Section */
+section.expandable > input[type='checkbox'] {
+    display: none;
+}
+
+section.expandable > label > i {
+    display: block;
+    height: 1em;
+    mask: url(./images/sf-symbols/chevron.right.svg) no-repeat center;
+    width: 1em;
+    transition: transform 300ms ease-out;
+}
+
+section.expandable > .list-content {
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 300ms ease-in-out;
+}
+
+section.expandable > input[type='checkbox']:checked ~ .list-content {
+    max-height: unset;
+}
+
+section.expandable > input[type='checkbox']:checked + label > i {
+    transform: rotate(90deg);
+}
+
 /* SF Symbols */
 i.icon {
     background-color: #000;
 }
 
 .list-content i.icon,
-    a i.icon {
+a i.icon,
+section.expandable > label > i {
     background-color: rgb(0, 122, 255);
 }
 
 i.icon.icon-power {
     mask: url(./images/sf-symbols/power.svg) no-repeat center;
-    -webkit-mask: url(./images/sf-symbols/power.svg) no-repeat center;
 }
 
 i.icon.icon-arrow-up-forward {
     mask: url(./images/sf-symbols/arrow.up.forward.svg) no-repeat center;
-    -webkit-mask: url(./images/sf-symbols/arrow.up.forward.svg) no-repeat center;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -175,7 +202,8 @@ i.icon.icon-arrow-up-forward {
 
     .list-content i.icon,
     a i.icon,
-    button i.icon {
+    button i.icon,
+    section.expandable > label > i {
         background-color: rgb(10, 132, 255);
     }
 }
@@ -224,9 +252,9 @@ i.icon.icon-arrow-up-forward {
     box-shadow: 0 0 1px 0 rgba(0, 0, 0, .25),
                 0 4px 11px 0 rgba(0, 0, 0, .08),
                 -1px 3px 3px 0 rgba(0, 0, 0, .14);
-    transition: width 280ms, -webkit-transform .3s;
+    transition: width 280ms, transform .3s;
     transition: transform .3s, width 280ms;
-    transition: transform .3s, width 280ms, -webkit-transform .3s;
+    transition: transform .3s, width 280ms, transform .3s;
     transform: translate3d(0, 0, 0);
     transition-timing-function: cubic-bezier(.42, .8, .58, 1.2);
     background: #fff

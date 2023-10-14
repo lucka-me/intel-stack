@@ -7,10 +7,8 @@ function buildScriptsSection(scriptsEnabled, mainNode) {
     {
         const rowNode = document.createElement("div");
 
-        const toggleId = `toggle-scripts`;
-
         const labelNode = document.createElement("label");
-        labelNode.htmlFor = toggleId;
+        labelNode.htmlFor = "toggle-scripts";
 
         const iconNode = document.createElement("i");
         iconNode.className = "icon icon-power";
@@ -24,7 +22,7 @@ function buildScriptsSection(scriptsEnabled, mainNode) {
 
         const toggleNode = document.createElement("input");
         toggleNode.type = "checkbox";
-        toggleNode.id = toggleId;
+        toggleNode.id = labelNode.htmlFor;
         toggleNode.className = "toggle";
         toggleNode.checked = scriptsEnabled;
         toggleNode.addEventListener("change", async (event) => {
@@ -49,27 +47,42 @@ function buildScriptsSection(scriptsEnabled, mainNode) {
 
 function buildSection(category, mainNode) {
     const sectionNode = document.createElement("section");
+    sectionNode.className = "expandable";
 
-    const headerNode = document.createElement("header");
-    headerNode.textContent = category.name;
-    sectionNode.appendChild(headerNode);
+    {
+        const toggleNode = document.createElement("input");
+        toggleNode.type = "checkbox";
+        toggleNode.id = `toggle-section-${category.name}`;
+        sectionNode.appendChild(toggleNode);
+
+        const labelNode = document.createElement("label");
+        labelNode.htmlFor = toggleNode.id;
+
+        const contentNode = document.createElement("span");
+        contentNode.textContent = category.name;
+        labelNode.appendChild(contentNode);
+
+        const indicatorNode = document.createElement("i");
+        labelNode.appendChild(indicatorNode);
+
+        sectionNode.appendChild(labelNode);
+    }
 
     const contentNode = document.createElement("div");
     contentNode.className = "list-content";
     for (const plugin of category.plugins) {
         const uuid = plugin.uuid;
-        const toggleId = `toggle-plugin-${uuid}`;
 
         const rowNode = document.createElement("div");
 
         const labelNode = document.createElement("label");
         labelNode.textContent = plugin.name;
-        labelNode.htmlFor = toggleId;
+        labelNode.htmlFor = `toggle-plugin-${uuid}`;
         rowNode.appendChild(labelNode);
 
         const toggleNode = document.createElement("input");
         toggleNode.type = "checkbox";
-        toggleNode.id = toggleId;
+        toggleNode.id = labelNode.htmlFor;
         toggleNode.className = "toggle";
         toggleNode.checked = plugin.enabled;
         toggleNode.addEventListener("change", async (event) => {
