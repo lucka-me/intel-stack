@@ -42,6 +42,7 @@ struct OnboardingView: View {
                     downloadRow
                     // TODO: Maybe more instructions
                 }
+                .frame(maxWidth: 400)
             }
 #if os(macOS)
             .frame(maxWidth: 400, minHeight: 150)
@@ -66,13 +67,20 @@ struct OnboardingView: View {
     @ViewBuilder
     private var downloadRow: some View {
         row("OnboardingView.Download") {
-            if isDownloading {
-                ProgressView(downloadProgress)
-            } else if downloadProgress.isFinished {
+            if downloadProgress.isFinished {
                 Text("OnboardingView.Download.Content.Done")
             } else {
                 Text("OnboardingView.Download.Content")
+                    .lineLimit(3, reservesSpace: true)
+                    .opacity(isDownloading ? 0 : 1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .overlay {
+                        if isDownloading {
+                            ProgressView(downloadProgress)
+                        }
+                    }
             }
+            Spacer()
         } icon: {
             if isDownloading {
                 Image(systemName: "arrow.down.circle.dotted")
@@ -131,6 +139,7 @@ struct OnboardingView: View {
                 content()
                     .foregroundStyle(.secondary)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .gridColumnAlignment(.leading)
         }
     }
