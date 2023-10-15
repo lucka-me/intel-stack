@@ -300,7 +300,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "构件通道"
+            "value" : "构建通道"
           }
         }
       }
