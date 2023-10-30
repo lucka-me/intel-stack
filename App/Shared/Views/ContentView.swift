@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.scriptManager) private var scriptManager
     
     @State private var isOnboardingSheetPresented = false
@@ -44,6 +45,11 @@ struct ContentView: View {
         .onAppear {
             scriptManager.updateMainScriptVersion()
             isOnboardingSheetPresented = scriptManager.mainScriptVersion == nil
+        }
+        .onChange(of: horizontalSizeClass, initial: true) {
+            if horizontalSizeClass == .regular, sidebarSelection == nil {
+                sidebarSelection = .settings
+            }
         }
     }
 }
