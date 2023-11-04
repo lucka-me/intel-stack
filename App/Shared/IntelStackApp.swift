@@ -35,9 +35,6 @@ struct IntelStackApp: App {
                         }
                     }
                 }
-#if os(macOS)
-                .environment(\.horizontalSizeClass, .regular)   // Always nil on macOS, maybe a bug?
-#endif
         }
         .onChange(of: scriptManager.status) {
             if scriptManager.status == .idle {

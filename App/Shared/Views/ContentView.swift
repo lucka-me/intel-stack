@@ -11,11 +11,12 @@ struct ContentView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.scriptManager) private var scriptManager
     
+    @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var isOnboardingSheetPresented = false
     @State private var sidebarSelection: SidebarView.Selection? = nil
     
     var body: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             SidebarView(selection: $sidebarSelection)
         } detail: {
             NavigationStack {
@@ -47,9 +48,13 @@ struct ContentView: View {
             isOnboardingSheetPresented = scriptManager.mainScriptVersion == nil
         }
         .onChange(of: horizontalSizeClass, initial: true) {
+#if os(macOS)
+            sidebarSelection = .settings    // horizontalSizeClass is always nil on macOS, maybe a bug?
+#else
             if horizontalSizeClass == .regular, sidebarSelection == nil {
                 sidebarSelection = .settings
             }
+#endif
         }
     }
 }
