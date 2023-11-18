@@ -11,7 +11,7 @@ function inject(scripts) {
 }
 
 async function execute() {
-    const response = await browser.runtime.sendMessage({ method: "getCodeForInjecting" });
+    const response = await browser.runtime.sendMessage({ method: "getInjectionData" });
     if (!response || !response.scripts) {
         console.error(`Invalid response: ${response}`);
         return;

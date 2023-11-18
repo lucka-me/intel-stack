@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 extension SafariWebExtensionHandler {
-    func getCodeForInjecting() -> [ String : Any ] {
+    func getInjectionData() -> [ String : Any ] {
         guard UserDefaults.shared.scriptsEnabled else { return [ : ] }
         
         let fileManager = FileManager.default

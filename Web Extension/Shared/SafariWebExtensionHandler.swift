@@ -27,8 +27,8 @@ class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
         let arguments = message["arguments"] as? [ String : Any ]
         
         switch method {
-        case "getCodeForInjecting":
-            responseContent = getCodeForInjecting()
+        case "getInjectionData":
+            responseContent = getInjectionData()
         case "getPopupContentData":
             responseContent = getPopupContentData()
         case "setPluginEnabled":
