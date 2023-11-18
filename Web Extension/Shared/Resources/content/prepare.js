@@ -3,6 +3,10 @@ function sleep(interval) {
 }
 
 async function execute() {
+    if ('renderPadding' in document.currentScript.dataset) {
+        window.RENDERER_PADDING = parseFloat(document.currentScript.dataset.renderPadding);
+    }
+
     while (!window.isSmartphone) {
         await sleep(100);
     }

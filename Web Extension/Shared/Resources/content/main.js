@@ -10,6 +10,9 @@ async function execute() {
 
     const extraScriptNode = document.createElement("script");
     extraScriptNode.src = browser.runtime.getURL("content/prepare.js");
+    if (response.device === 'iPad') {
+        extraScriptNode.dataset.renderPadding = 0.1;
+    }
     document.head.appendChild(extraScriptNode);
 
     for (const script of response.scripts) {

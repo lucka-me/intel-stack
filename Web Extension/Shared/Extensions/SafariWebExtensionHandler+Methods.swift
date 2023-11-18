@@ -7,6 +7,9 @@
 
 import Foundation
 import SwiftData
+#if os(iOS)
+import UIKit
+#endif
 
 extension SafariWebExtensionHandler {
     func getInjectionData() -> [ String : Any ] {
@@ -71,6 +74,11 @@ extension SafariWebExtensionHandler {
         }
         
         var response: [ String : Any ] = [ : ]
+#if os(iOS)
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            response["device"] = "iPad"
+        }
+#endif
         response["scripts"] = scripts
         
         return response
