@@ -1,15 +1,3 @@
-function inject(scripts) {
-    for (const script of scripts) {
-        const node = document.createElement("script");
-        node.textContent = script;
-        document.head.appendChild(node);
-    }
-
-    const extraScriptNode = document.createElement("script");
-    extraScriptNode.src = browser.runtime.getURL("content/inject.js");
-    document.head.appendChild(extraScriptNode);
-}
-
 async function execute() {
     const response = await browser.runtime.sendMessage({ method: "getInjectionData" });
     if (!response || !response.scripts) {
@@ -20,10 +8,14 @@ async function execute() {
         return;
     }
 
-    if (document.readyState !== "loading") {
-        inject(response.scripts);
-    } else {
-        document.addEventListener("DOMContentLoaded", () => { inject(response.scripts); }, { once: true });
+    const extraScriptNode = document.createElement("script");
+    extraScriptNode.src = browser.runtime.getURL("content/prepare.js");
+    document.head.appendChild(extraScriptNode);
+
+    for (const script of response.scripts) {
+        const node = document.createElement("script");
+        node.textContent = script;
+        document.head.appendChild(node);
     }
 }
 
