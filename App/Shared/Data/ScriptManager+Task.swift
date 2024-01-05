@@ -37,6 +37,14 @@ extension ScriptManager {
             downloadProgress.completedUnitCount = 0
         }
         
+        let fileManager = FileManager.default
+        if !fileManager.fileExists(at: FileConstants.internalScriptsDirectoryURL) {
+            try fileManager.createDirectory(at: FileConstants.internalScriptsDirectoryURL, withIntermediateDirectories: true)
+        }
+        if !fileManager.fileExists(at: FileConstants.internalPluginsDirectoryURL) {
+            try fileManager.createDirectory(at: FileConstants.internalPluginsDirectoryURL, withIntermediateDirectories: true)
+        }
+        
         let internalPlugins = try Self.internalPluginNames
         
         let externalPlugins = try await ModelExecutor.shared.allUpdatableExternalPlugins.filter {

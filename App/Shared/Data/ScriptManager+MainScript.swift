@@ -16,11 +16,6 @@ extension ScriptManager {
         }
         
         let fileManager = FileManager.default
-        guard fileManager.fileExists(at: FileConstants.internalScriptsDirectoryURL) else {
-            try? fileManager.createDirectory(at: FileConstants.internalScriptsDirectoryURL, withIntermediateDirectories: true)
-            try? fileManager.createDirectory(at: FileConstants.internalPluginsDirectoryURL, withIntermediateDirectories: true)
-            return
-        }
         guard
             fileManager.fileExists(at: FileConstants.mainScriptURL),
             let content = try? String(contentsOf: FileConstants.mainScriptURL),
