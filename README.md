@@ -6,7 +6,13 @@
 
 IITC script and plugins manager designed for Safari.
 
-**This project is under development, nothing is guarateed, including the data structure, breaking changes, incoming features, continuing development and final release.**
+**This project is under development, nothing is guarateed, including the data structure, breaking changes, incoming features and continuing development.**
+
+## Installation
+
+[![App Store](https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us)](https://apps.apple.com/app/id6467517367 "App Store")
+
+The packages are also available as archives of the [latest release](https://github.com/lucka-me/intel-stack/releases/latest "Latest release").
 
 ### Requirements
 - macOS: Sonoma 14.0 or above
