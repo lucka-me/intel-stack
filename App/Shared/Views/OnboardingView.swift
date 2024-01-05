@@ -146,6 +146,8 @@ struct OnboardingView: View {
     
     private func tryDownload() async {
         do {
+            try ScriptManager.ensureInternalDirectories()
+            
             let internalPluginNames = try ScriptManager.internalPluginNames
             
             await MainActor.run {

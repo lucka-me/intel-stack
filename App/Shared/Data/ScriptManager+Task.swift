@@ -37,13 +37,7 @@ extension ScriptManager {
             downloadProgress.completedUnitCount = 0
         }
         
-        let fileManager = FileManager.default
-        if !fileManager.fileExists(at: FileConstants.internalScriptsDirectoryURL) {
-            try fileManager.createDirectory(at: FileConstants.internalScriptsDirectoryURL, withIntermediateDirectories: true)
-        }
-        if !fileManager.fileExists(at: FileConstants.internalPluginsDirectoryURL) {
-            try fileManager.createDirectory(at: FileConstants.internalPluginsDirectoryURL, withIntermediateDirectories: true)
-        }
+        try Self.ensureInternalDirectories()
         
         let internalPlugins = try Self.internalPluginNames
         
@@ -97,6 +91,16 @@ extension ScriptManager {
 }
 
 extension ScriptManager {
+    static func ensureInternalDirectories() throws {
+        let fileManager = FileManager.default
+        if !fileManager.fileExists(at: FileConstants.internalScriptsDirectoryURL) {
+            try fileManager.createDirectory(at: FileConstants.internalScriptsDirectoryURL, withIntermediateDirectories: true)
+        }
+        if !fileManager.fileExists(at: FileConstants.internalPluginsDirectoryURL) {
+            try fileManager.createDirectory(at: FileConstants.internalPluginsDirectoryURL, withIntermediateDirectories: true)
+        }
+    }
+    
     static func downloadMainScript(from channel: BuildChannel) async throws {
         let downloadURL = Self.websiteBuildURL
             .appending(path: channel.rawValue)
