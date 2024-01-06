@@ -70,13 +70,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Intel Stack need to download the main IITC script and internal plugins."
+            "value" : "Intel Stack need to download the main IITC script and internal plugins. 65 plugins will be downloaded, around 2.5 MB in total."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Intel Stack需要下载IITC主脚本和内部插件。"
+            "value" : "Intel Stack需要下载IITC主脚本和内部插件。将会下载65个内部插件，总共约2.5MB。"
           }
         }
       }
