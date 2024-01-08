@@ -18,6 +18,7 @@ struct SidebarView: View {
     
     static private let extensionId = "dev.lucka.IntelStack.WebExtension"
     
+    @AppStorage(UserDefaults.Key.externalScriptsBookmark) private var externalScriptsBookmark: Data?
     @AppStorage(UserDefaults.Key.scriptsEnabled) private var scriptsEnabled = false
     
     @Binding private var selection: Selection?
@@ -27,6 +28,7 @@ struct SidebarView: View {
     @Environment(\.scenePhase) private var scenePhase : ScenePhase
     #endif
     
+    @State private var isAddPluginDialogPresented = false
     #if os(macOS)
     @State private var extensionEnabled: Bool? = nil
     #endif
@@ -42,16 +44,6 @@ struct SidebarView: View {
         #if os(macOS)
         .listStyle(.sidebar)
         .frame(minWidth: 200)
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button("SidebarView.Refresh", systemImage: "arrow.clockwise") {
-                    Task {
-                        await tryUpdateScripts()
-                    }
-                }
-                .disabled(scriptManager.status != .idle)
-            }
-        }
         #else
         .listStyle(.insetGrouped)
         .refreshable {
@@ -64,8 +56,21 @@ struct SidebarView: View {
                     ProgressView(scriptManager.downloadProgress)
                 }
             }
+            #if os(macOS)
+            ToolbarItem(placement: .primaryAction) {
+                Button("SidebarView.Refresh", systemImage: "arrow.clockwise") {
+                    Task {
+                        await tryUpdateScripts()
+                    }
+                }
+                .disabled(scriptManager.status != .idle)
+            }
+            #endif
         }
         .navigationTitle("SidebarView.Title")
+        .sheet(isPresented: $isAddPluginDialogPresented) {
+            AddPluginView()
+        }
     }
     
     @ViewBuilder
@@ -96,6 +101,14 @@ struct SidebarView: View {
                 NavigationLink(value: Selection.plugins(category: category)) {
                     Label(category.rawValue, systemImage: category.icon)
                 }
+            }
+            if externalScriptsBookmark != nil {
+                Button("SidebarView.Plugins.Add", systemImage: "plus.circle") {
+                    isAddPluginDialogPresented = true
+                }
+                #if os(macOS)
+                .buttonStyle(.plain)
+                #endif
             }
         } header: {
             Text("SidebarView.Plugins")
