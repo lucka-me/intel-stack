@@ -11,35 +11,16 @@ struct AddPluginView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     
-    @FocusState private var isURLTextFieldFocused: Bool
-    
-    @State private var pluginInformation: ExternalPluginInformation? = nil
-    
     @State private var isAlertPresented = false
-    @State private var isDownloading = false
+    @State private var pluginInformation: ExternalPluginInformation? = nil
     @State private var taskError: TaskError? = nil
-    @State private var urlText: String = ""
     
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    TextField("AddPluginView.URL", text: $urlText, prompt: Text("AddPluginView.URL.Prompt"))
-                        .lineLimit(1)
-#if os(iOS)
-                        .keyboardType(.URL)
-#endif
-                        .disableAutocorrection(true)
-                        .focused($isURLTextFieldFocused)
-                        .onSubmit {
-                            Task { await tryDownload() }
-                        }
-                        .disabled(isDownloading)
-                    
-                    Button("AddPluginView.Download") {
-                        Task { await tryDownload() }
-                    }
-                    .disabled(urlText.isEmpty || isDownloading || pluginInformation != nil)
+                RemoteSection($pluginInformation) { error in
+                    taskError = error
+                    isAlertPresented = true
                 }
                 
                 if let pluginInformation {
@@ -65,9 +46,6 @@ struct AddPluginView: View {
                 if let reason = error.failureReason {
                     Text(reason)
                 }
-            }
-            .onAppear {
-                isURLTextFieldFocused = true
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -117,7 +95,163 @@ struct AddPluginView: View {
             }
         }
     }
+    
+    private func trySave(information: ExternalPluginInformation) {
+        guard
+            let externalURL = UserDefaults.shared.externalScriptsBookmarkURL,
+            externalURL.startAccessingSecurityScopedResource()
+        else {
+            self.taskError = .externalLocationUnavailable
+            self.isAlertPresented = true
+            return
+        }
+        defer {
+            externalURL.stopAccessingSecurityScopedResource()
+        }
+        
+        let destinationURL = externalURL
+            .appending(path: information.filename)
+            .appendingPathExtension(FileConstants.userScriptExtension)
+        
+        do {
+            try information.provider.save(to: destinationURL)
+            guard
+                let plugin = Plugin(
+                    metadata: information.metadata, isInternal: false, filename: information.filename
+                )
+            else {
+                return
+            }
+            modelContext.insert(plugin)
+            try modelContext.save()
+            dismiss()
+        } catch let error as LocalizedError {
+            self.taskError = .localizedError(error: error)
+            self.isAlertPresented = true
+            return
+        } catch {
+            self.taskError = .genericError(error: error)
+            self.isAlertPresented = true
+            return
+        }
+    }
+}
 
+fileprivate enum CodeProvider {
+    case temporaryFile(url: URL)
+    case code(code: String)
+    
+    func save(to destination: URL) throws {
+        switch self {
+        case .temporaryFile(let url):
+            let fileManager = FileManager.default
+            try fileManager.moveItem(at: url, to: destination)
+        case .code(let code):
+            try code.write(to: destination, atomically: true, encoding: .utf8)
+        }
+    }
+}
+
+fileprivate enum TaskError: Error, LocalizedError {
+    case externalLocationUnavailable
+    case invalidHTTPResponse(statusCode: Int)
+    case invalidMetadata(key: String)
+    case invalidURL
+    case metadataUnavailable
+    case localizedError(error: LocalizedError)
+    case genericError(error: Error)
+    
+    var errorDescription: String? {
+        switch self {
+        case .externalLocationUnavailable:
+            return .init(localized: "AddPluginView.TaskError.ExternalLocationUnavailable")
+        case .invalidHTTPResponse(let statusCode):
+            return .init(localized: "AddPluginView.TaskError.InvalidHTTPResponse \(statusCode)")
+        case .invalidMetadata(let key):
+            return .init(localized: "AddPluginView.TaskError.InvalidMetadata \(key)")
+        case .invalidURL:
+            return .init(localized: "AddPluginView.TaskError.InvalidURL")
+        case .metadataUnavailable:
+            return .init(localized: "AddPluginView.TaskError.MetadataUnavailable")
+        case .localizedError(let error):
+            return error.errorDescription
+        case .genericError(let error):
+            return error.localizedDescription
+        }
+    }
+    
+    var failureReason: String? {
+        switch self {
+        case .externalLocationUnavailable:
+            return .init(localized: "AddPluginView.TaskError.ExternalLocationUnavailable.Reason")
+        case .invalidHTTPResponse(let statusCode):
+            return .init(localized: "AddPluginView.TaskError.InvalidHTTPResponse.Reason \(statusCode)")
+        case .invalidMetadata(let key):
+            return .init(localized: "AddPluginView.TaskError.InvalidMetadata.Reason \(key)")
+        case .invalidURL:
+            return .init(localized: "AddPluginView.TaskError.InvalidURL.Reason")
+        case .metadataUnavailable:
+            return .init(localized: "AddPluginView.TaskError.MetadataUnavailable.Reason")
+        case .localizedError(let error):
+            return error.failureReason
+        case .genericError(let error):
+            return error.localizedDescription
+        }
+    }
+}
+
+fileprivate struct ExternalPluginInformation {
+    let metadata: UserScriptMetadata
+
+    let filename: String
+    let provider: CodeProvider
+    
+    let id: String
+    let category: Plugin.Category
+    
+    var author: String? = nil
+    var version: String? = nil
+}
+
+fileprivate struct RemoteSection: View {
+    @Binding private var pluginInformation: ExternalPluginInformation?
+    
+    @FocusState private var isTextFieldFocused: Bool
+    
+    @State private var isDownloading = false
+    @State private var urlText: String = ""
+    
+    private let onError: (TaskError) -> Void
+    
+    init(_ pluginInformation: Binding<ExternalPluginInformation?>, onError: @escaping (TaskError) -> Void) {
+        self._pluginInformation = pluginInformation
+        self.onError = onError
+    }
+    
+    var body: some View {
+        Section {
+            TextField("AddPluginView.URL", text: $urlText, prompt: Text("AddPluginView.URL.Prompt"))
+                .lineLimit(1)
+    #if os(iOS)
+                .keyboardType(.URL)
+    #endif
+                .disableAutocorrection(true)
+                .focused($isTextFieldFocused)
+                .onSubmit {
+                    Task { await tryDownload() }
+                }
+                .disabled(isDownloading)
+            
+            Button("AddPluginView.Download") {
+                Task { await tryDownload() }
+            }
+            .disabled(urlText.isEmpty || isDownloading || pluginInformation != nil)
+        }
+        .onAppear {
+            isTextFieldFocused = true
+        }
+    }
+    
     @MainActor
     private func tryDownload() async {
         isDownloading = true
@@ -168,125 +302,21 @@ struct AddPluginView: View {
                 throw TaskError.invalidMetadata(key: "category")
             }
             
-            var information = ExternalPluginInformation(
+            self.pluginInformation = .init(
                 metadata: metadata,
                 filename: filename,
-                temporaryURL: temporaryURL,
+                provider: .temporaryFile(url: temporaryURL),
                 id: id,
-                category: category
+                category: category,
+                author: metadata["author"],
+                version: metadata["version"]
             )
-            
-            information.author = metadata["author"]
-            information.version = metadata["version"]
-            
-            self.pluginInformation = information
         } catch let error as TaskError {
-            self.taskError = error
-            self.isAlertPresented = true
+            onError(error)
         } catch let error as LocalizedError {
-            self.taskError = .localizedError(error: error)
-            self.isAlertPresented = true
+            onError(.localizedError(error: error))
         } catch {
-            self.taskError = .genericError(error: error)
-            self.isAlertPresented = true
-        }
-    }
-    
-    private func trySave(information: ExternalPluginInformation) {
-        guard
-            let externalURL = UserDefaults.shared.externalScriptsBookmarkURL,
-            externalURL.startAccessingSecurityScopedResource()
-        else {
-            self.taskError = .externalLocationUnavailable
-            self.isAlertPresented = true
-            return
-        }
-        defer {
-            externalURL.stopAccessingSecurityScopedResource()
-        }
-        
-        let destinationURL = externalURL
-            .appending(path: information.filename)
-            .appendingPathExtension(FileConstants.userScriptExtension)
-        
-        let fileManager = FileManager.default
-        do {
-            try fileManager.moveItem(at: information.temporaryURL, to: destinationURL)
-            guard
-                let plugin = Plugin(
-                    metadata: information.metadata, isInternal: false, filename: information.filename
-                )
-            else {
-                return
-            }
-            modelContext.insert(plugin)
-            try modelContext.save()
-            dismiss()
-        } catch {
-            self.taskError = .genericError(error: error)
-            self.isAlertPresented = true
-            return
-        }
-    }
-}
-
-fileprivate struct ExternalPluginInformation {
-    let metadata: UserScriptMetadata
-
-    let filename: String
-    let temporaryURL: URL
-    
-    let id: String
-    let category: Plugin.Category
-    
-    var author: String? = nil
-    var version: String? = nil
-}
-
-fileprivate enum TaskError: Error, LocalizedError {
-    case externalLocationUnavailable
-    case invalidHTTPResponse(statusCode: Int)
-    case invalidMetadata(key: String)
-    case invalidURL
-    case metadataUnavailable
-    case localizedError(error: LocalizedError)
-    case genericError(error: Error)
-    
-    var errorDescription: String? {
-        switch self {
-        case .externalLocationUnavailable:
-            return .init(localized: "AddPluginView.TaskError.ExternalLocationUnavailable")
-        case .invalidHTTPResponse(let statusCode):
-            return .init(localized: "AddPluginView.TaskError.InvalidHTTPResponse \(statusCode)")
-        case .invalidMetadata(let key):
-            return .init(localized: "AddPluginView.TaskError.InvalidMetadata \(key)")
-        case .invalidURL:
-            return .init(localized: "AddPluginView.TaskError.InvalidURL")
-        case .metadataUnavailable:
-            return .init(localized: "AddPluginView.TaskError.MetadataUnavailable")
-        case .localizedError(let error):
-            return error.errorDescription
-        case .genericError(let error):
-            return error.localizedDescription
-        }
-    }
-    
-    var failureReason: String? {
-        switch self {
-        case .externalLocationUnavailable:
-            return .init(localized: "AddPluginView.TaskError.ExternalLocationUnavailable.Reason")
-        case .invalidHTTPResponse(let statusCode):
-            return .init(localized: "AddPluginView.TaskError.InvalidHTTPResponse.Reason \(statusCode)")
-        case .invalidMetadata(let key):
-            return .init(localized: "AddPluginView.TaskError.InvalidMetadata.Reason \(key)")
-        case .invalidURL:
-            return .init(localized: "AddPluginView.TaskError.InvalidURL.Reason")
-        case .metadataUnavailable:
-            return .init(localized: "AddPluginView.TaskError.MetadataUnavailable.Reason")
-        case .localizedError(let error):
-            return error.failureReason
-        case .genericError(let error):
-            return error.localizedDescription
+            onError(.genericError(error: error))
         }
     }
 }
