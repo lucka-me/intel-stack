@@ -9,7 +9,9 @@ import Foundation
 import SwiftData
 
 extension ModelContainer {
-    static var `default`: ModelContainer {
+    static let `default` = createDefault()
+    
+    private static func createDefault() -> ModelContainer {
         let container: ModelContainer
         do {
             container = try .init(
