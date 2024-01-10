@@ -12,15 +12,33 @@ struct AddPluginView: View {
     @Environment(\.modelContext) private var modelContext
     
     @State private var isAlertPresented = false
+    @State private var method = Method.remote
     @State private var pluginInformation: ExternalPluginInformation? = nil
     @State private var taskError: TaskError? = nil
     
     var body: some View {
         NavigationStack {
             Form {
-                RemoteSection($pluginInformation) { error in
-                    taskError = error
-                    isAlertPresented = true
+                Picker("AddPluginView.Method", selection: $method) {
+                    ForEach(Method.allCases, id: \.rawValue) { method in
+                        Text(method.titleKey)
+                            .tag(method)
+                    }
+                }
+                .pickerStyle(.segmented)
+#if os(iOS)
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowBackground(Color.clear)
+#endif
+                
+                switch method {
+                case .remote:
+                    RemoteSection($pluginInformation) { error in
+                        taskError = error
+                        isAlertPresented = true
+                    }
+                case .code:
+                    CodeSection($pluginInformation)
                 }
                 
                 if let pluginInformation {
@@ -52,6 +70,9 @@ struct AddPluginView: View {
                     cancelButton
                 }
             }
+        }
+        .onChange(of: method) {
+            pluginInformation = nil
         }
     }
     
@@ -148,6 +169,20 @@ fileprivate enum CodeProvider {
             try fileManager.moveItem(at: url, to: destination)
         case .code(let code):
             try code.write(to: destination, atomically: true, encoding: .utf8)
+        }
+    }
+}
+
+fileprivate enum Method : Int, CaseIterable {
+    case remote
+    case code
+    
+    var titleKey: LocalizedStringKey {
+        switch self {
+        case .remote:
+            return "AddPluginView.Method.Remote"
+        case .code:
+            return "AddPluginView.Method.Code"
         }
     }
 }
@@ -318,5 +353,59 @@ fileprivate struct RemoteSection: View {
         } catch {
             onError(.genericError(error: error))
         }
+    }
+}
+
+
+fileprivate struct CodeSection: View {
+    @Binding private var pluginInformation: ExternalPluginInformation?
+    
+    @FocusState private var isCodeEditorFocused: Bool
+    
+    @State private var filename = ""
+    @State private var code = ""
+    
+    init(_ pluginInformation: Binding<ExternalPluginInformation?>) {
+        self._pluginInformation = pluginInformation
+    }
+    
+    var body: some View {
+        Section {
+            TextEditor(text: $code)
+                .monospaced()
+                .focused($isCodeEditorFocused)
+#if os(macOS)
+                .frame(height: 180)
+#endif
+            TextField("AddPluginView.CodeSection.Filename", text: $filename)
+        }
+        .onAppear {
+            isCodeEditorFocused = true
+        }
+        .onChange(of: code, initial: false, updateInformation)
+    }
+    
+    private func updateInformation() {
+        guard
+            let metadata = try? UserScriptMetadata(content: code),
+            let id = metadata["id"],
+            let categoryText = metadata["category"],
+            let category = Plugin.Category(rawValue: categoryText)
+        else {
+            pluginInformation = nil
+            return
+        }
+        if filename.isEmpty {
+            filename = metadata.name.components(separatedBy: "/\\:?%*|\"<>").joined()
+        }
+        pluginInformation = .init(
+            metadata: metadata,
+            filename: filename,
+            provider: .code(code: code),
+            id: id,
+            category: category,
+            author: metadata["author"],
+            version: metadata["version"]
+        )
     }
 }
