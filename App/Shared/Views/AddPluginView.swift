@@ -44,9 +44,6 @@ struct AddPluginView: View {
                 if let pluginInformation {
                     Section {
                         sectionContent(of: pluginInformation)
-                        Button("AddPluginView.Add") {
-                            trySave(information: pluginInformation)
-                        }
                     } header: {
                         Text("AddPluginView.PluginInformation.Title")
                     }
@@ -115,6 +112,9 @@ struct AddPluginView: View {
                     .monospaced()
             }
         }
+        Button("AddPluginView.Add") {
+            trySave(information: information)
+        }
     }
     
     private func trySave(information: ExternalPluginInformation) {
@@ -147,11 +147,11 @@ struct AddPluginView: View {
             try modelContext.save()
             dismiss()
         } catch let error as LocalizedError {
-            self.taskError = .localizedError(error: error)
+            self.taskError = .localized(error: error)
             self.isAlertPresented = true
             return
         } catch {
-            self.taskError = .genericError(error: error)
+            self.taskError = .generic(error: error)
             self.isAlertPresented = true
             return
         }
@@ -193,8 +193,8 @@ fileprivate enum TaskError: Error, LocalizedError {
     case invalidMetadata(key: String)
     case invalidURL
     case metadataUnavailable
-    case localizedError(error: LocalizedError)
-    case genericError(error: Error)
+    case localized(error: LocalizedError)
+    case generic(error: Error)
     
     var errorDescription: String? {
         switch self {
@@ -208,9 +208,9 @@ fileprivate enum TaskError: Error, LocalizedError {
             return .init(localized: "AddPluginView.TaskError.InvalidURL")
         case .metadataUnavailable:
             return .init(localized: "AddPluginView.TaskError.MetadataUnavailable")
-        case .localizedError(let error):
+        case .localized(let error):
             return error.errorDescription
-        case .genericError(let error):
+        case .generic(let error):
             return error.localizedDescription
         }
     }
@@ -227,9 +227,9 @@ fileprivate enum TaskError: Error, LocalizedError {
             return .init(localized: "AddPluginView.TaskError.InvalidURL.Reason")
         case .metadataUnavailable:
             return .init(localized: "AddPluginView.TaskError.MetadataUnavailable.Reason")
-        case .localizedError(let error):
+        case .localized(let error):
             return error.failureReason
-        case .genericError(let error):
+        case .generic(let error):
             return error.localizedDescription
         }
     }
@@ -349,9 +349,9 @@ fileprivate struct RemoteSection: View {
         } catch let error as TaskError {
             onError(error)
         } catch let error as LocalizedError {
-            onError(.localizedError(error: error))
+            onError(.localized(error: error))
         } catch {
-            onError(.genericError(error: error))
+            onError(.generic(error: error))
         }
     }
 }
