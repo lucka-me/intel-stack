@@ -101,31 +101,21 @@ struct AddPluginView: View {
     
     @ViewBuilder
     private func sectionContent(of information: ExternalPluginInformation) -> some View {
-        row(of: "AddPluginView.PluginInformation.Name", content: information.metadata.name)
-        row(of: "AddPluginView.PluginInformation.ID", content: Text(information.id).monospaced())
-        row(of: "AddPluginView.PluginInformation.Category", content: information.category.rawValue)
+        LabeledContent("AddPluginView.PluginInformation.Name", value: information.metadata.name)
+        LabeledContent("AddPluginView.PluginInformation.ID") {
+            Text(information.id)
+                .monospaced()
+        }
+        LabeledContent("AddPluginView.PluginInformation.Category", value: information.category.rawValue)
         if let author = information.author {
-            row(of: "AddPluginView.PluginInformation.Author", content: author)
+            LabeledContent("AddPluginView.PluginInformation.Author", value: author)
         }
         if let version = information.version {
-            row(of: "AddPluginView.PluginInformation.Version", content: Text(version).monospaced())
+            LabeledContent("AddPluginView.PluginInformation.Version") {
+                Text(version)
+                    .monospaced()
+            }
         }
-    }
-    
-    @ViewBuilder
-    private func row(of titleKey: LocalizedStringKey, content: String) -> some View {
-        row(of: titleKey, content: Text(content))
-    }
-    
-    @ViewBuilder
-    private func row(of titleKey: LocalizedStringKey, content: Text) -> some View {
-        HStack {
-            Text(titleKey)
-            Spacer()
-            content
-                .foregroundStyle(.secondary)
-        }
-        .lineLimit(1)
     }
 
     @MainActor
