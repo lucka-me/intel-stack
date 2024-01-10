@@ -193,6 +193,9 @@ struct AddPluginView: View {
         } catch let error as TaskError {
             self.taskError = error
             self.isAlertPresented = true
+        } catch let error as LocalizedError {
+            self.taskError = .localizedError(error: error)
+            self.isAlertPresented = true
         } catch {
             self.taskError = .genericError(error: error)
             self.isAlertPresented = true
@@ -256,6 +259,7 @@ fileprivate enum TaskError: Error, LocalizedError {
     case invalidMetadata(key: String)
     case invalidURL
     case metadataUnavailable
+    case localizedError(error: LocalizedError)
     case genericError(error: Error)
     
     var errorDescription: String? {
@@ -270,6 +274,8 @@ fileprivate enum TaskError: Error, LocalizedError {
             return .init(localized: "AddPluginView.TaskError.InvalidURL")
         case .metadataUnavailable:
             return .init(localized: "AddPluginView.TaskError.MetadataUnavailable")
+        case .localizedError(let error):
+            return error.errorDescription
         case .genericError(let error):
             return error.localizedDescription
         }
@@ -287,6 +293,8 @@ fileprivate enum TaskError: Error, LocalizedError {
             return .init(localized: "AddPluginView.TaskError.InvalidURL.Reason")
         case .metadataUnavailable:
             return .init(localized: "AddPluginView.TaskError.MetadataUnavailable.Reason")
+        case .localizedError(let error):
+            return error.failureReason
         case .genericError(let error):
             return error.localizedDescription
         }
