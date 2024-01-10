@@ -11,7 +11,9 @@ struct OnboardingView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scriptManager) private var scriptManager
     
+    @State private var isAlertPresented = false
     @State private var isDownloading = false
+    @State private var taskError: TaskError? = nil
     
     private var downloadProgress = Progress()
     
@@ -62,6 +64,11 @@ struct OnboardingView: View {
         }
 #endif
         .padding([ .horizontal, .bottom ])
+        .alert(isPresented: $isAlertPresented, error: taskError) { _ in } message: { error in
+            if let reason = error.failureReason {
+                Text(reason)
+            }
+        }
     }
     
     @ViewBuilder
@@ -169,9 +176,12 @@ struct OnboardingView: View {
                 
                 try await group.waitForAll()
             }
+        } catch let error as LocalizedError {
+            self.taskError = .localizedError(error: error)
+            self.isAlertPresented = true
         } catch {
-            // TODO: Present the error
-            print(error)
+            self.taskError = .genericError(error: error)
+            self.isAlertPresented = true
         }
         
         await MainActor.run {
@@ -182,4 +192,27 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView()
+}
+
+fileprivate enum TaskError: Error, LocalizedError {
+    case localizedError(error: LocalizedError)
+    case genericError(error: Error)
+    
+    var errorDescription: String? {
+        switch self {
+        case .localizedError(let error):
+            return error.errorDescription
+        case .genericError(let error):
+            return error.localizedDescription
+        }
+    }
+        
+    var failureReason: String? {
+        switch self {
+        case .localizedError(let error):
+            return error.failureReason
+        case .genericError(let error):
+            return error.localizedDescription
+        }
+    }
 }

@@ -13,7 +13,37 @@ extension ScriptManager {
         case release = "release"
         case beta = "beta"
     }
-    
+
+    enum TaskError: Error, LocalizedError {
+        case invalidHTTPResponse(statusCode: Int)
+        case metadataUnavailable
+        case missingConfiguration(key: String)
+        
+        var errorDescription: String? {
+            switch self {
+            case .invalidHTTPResponse(let statusCode):
+                return .init(localized: "ScriptManager.TaskError.InvalidHTTPResponse \(statusCode)")
+            case .metadataUnavailable:
+                return .init(localized: "ScriptManager.TaskError.InvalidMetadata")
+            case .missingConfiguration(let key):
+                return .init(localized: "ScriptManager.TaskError.MissingConfiguration \(key)")
+            }
+        }
+        
+        var failureReason: String? {
+            switch self {
+            case .invalidHTTPResponse(let statusCode):
+                return .init(localized: "ScriptManager.TaskError.InvalidHTTPResponse.Reason \(statusCode)")
+            case .metadataUnavailable:
+                return .init(localized: "ScriptManager.TaskError.InvalidMetadata.Reason")
+            case .missingConfiguration(let key):
+                return .init(localized: "ScriptManager.TaskError.MissingConfiguration.Reason \(key)")
+            }
+        }
+    }
+}
+
+extension ScriptManager {
     static var internalPluginNames: [ String ] {
         get throws {
             try JSONDecoder().decode(
@@ -118,21 +148,15 @@ extension ScriptManager {
         
         guard let httpResponse = response as? HTTPURLResponse else { return }
         guard httpResponse.statusCode == 200 else {
-            // TODO: Throw an error
-            print("Download main script resulted in \(httpResponse.statusCode)")
-            return
+            throw TaskError.invalidHTTPResponse(statusCode: httpResponse.statusCode)
         }
         
         let content = try String(contentsOf: temporaryURL)
         guard let metadata = try UserScriptMetadata(content: content) else {
-            // TODO: Throw an error
-            print("Unable to fetch metadata from main script")
-            return
+            throw TaskError.metadataUnavailable
         }
         guard let _ = metadata["version"] else {
-            // TODO: Throw an error
-            print("Unable to get version of main script")
-            return
+            throw TaskError.missingConfiguration(key: "version")
         }
         
         if fileManager.fileExists(at: FileConstants.mainScriptURL) {
@@ -161,9 +185,7 @@ extension ScriptManager {
         
         guard let httpResponse = response as? HTTPURLResponse else { return }
         guard httpResponse.statusCode == 200 else {
-            // TODO: Throw an error
-            print("Download plugin \(filename) resulted in \(httpResponse.statusCode)")
-            return
+            throw TaskError.invalidHTTPResponse(statusCode: httpResponse.statusCode)
         }
         
         let content = try String(contentsOf: temporaryURL)
@@ -171,9 +193,7 @@ extension ScriptManager {
             let metadata = try UserScriptMetadata(content: content),
             metadata.readyForPlugin
         else {
-            // TODO: Throw an error
-            print("Unable to fetch metadata from \(downloadURL)")
-            return
+            throw TaskError.metadataUnavailable
         }
         
         let destinationURL = FileConstants.internalPluginsDirectoryURL
@@ -204,9 +224,7 @@ fileprivate extension ScriptManager {
         
         guard let httpResponse = response as? HTTPURLResponse else { return }
         guard httpResponse.statusCode == 200 else {
-            // TODO: Throw an error
-            print("Download plugin \(information.filename) resulted in \(httpResponse.statusCode)")
-            return
+            throw TaskError.invalidHTTPResponse(statusCode: httpResponse.statusCode)
         }
         
         let destinationURL = externalURL
@@ -219,15 +237,12 @@ fileprivate extension ScriptManager {
             let metadata = try UserScriptMetadata(content: content),
             metadata.readyForPlugin
         else {
-            // TODO: Throw an error
-            print("Unable to fetch metadata from \(downloadURL)")
-            return
+            throw TaskError.metadataUnavailable
         }
         
         guard let newVersion = metadata["version"], newVersion != information.version else {
             return
         }
-        print("Update \(information.filename) \(information.version) -> \(newVersion)")
         
         try fileManager.replaceItem(at: destinationURL, withItemAt: temporaryURL, backupItemName: nil, resultingItemURL: nil)
         try await ModelExecutor.shared.updateExternalPlugin(information.identifier, with: metadata)
