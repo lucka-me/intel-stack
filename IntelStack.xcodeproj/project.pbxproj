@@ -29,6 +29,7 @@
 		84424BE92ACEAB15009013A3 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84424BE82ACEAB15009013A3 /* SidebarView.swift */; };
 		844AF6952ABC64B800D90B0F /* SafariWebExtensionHandler+Methods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844AF6942ABC64B800D90B0F /* SafariWebExtensionHandler+Methods.swift */; };
 		844AF6972ABC882500D90B0F /* ScriptManager+ExternalScripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844AF6962ABC882500D90B0F /* ScriptManager+ExternalScripts.swift */; };
+		8471FBB22B47AE0A00A67749 /* AddPluginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8471FBB12B47AE0A00A67749 /* AddPluginView.swift */; };
 		8475D18E2AD6CF8F00D71F59 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8475D18D2AD6CF8F00D71F59 /* AppIcon.swift */; };
 		8475D1902AD6EE1300D71F59 /* ModelExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8475D18F2AD6EE1300D71F59 /* ModelExecutor.swift */; };
 		8475D1932AD8333800D71F59 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8475D1922AD8333800D71F59 /* Localizable.xcstrings */; };
@@ -108,6 +109,7 @@
 		844AF6912ABC638500D90B0F /* Web Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Web Extension.entitlements"; sourceTree = "<group>"; };
 		844AF6942ABC64B800D90B0F /* SafariWebExtensionHandler+Methods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SafariWebExtensionHandler+Methods.swift"; sourceTree = "<group>"; };
 		844AF6962ABC882500D90B0F /* ScriptManager+ExternalScripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptManager+ExternalScripts.swift"; sourceTree = "<group>"; };
+		8471FBB12B47AE0A00A67749 /* AddPluginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPluginView.swift; sourceTree = "<group>"; };
 		8475D18D2AD6CF8F00D71F59 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
 		8475D18F2AD6EE1300D71F59 /* ModelExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExecutor.swift; sourceTree = "<group>"; };
 		8475D1922AD8333800D71F59 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -183,12 +185,13 @@
 		840F49AF2AB7073A00012C44 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				8475D18C2AD6CF8000D71F59 /* Components */,
+				8471FBB12B47AE0A00A67749 /* AddPluginView.swift */,
 				842318872AB7053A000A0A09 /* ContentView.swift */,
 				840F49D82AB710EA00012C44 /* OnboardingView.swift */,
 				840F49D62AB7108200012C44 /* PluginListView.swift */,
 				840F49D42AB7101F00012C44 /* SettingsView.swift */,
 				84424BE82ACEAB15009013A3 /* SidebarView.swift */,
+				8475D18C2AD6CF8000D71F59 /* Components */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -492,6 +495,7 @@
 				840F49D72AB7108200012C44 /* PluginListView.swift in Sources */,
 				84D8E95B2AB7312C000234A9 /* ScriptManager.swift in Sources */,
 				84D8E9612AB73CD9000234A9 /* FileManager.swift in Sources */,
+				8471FBB22B47AE0A00A67749 /* AddPluginView.swift in Sources */,
 				8437CD132ABB3D7D008AF3A5 /* UserDefaults+Bookmark.swift in Sources */,
 				84F3A1112AC1C19100C1F4BE /* ScriptManager+MainScript.swift in Sources */,
 				842F9D042ACD3556002E750B /* ExternalFileMonitor.swift in Sources */,
