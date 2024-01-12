@@ -22,7 +22,7 @@ struct OnboardingView: View {
             Image(AppIcon.current.previewName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-#if os(iOS)
+#if !os(macOS)
                 .mask {
                     RoundedRectangle(cornerRadius: 20, style: .continuous)
                 }
@@ -46,17 +46,19 @@ struct OnboardingView: View {
                 }
                 .frame(maxWidth: 400)
             }
-#if os(macOS)
+#if !os(iOS)
             .frame(maxWidth: 400, minHeight: 150)
 #endif
             
-#if os(iOS)
+#if !os(macOS)
             Spacer()
             primaryActionButton
 #endif
         }
-#if os(macOS)
+#if !os(iOS)
         .frame(minWidth: 320, maxWidth: 640, maxHeight: 640, alignment: .top)
+#endif
+#if os(macOS)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 primaryActionButton

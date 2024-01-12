@@ -26,7 +26,7 @@ struct AddPluginView: View {
                     }
                 }
                 .pickerStyle(.segmented)
-#if os(iOS)
+#if !os(macOS)
                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .listRowBackground(Color.clear)
 #endif
@@ -54,7 +54,7 @@ struct AddPluginView: View {
 #endif
             .formStyle(.grouped)
             .navigationTitle("AddPluginView.Title")
-#if os(iOS)
+#if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
 #endif
             .alert(isPresented: $isAlertPresented, error: taskError) { _ in } message: { error in
@@ -75,7 +75,11 @@ struct AddPluginView: View {
     
     @ViewBuilder
     private var cancelButton : some View {
-#if os(iOS)
+#if os(macOS)
+        Button("AddPluginView.Cancel") {
+            dismiss()
+        }
+#else
         Button {
             dismiss()
         } label: {
@@ -87,10 +91,6 @@ struct AddPluginView: View {
         .buttonStyle(.bordered)
         .mask {
             Circle()
-        }
-#elseif os(macOS)
-        Button("AddPluginView.Cancel") {
-            dismiss()
         }
 #endif
     }
@@ -267,9 +267,9 @@ fileprivate struct RemoteSection: View {
         Section {
             TextField("AddPluginView.URL", text: $urlText, prompt: Text("AddPluginView.URL.Prompt"))
                 .lineLimit(1)
-    #if os(iOS)
+#if !os(macOS)
                 .keyboardType(.URL)
-    #endif
+#endif
                 .disableAutocorrection(true)
                 .focused($isTextFieldFocused)
                 .onSubmit {
@@ -356,7 +356,6 @@ fileprivate struct RemoteSection: View {
     }
 }
 
-
 fileprivate struct CodeSection: View {
     @Binding private var pluginInformation: ExternalPluginInformation?
     
@@ -374,8 +373,13 @@ fileprivate struct CodeSection: View {
             TextEditor(text: $code)
                 .monospaced()
                 .focused($isCodeEditorFocused)
-#if os(macOS)
+#if !os(iOS)
+                // On iOS, the height of row will increase beyond the frame height
+                // This bug exists on visionOS but will not occurs if paste directly
                 .frame(height: 180)
+#endif
+#if os(visionOS)
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
 #endif
             TextField("AddPluginView.CodeSection.Filename", text: $filename)
         }
