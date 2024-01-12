@@ -24,12 +24,15 @@ struct OnboardingView: View {
                 .aspectRatio(contentMode: .fit)
 #if !os(macOS)
                 .mask {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    appIconShape
                 }
                 .overlay {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    appIconShape
                         .stroke(.secondary.opacity(0.5), lineWidth: 1)
                 }
+#endif
+#if os(visionOS)
+                .shadow(radius: 5)
 #endif
                 .frame(width: 96, height: 96, alignment: .center)
                 .padding(.top, 40)
@@ -128,6 +131,16 @@ struct OnboardingView: View {
         .controlSize(.large)
         .disabled(isDownloading)
     }
+    
+#if os(iOS)
+    private var appIconShape: RoundedRectangle {
+        .init(cornerRadius: 20, style: .continuous)
+    }
+#elseif os(visionOS)
+    private var appIconShape: Circle {
+        .init()
+    }
+#endif
     
     @ViewBuilder
     private func row<Icon: View, Content: View>(
