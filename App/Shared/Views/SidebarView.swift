@@ -24,14 +24,14 @@ struct SidebarView: View {
     @Binding private var selection: Selection?
     
     @Environment(\.scriptManager) private var scriptManager
-    #if os(macOS)
+#if os(macOS)
     @Environment(\.scenePhase) private var scenePhase : ScenePhase
-    #endif
+#endif
     
     @State private var isAddPluginDialogPresented = false
-    #if os(macOS)
-    @State private var extensionEnabled: Bool? = nil
-    #endif
+#if os(macOS)
+    @State private var isExtensionEnabled: Bool? = nil
+#endif
     
     init(selection: Binding<Selection?>) {
         self._selection = selection
@@ -39,24 +39,62 @@ struct SidebarView: View {
     
     var body: some View {
         List(selection: $selection) {
-            sidebarContent
+            Section {
+                scriptSectionContent
+            } header: {
+                Text("SidebarView.Script")
+            } footer: {
+                Text("SidebarView.Script.Footer")
+            }
+            
+#if os(macOS)
+            Section {
+                Button(extensionStateTextKey, systemImage: extensionStateIcon) {
+                    SFSafariApplication.showPreferencesForExtension(withIdentifier: Self.extensionId)
+                }
+                .buttonStyle(.link)
+                .foregroundStyle(extensionSateColor)
+                .onChange(of: scenePhase, initial: true, fetchExtensionState)
+            } header: {
+                Text("SidebarView.Extension")
+            }
+#endif
+            
+            Section {
+                ForEach(Plugin.Category.allCases, id: \.rawValue) { category in
+                    NavigationLink(value: Selection.plugins(category: category)) {
+                        Label(category.rawValue, systemImage: category.icon)
+                    }
+                }
+                if externalScriptsBookmark != nil {
+                    Button("SidebarView.Plugins.Add", systemImage: "plus.circle") {
+                        isAddPluginDialogPresented = true
+                    }
+#if os(macOS)
+                    .buttonStyle(.plain)
+#endif
+                }
+            } header: {
+                Text("SidebarView.Plugins")
+            }
         }
-        #if os(macOS)
-        .listStyle(.sidebar)
-        .frame(minWidth: 200)
-        #else
+#if os(iOS)
         .listStyle(.insetGrouped)
+#else
+        .listStyle(.sidebar)
+#endif
+#if !os(macOS)
         .refreshable {
             await tryUpdateScripts()
         }
-        #endif
+#endif
         .toolbar {
             ToolbarItem(placement: .principal) {
                 if scriptManager.status == .downloading {
                     ProgressView(scriptManager.downloadProgress)
                 }
             }
-            #if os(macOS)
+#if os(macOS)
             ToolbarItem(placement: .primaryAction) {
                 Button("SidebarView.Refresh", systemImage: "arrow.clockwise") {
                     Task {
@@ -65,7 +103,7 @@ struct SidebarView: View {
                 }
                 .disabled(scriptManager.status != .idle)
             }
-            #endif
+#endif
         }
         .navigationTitle("SidebarView.Title")
         .sheet(isPresented: $isAddPluginDialogPresented) {
@@ -74,54 +112,12 @@ struct SidebarView: View {
     }
     
     @ViewBuilder
-    private var sidebarContent: some View {
-        Section {
-            scriptSectionContent
-        } header: {
-            Text("SidebarView.Script")
-        } footer: {
-            Text("SidebarView.Script.Footer")
-        }
-        
-        #if os(macOS)
-        Section {
-            Button(extensionStateTextKey, systemImage: extensionStateIcon) {
-                SFSafariApplication.showPreferencesForExtension(withIdentifier: Self.extensionId)
-            }
-            .buttonStyle(.link)
-            .foregroundStyle(extensionSateColor)
-            .onChange(of: scenePhase, initial: true, fetchExtensionState)
-        } header: {
-            Text("SidebarView.Extension")
-        }
-        #endif
-        
-        Section {
-            ForEach(Plugin.Category.allCases, id: \.rawValue) { category in
-                NavigationLink(value: Selection.plugins(category: category)) {
-                    Label(category.rawValue, systemImage: category.icon)
-                }
-            }
-            if externalScriptsBookmark != nil {
-                Button("SidebarView.Plugins.Add", systemImage: "plus.circle") {
-                    isAddPluginDialogPresented = true
-                }
-                #if os(macOS)
-                .buttonStyle(.plain)
-                #endif
-            }
-        } header: {
-            Text("SidebarView.Plugins")
-        }
-    }
-    
-    @ViewBuilder
     private var scriptSectionContent: some View {
         let version = scriptManager.mainScriptVersion
         Toggle("SidebarView.Script.Enabled", systemImage: "power", isOn: $scriptsEnabled)
-            #if os(macOS)
+#if os(macOS)
             .toggleStyle(.switch)
-            #endif
+#endif
             .disabled(version == nil)
         if scriptManager.status == .downloading {
             Label("SidebarView.Script.Downloading", systemImage: "arrow.down.circle.dotted")
@@ -142,9 +138,9 @@ struct SidebarView: View {
         }
     }
     
-    #if os(macOS)
+#if os(macOS)
     private var extensionStateTextKey: LocalizedStringKey {
-        switch extensionEnabled {
+        switch isExtensionEnabled {
         case true: "SidebarView.Extension.Enabled"
         case false: "SidebarView.Extension.Disabled"
         default: "SidebarView.Extension.Unknown"
@@ -152,7 +148,7 @@ struct SidebarView: View {
     }
 
     private var extensionStateIcon: String {
-        switch extensionEnabled {
+        switch isExtensionEnabled {
         case true: "checkmark.circle"
         case false: "xmark.octagon"
         default: "questionmark.diamond"
@@ -160,13 +156,13 @@ struct SidebarView: View {
     }
     
     private var extensionSateColor: Color {
-        switch extensionEnabled {
+        switch isExtensionEnabled {
         case true: .green
         case false: .red
         default: .orange
         }
     }
-    #endif
+#endif
     
     @MainActor
     private func tryUpdateScripts() async {
@@ -177,13 +173,13 @@ struct SidebarView: View {
         }
     }
     
-    #if os(macOS)
+#if os(macOS)
     private func fetchExtensionState() {
         SFSafariExtensionManager.getStateOfSafariExtension(withIdentifier: Self.extensionId) { state, error in
             DispatchQueue.main.async {
-                extensionEnabled = state?.isEnabled
+                isExtensionEnabled = state?.isEnabled
             }
         }
     }
-    #endif
+#endif
 }

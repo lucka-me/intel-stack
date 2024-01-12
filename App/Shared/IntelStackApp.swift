@@ -19,7 +19,13 @@ struct IntelStackApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+#if os(macOS)
+                .frame(minWidth: 600, minHeight: 400)
+#elseif os(visionOS)
+                .frame(minWidth: 800, minHeight: 600)
+#endif
         }
+        .windowResizability(.contentSize)
         .onChange(of: bookmark, initial: false) {
             Task(priority: .background) {
                 await engageMonitor()
