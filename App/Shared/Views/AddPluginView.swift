@@ -18,34 +18,43 @@ struct AddPluginView: View {
     
     var body: some View {
         NavigationStack {
-            Form {
-                Picker("AddPluginView.Method", selection: $method) {
-                    ForEach(Method.allCases, id: \.rawValue) { method in
-                        Text(method.titleKey)
-                            .tag(method)
+            ScrollViewReader { proxy in
+                Form {
+                    Picker("AddPluginView.Method", selection: $method) {
+                        ForEach(Method.allCases, id: \.rawValue) { method in
+                            Text(method.titleKey)
+                                .tag(method)
+                        }
                     }
-                }
-                .pickerStyle(.segmented)
+                    .pickerStyle(.segmented)
 #if !os(macOS)
-                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .listRowBackground(Color.clear)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .listRowBackground(Color.clear)
 #endif
-                
-                switch method {
-                case .remote:
-                    RemoteSection($pluginInformation) { error in
-                        taskError = error
-                        isAlertPresented = true
+                    
+                    switch method {
+                    case .remote:
+                        RemoteSection($pluginInformation) { error in
+                            taskError = error
+                            isAlertPresented = true
+                        }
+                    case .code:
+                        CodeSection($pluginInformation)
                     }
-                case .code:
-                    CodeSection($pluginInformation)
+                    
+                    if let pluginInformation {
+                        Section {
+                            sectionContent(of: pluginInformation)
+                        } header: {
+                            Text("AddPluginView.PluginInformation.Title")
+                        }
+                    }
                 }
-                
-                if let pluginInformation {
-                    Section {
-                        sectionContent(of: pluginInformation)
-                    } header: {
-                        Text("AddPluginView.PluginInformation.Title")
+                .onChange(of: pluginInformation, initial: false) { oldValue, newValue in
+                    if oldValue == nil, newValue != nil {
+                        // The bug of TextEditor / TextField in Form / List makes the height unlimited,
+                        // When parsing successes, scroll to bottom
+                        proxy.scrollTo(FormPosition.saveButton, anchor: .bottom)
                     }
                 }
             }
@@ -115,6 +124,7 @@ struct AddPluginView: View {
         Button("AddPluginView.Add") {
             trySave(information: information)
         }
+        .id(FormPosition.saveButton)
     }
     
     private func trySave(information: ExternalPluginInformation) {
@@ -171,6 +181,10 @@ fileprivate enum CodeProvider {
             try code.write(to: destination, atomically: true, encoding: .utf8)
         }
     }
+}
+
+fileprivate enum FormPosition : Int, Hashable {
+    case saveButton
 }
 
 fileprivate enum Method : Int, CaseIterable {
@@ -235,7 +249,14 @@ fileprivate enum TaskError: Error, LocalizedError {
     }
 }
 
-fileprivate struct ExternalPluginInformation {
+fileprivate struct ExternalPluginInformation : Equatable {
+    static func == (lhs: ExternalPluginInformation, rhs: ExternalPluginInformation) -> Bool {
+        lhs.metadata.items == rhs.metadata.items &&
+        lhs.filename == rhs.filename &&
+        lhs.id == rhs.id &&
+        lhs.category == rhs.category
+    }
+    
     let metadata: UserScriptMetadata
 
     let filename: String
@@ -361,8 +382,8 @@ fileprivate struct CodeSection: View {
     
     @FocusState private var isCodeEditorFocused: Bool
     
-    @State private var filename = ""
     @State private var code = ""
+    @State private var filename = ""
     
     init(_ pluginInformation: Binding<ExternalPluginInformation?>) {
         self._pluginInformation = pluginInformation
@@ -373,9 +394,11 @@ fileprivate struct CodeSection: View {
             TextEditor(text: $code)
                 .monospaced()
                 .focused($isCodeEditorFocused)
-#if !os(iOS)
+#if os(macOS)
+                // .lineLimit(_:reservesSpace:) does not work at all
                 // On iOS, the height of row will increase beyond the frame height
-                // This bug exists on visionOS but will not occurs if paste directly
+                // This bug exists on visionOS but will not occurs if paste without editing
+                // If the bug is fixed or there are other workarounds, remove these.
                 .frame(height: 180)
 #endif
 #if os(visionOS)
