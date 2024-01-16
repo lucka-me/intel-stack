@@ -9,6 +9,12 @@ import SwiftData
 import SwiftUI
 
 struct PluginListView: View {
+    @Environment(\.scriptManager) private var scriptManager
+    
+#if !os(macOS)
+    @Environment(\.openURL) private var openURL
+#endif
+    
     @Query private var plugins: [ Plugin ]
     
     private let title: String
@@ -25,28 +31,16 @@ struct PluginListView: View {
     var body: some View {
         ScrollView(.vertical) {
             LazyVGrid(columns: [ .init(.adaptive(minimum: 300, maximum: .infinity)) ]) {
-                ForEach(plugins, id: \.uuid) { plugin in
-                    PluginCardView(plugin: plugin)
-                }
+                ForEach(plugins, id: \.uuid, content: card(of:))
             }
         }
         .contentMargins(15, for: .scrollContent)
         .navigationTitle(title)
     }
-}
-
-fileprivate struct PluginCardView: View {
-    @Environment(\.scriptManager) private var scriptManager
     
-    #if !os(macOS)
-    @Environment(\.openURL) private var openURL
-    #endif
-    
-    @State private var enabled = false
-    
-    let plugin: Plugin
-    
-    var body: some View {
+    @ViewBuilder
+    private func card(of plugin: Plugin) -> some View {
+        @Bindable var plugin = plugin
         GroupBox {
             VStack(alignment: .leading) {
                 HStack(alignment: .firstTextBaseline) {
@@ -62,7 +56,9 @@ fileprivate struct PluginCardView: View {
                     } else {
                         Label("PluginCardView.External", systemImage: "arrow.up.right")
                             .capsule(.indigo)
-                            .onTapGesture(perform: openFile)
+                            .onTapGesture {
+                                open(plugin)
+                            }
                         if scriptManager.updatingPluginIds.contains(plugin.uuid) {
                             Text("PluginCardView.Updating")
                                 .capsule(.pink)
@@ -91,7 +87,7 @@ fileprivate struct PluginCardView: View {
                 }
             }
         } label: {
-            Toggle(isOn: $enabled) {
+            Toggle(isOn: $plugin.enabled) {
                 Text(plugin.displayName)
                     #if os(macOS)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -103,18 +99,12 @@ fileprivate struct PluginCardView: View {
             #endif
         }
         .fixedSize(horizontal: false, vertical: false)
-        .onAppear {
-            enabled = plugin.enabled
-        }
-        .onChange(of: enabled) {
-            plugin.enabled = enabled
-        }
         #if os(macOS)
         .groupBoxStyle(.card)
         #endif
     }
     
-    private func openFile() {
+    private func open(_ plugin: Plugin) {
         guard
             let url = UserDefaults.shared.externalScriptsBookmarkURL?
                 .appending(path: plugin.filename)
@@ -122,14 +112,14 @@ fileprivate struct PluginCardView: View {
         else {
             return
         }
-        #if os(macOS)
+#if os(macOS)
         NSWorkspace.shared.activateFileViewerSelecting([ url ])
-        #else
+#else
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
         components.scheme = "shareddocuments"
         guard let urlForFileApp = components.url else { return }
         openURL(urlForFileApp)
-        #endif
+#endif
     }
 }
 

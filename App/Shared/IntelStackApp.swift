@@ -19,22 +19,29 @@ struct IntelStackApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .task(id: bookmark) {
-                    // TODO: Be ware of the scenePhase, task should not run if not active
-                    guard let externalURL = try? ScriptManager.sync() else {
-                        await MainActor.run { monitor = nil }
-                        return
-                    }
-                    await MainActor.run {
-                        monitor = .init(url: externalURL) { url in
-                            do {
-                                try ScriptManager.sync(in: url)
-                            } catch {
-                                print(error)
-                            }
-                        }
+#if os(macOS)
+                .frame(minWidth: 600, minHeight: 400)
+#elseif os(visionOS)
+                .frame(minWidth: 800, minHeight: 600)
+#endif
+        }
+        .windowResizability(.contentSize)
+        .onChange(of: bookmark, initial: false) {
+            Task(priority: .background) {
+                await engageMonitor()
+            }
+        }
+        .onChange(of: scenePhase, initial: true) {
+            switch scenePhase {
+            case .active:
+                if monitor == nil {
+                    Task(priority: .background) {
+                        await engageMonitor()
                     }
                 }
+            default:
+                monitor = nil
+            }
         }
         .onChange(of: scriptManager.status) {
             if scriptManager.status == .idle {
@@ -43,5 +50,21 @@ struct IntelStackApp: App {
         }
         .modelContainer(.default)
         .defaultAppStorage(.shared)
+    }
+    
+    private func engageMonitor() async {
+        guard let externalURL = try? ScriptManager.sync() else {
+            await MainActor.run { monitor = nil }
+            return
+        }
+        await MainActor.run {
+            monitor = .init(url: externalURL) { url in
+                do {
+                    try ScriptManager.sync(in: url)
+                } catch {
+                    print(error)
+                }
+            }
+        }
     }
 }

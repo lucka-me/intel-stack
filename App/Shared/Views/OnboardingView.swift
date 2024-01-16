@@ -22,14 +22,17 @@ struct OnboardingView: View {
             Image(AppIcon.current.previewName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-#if os(iOS)
+#if !os(macOS)
                 .mask {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    appIconShape
                 }
                 .overlay {
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    appIconShape
                         .stroke(.secondary.opacity(0.5), lineWidth: 1)
                 }
+#endif
+#if os(visionOS)
+                .shadow(radius: 5)
 #endif
                 .frame(width: 96, height: 96, alignment: .center)
                 .padding(.top, 40)
@@ -46,17 +49,19 @@ struct OnboardingView: View {
                 }
                 .frame(maxWidth: 400)
             }
-#if os(macOS)
+#if !os(iOS)
             .frame(maxWidth: 400, minHeight: 150)
 #endif
             
-#if os(iOS)
+#if !os(macOS)
             Spacer()
             primaryActionButton
 #endif
         }
-#if os(macOS)
+#if !os(iOS)
         .frame(minWidth: 320, maxWidth: 640, maxHeight: 640, alignment: .top)
+#endif
+#if os(macOS)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 primaryActionButton
@@ -126,6 +131,16 @@ struct OnboardingView: View {
         .controlSize(.large)
         .disabled(isDownloading)
     }
+    
+#if os(iOS)
+    private var appIconShape: RoundedRectangle {
+        .init(cornerRadius: 20, style: .continuous)
+    }
+#elseif os(visionOS)
+    private var appIconShape: Circle {
+        .init()
+    }
+#endif
     
     @ViewBuilder
     private func row<Icon: View, Content: View>(

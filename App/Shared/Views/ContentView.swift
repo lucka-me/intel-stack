@@ -11,13 +11,16 @@ struct ContentView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.scriptManager) private var scriptManager
     
-    @State private var columnVisibility = NavigationSplitViewVisibility.all
+    @State private var columnVisibility = NavigationSplitViewVisibility.doubleColumn
     @State private var isOnboardingSheetPresented = false
     @State private var sidebarSelection: SidebarView.Selection? = nil
     
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             SidebarView(selection: $sidebarSelection)
+#if os(macOS)
+                .frame(minWidth: 200)
+#endif
         } detail: {
             NavigationStack {
                 switch sidebarSelection {
@@ -29,13 +32,7 @@ struct ContentView: View {
                     Text("ContentView.EmptyHint")
                 }
             }
-            #if os(macOS)
-            .frame(minWidth: 450)
-            #endif
         }
-        #if os(macOS)
-        .frame(minHeight: 450)
-        #endif
         .navigationSplitViewStyle(.balanced)
         .sheet(isPresented: $isOnboardingSheetPresented) {
             scriptManager.updateMainScriptVersion()

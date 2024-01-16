@@ -78,6 +78,8 @@ extension SafariWebExtensionHandler {
         if UIDevice.current.userInterfaceIdiom == .pad {
             response["device"] = "iPad"
         }
+#elseif os(visionOS)
+        response["device"] = "vision"
 #endif
         response["scripts"] = scripts
         
