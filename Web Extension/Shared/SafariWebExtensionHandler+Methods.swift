@@ -29,7 +29,7 @@ extension SafariWebExtensionHandler {
         descriptor.propertiesToFetch = [ \.name, \.scriptDescription, \.filename, \.isInternal, \.version ]
         guard let plugins = try? context.fetch(descriptor) else { return [ : ] }
         
-        var scripts = [ mainScriptMetadata.wrap(code: mainScriptContent) ]
+        var scripts = [ CodeWrapper.wrap(code: mainScriptContent, metadata: mainScriptMetadata) ]
         
         let externalURL: URL?
         let accessingSecurityScopedResource: Bool
@@ -60,14 +60,7 @@ extension SafariWebExtensionHandler {
             guard fileManager.fileExists(at: fileURL) else { continue }
             do {
                 let content = try String(contentsOf: fileURL)
-                scripts.append(
-                    UserScriptMetadata.wrap(
-                        code: content,
-                        name: plugin.name,
-                        description: plugin.scriptDescription,
-                        version: plugin.version
-                    )
-                )
+                scripts.append(CodeWrapper.wrap(code: content, plugin: plugin))
             } catch {
                 print(error)
             }
