@@ -273,38 +273,6 @@
         }
       }
     },
-    "AddPluginView.TaskError.InvalidMetadata %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please check if the key \"%@\" exists and is valid in the metadata block"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请检查"
-          }
-        }
-      }
-    },
-    "AddPluginView.TaskError.InvalidMetadata.Reason %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The key \"%@\" is missing or invalid in the plugin metadata"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "元数据块中不存在“%@”或它的值无效"
-          }
-        }
-      }
-    },
     "AddPluginView.TaskError.InvalidURL" : {
       "localizations" : {
         "en" : {
@@ -333,38 +301,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请检查链接的格式，此外它应当以.user.js结尾"
-          }
-        }
-      }
-    },
-    "AddPluginView.TaskError.MetadataUnavailable" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unable to extract plugin metadata from the file"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法从文件中解析插件元数据"
-          }
-        }
-      }
-    },
-    "AddPluginView.TaskError.MetadataUnavailable.Reason" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please check the format and content of the metadata block"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请检查元数据块的格式与内容"
           }
         }
       }
@@ -637,70 +573,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无效的HTTP回应状态码：%lld"
-          }
-        }
-      }
-    },
-    "ScriptManager.TaskError.InvalidMetadata" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unable to extract plugin metadata from the file"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法从文件中解析插件元数据"
-          }
-        }
-      }
-    },
-    "ScriptManager.TaskError.InvalidMetadata.Reason" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please check the existance and format of the metadata block"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请检查元数据块是否存在以及格式是否正确"
-          }
-        }
-      }
-    },
-    "ScriptManager.TaskError.MissingConfiguration %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The configuration \"%@\" is missing"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "缺少配置“%@”"
-          }
-        }
-      }
-    },
-    "ScriptManager.TaskError.MissingConfiguration.Reason %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please check if \"%@\" exists in the metadata block"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请检查元数据块中是否存在“%@”"
           }
         }
       }

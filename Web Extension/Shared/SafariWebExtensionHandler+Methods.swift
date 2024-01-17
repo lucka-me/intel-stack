@@ -19,7 +19,8 @@ extension SafariWebExtensionHandler {
         guard
             fileManager.fileExists(at: FileConstants.mainScriptURL),
             let mainScriptContent = try? String(contentsOf: FileConstants.mainScriptURL),
-            let mainScriptMetadata = try? UserScriptMetadata(content: mainScriptContent)
+            let mainScriptMetadata = try? UserScriptMetadataDecoder()
+                .decode(MainScriptMetadata.self, from: mainScriptContent)
         else {
             return [ : ]
         }

@@ -19,10 +19,10 @@ extension ScriptManager {
         guard
             fileManager.fileExists(at: FileConstants.mainScriptURL),
             let content = try? String(contentsOf: FileConstants.mainScriptURL),
-            let metadata = try? UserScriptMetadata(content: content)
+            let metadata = try? UserScriptMetadataDecoder().decode(MainScriptMetadata.self, from: content)
         else {
             return
         }
-        version = metadata["version"]
+        version = metadata.version
     }
 }

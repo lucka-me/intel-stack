@@ -9,11 +9,30 @@ import Foundation
 
 struct CodeWrapper {
     static func wrap(code: String, plugin: Plugin) -> String {
-        return wrap(code: code, name: plugin.name, description: plugin.scriptDescription, version: plugin.version)
+        return wrap(
+            code: code,
+            name: plugin.name,
+            description: plugin.scriptDescription,
+            version: plugin.version
+        )
     }
     
-    static func wrap(code: String, metadata: UserScriptMetadata) -> String {
-        return wrap(code: code, name: metadata.name, description: metadata.description, version: metadata["version"])
+    static func wrap(code: String, metadata: MainScriptMetadata) -> String {
+        return wrap(
+            code: code,
+            name: metadata.name,
+            description: metadata.description,
+            version: metadata.version
+        )
+    }
+    
+    static func wrap(code: String, metadata: PluginMetadata) -> String {
+        return wrap(
+            code: code,
+            name: metadata.name,
+            description: metadata.description,
+            version: metadata.version
+        )
     }
     
     private static func wrap(code: String, name: String, description: String?, version: String?) -> String {

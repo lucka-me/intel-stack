@@ -6,51 +6,22 @@
 //
 
 import Foundation
-import RegexBuilder
 
-struct UserScriptMetadata {
-    let name: String
-    let description: String?
+struct MainScriptMetadata : Decodable {
+    var name: String
     
-    let items: [ String : String ]
-    
-    subscript(key: String) -> String? {
-        items[key]
-    }
+    var description: String?
+    var version: String
 }
 
-extension UserScriptMetadata {
-    init?(content: String) throws {
-        guard
-            content.hasPrefix("// ==UserScript=="),
-            let startIndex = content.firstRange(of: "// ==UserScript==")?.upperBound,
-            let endIndex = content.firstRange(of: "// ==/UserScript==")?.lowerBound
-        else {
-            return nil
-        }
-        self.items = try content[startIndex...endIndex]
-            .split(separator: Regex { .newlineSequence })
-            .reduce(into: [ : ]) { result, row in
-                let trimmed = row.trimmingCharacters(in: .whitespaces)
-                guard !trimmed.isEmpty else { return }
-                let rowPattern = /\/\/ *@(.+?) +(.+?) */
-                guard let (_, key, value) = try rowPattern.wholeMatch(in: trimmed)?.output else { return }
-                result[String(key)] = String(value)
-            }
-        self.name = items["name"] ?? ""
-        self.description = items["description"]
-    }
-}
-
-extension UserScriptMetadata {
-    var readyForPlugin: Bool {
-        guard
-            let _ = items["id"],
-            let categoryString = items["category"],
-            let _ = Plugin.Category(rawValue: categoryString)
-        else {
-            return false
-        }
-        return true
-    }
+struct PluginMetadata : Decodable {
+    var id: String
+    var name: String
+    var category: Plugin.Category
+    
+    var author: String?
+    var description: String?
+    var downloadURL: String?
+    var updateURL: String?
+    var version: String?
 }

@@ -16,7 +16,7 @@ extension ScriptManager {
             return
         }
         
-        var metadatas: [ String : (String, UserScriptMetadata) ] = try FileManager.default
+        var metadatas: [ String : (String, PluginMetadata) ] = try FileManager.default
             .contentsOfDirectory(at: externalURL, includingPropertiesForKeys: nil)
             .filter { fileURL in
                 fileURL.isFileURL && fileURL.lastPathComponent.hasSuffix(FileConstants.userScriptFilenameSuffix)
@@ -24,12 +24,11 @@ extension ScriptManager {
             .reduce(into: [ : ]) { result, url in
                 guard
                     let content = try? String(contentsOf: url),
-                    let metadata = try? UserScriptMetadata(content: content),
-                    metadata.readyForPlugin
+                    let metadata = try? UserScriptMetadataDecoder().decode(PluginMetadata.self, from: content)
                 else {
                     return
                 }
-                result[metadata["id"]!] = (
+                result[metadata.id] = (
                     url.lastPathComponent.replacing(FileConstants.userScriptFilenameSuffix, with: ""),
                     metadata
                 )

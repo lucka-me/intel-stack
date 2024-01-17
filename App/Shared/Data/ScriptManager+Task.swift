@@ -16,17 +16,11 @@ extension ScriptManager {
 
     enum TaskError: Error, LocalizedError {
         case invalidHTTPResponse(statusCode: Int)
-        case metadataUnavailable
-        case missingConfiguration(key: String)
         
         var errorDescription: String? {
             switch self {
             case .invalidHTTPResponse(let statusCode):
                 return .init(localized: "ScriptManager.TaskError.InvalidHTTPResponse \(statusCode)")
-            case .metadataUnavailable:
-                return .init(localized: "ScriptManager.TaskError.InvalidMetadata")
-            case .missingConfiguration(let key):
-                return .init(localized: "ScriptManager.TaskError.MissingConfiguration \(key)")
             }
         }
         
@@ -34,10 +28,6 @@ extension ScriptManager {
             switch self {
             case .invalidHTTPResponse(let statusCode):
                 return .init(localized: "ScriptManager.TaskError.InvalidHTTPResponse.Reason \(statusCode)")
-            case .metadataUnavailable:
-                return .init(localized: "ScriptManager.TaskError.InvalidMetadata.Reason")
-            case .missingConfiguration(let key):
-                return .init(localized: "ScriptManager.TaskError.MissingConfiguration.Reason \(key)")
             }
         }
     }
@@ -152,12 +142,7 @@ extension ScriptManager {
         }
         
         let content = try String(contentsOf: temporaryURL)
-        guard let metadata = try UserScriptMetadata(content: content) else {
-            throw TaskError.metadataUnavailable
-        }
-        guard let _ = metadata["version"] else {
-            throw TaskError.missingConfiguration(key: "version")
-        }
+        let _ = try UserScriptMetadataDecoder().decode(MainScriptMetadata.self, from: content)
         
         if fileManager.fileExists(at: FileConstants.mainScriptURL) {
             try fileManager.removeItem(at: FileConstants.mainScriptURL)
@@ -189,12 +174,7 @@ extension ScriptManager {
         }
         
         let content = try String(contentsOf: temporaryURL)
-        guard
-            let metadata = try UserScriptMetadata(content: content),
-            metadata.readyForPlugin
-        else {
-            throw TaskError.metadataUnavailable
-        }
+        let metadata = try UserScriptMetadataDecoder().decode(PluginMetadata.self, from: content)
         
         let destinationURL = FileConstants.internalPluginsDirectoryURL
             .appending(path: filename)
@@ -233,14 +213,9 @@ fileprivate extension ScriptManager {
         guard fileManager.fileExists(at: destinationURL) else { return }
         
         let content = try String(contentsOf: temporaryURL)
-        guard
-            let metadata = try UserScriptMetadata(content: content),
-            metadata.readyForPlugin
-        else {
-            throw TaskError.metadataUnavailable
-        }
+        let metadata = try UserScriptMetadataDecoder().decode(PluginMetadata.self, from: content)
         
-        guard let newVersion = metadata["version"], newVersion != information.version else {
+        guard let newVersion = metadata.version, newVersion != information.version else {
             return
         }
         
@@ -262,7 +237,7 @@ fileprivate extension ModelExecutor {
         }
     }
     
-    func updateInternalPlugin(with metadata: UserScriptMetadata, filename: String) throws {
+    func updateInternalPlugin(with metadata: PluginMetadata, filename: String) throws {
         let predicate = #Predicate<Plugin> {
             $0.isInternal && $0.filename == filename
         }
@@ -277,7 +252,7 @@ fileprivate extension ModelExecutor {
         try modelContext.save()
     }
     
-    func updateExternalPlugin(_ identifier: PersistentIdentifier, with metadata: UserScriptMetadata) throws {
+    func updateExternalPlugin(_ identifier: PersistentIdentifier, with metadata: PluginMetadata) throws {
         guard let item = self[identifier, as: Plugin.self] else { return }
         item.update(from: metadata)
         try modelContext.save()

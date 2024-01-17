@@ -108,14 +108,17 @@ struct AddPluginView: View {
     private func sectionContent(of information: ExternalPluginInformation) -> some View {
         LabeledContent("AddPluginView.PluginInformation.Name", value: information.metadata.name)
         LabeledContent("AddPluginView.PluginInformation.ID") {
-            Text(information.id)
+            Text(information.metadata.id)
                 .monospaced()
         }
-        LabeledContent("AddPluginView.PluginInformation.Category", value: information.category.rawValue)
-        if let author = information.author {
+        LabeledContent(
+            "AddPluginView.PluginInformation.Category",
+            value: information.metadata.category.rawValue
+        )
+        if let author = information.metadata.author {
             LabeledContent("AddPluginView.PluginInformation.Author", value: author)
         }
-        if let version = information.version {
+        if let version = information.metadata.version {
             LabeledContent("AddPluginView.PluginInformation.Version") {
                 Text(version)
                     .monospaced()
@@ -204,9 +207,7 @@ fileprivate enum Method : Int, CaseIterable {
 fileprivate enum TaskError: Error, LocalizedError {
     case externalLocationUnavailable
     case invalidHTTPResponse(statusCode: Int)
-    case invalidMetadata(key: String)
     case invalidURL
-    case metadataUnavailable
     case localized(error: LocalizedError)
     case generic(error: Error)
     
@@ -216,12 +217,8 @@ fileprivate enum TaskError: Error, LocalizedError {
             return .init(localized: "AddPluginView.TaskError.ExternalLocationUnavailable")
         case .invalidHTTPResponse(let statusCode):
             return .init(localized: "AddPluginView.TaskError.InvalidHTTPResponse \(statusCode)")
-        case .invalidMetadata(let key):
-            return .init(localized: "AddPluginView.TaskError.InvalidMetadata \(key)")
         case .invalidURL:
             return .init(localized: "AddPluginView.TaskError.InvalidURL")
-        case .metadataUnavailable:
-            return .init(localized: "AddPluginView.TaskError.MetadataUnavailable")
         case .localized(let error):
             return error.errorDescription
         case .generic(let error):
@@ -235,12 +232,8 @@ fileprivate enum TaskError: Error, LocalizedError {
             return .init(localized: "AddPluginView.TaskError.ExternalLocationUnavailable.Reason")
         case .invalidHTTPResponse(let statusCode):
             return .init(localized: "AddPluginView.TaskError.InvalidHTTPResponse.Reason \(statusCode)")
-        case .invalidMetadata(let key):
-            return .init(localized: "AddPluginView.TaskError.InvalidMetadata.Reason \(key)")
         case .invalidURL:
             return .init(localized: "AddPluginView.TaskError.InvalidURL.Reason")
-        case .metadataUnavailable:
-            return .init(localized: "AddPluginView.TaskError.MetadataUnavailable.Reason")
         case .localized(let error):
             return error.failureReason
         case .generic(let error):
@@ -251,22 +244,15 @@ fileprivate enum TaskError: Error, LocalizedError {
 
 fileprivate struct ExternalPluginInformation : Equatable {
     static func == (lhs: ExternalPluginInformation, rhs: ExternalPluginInformation) -> Bool {
-        lhs.metadata.items == rhs.metadata.items &&
-        lhs.filename == rhs.filename &&
-        lhs.id == rhs.id &&
-        lhs.category == rhs.category
+        lhs.metadata.id == rhs.metadata.id &&
+        lhs.metadata.category == rhs.metadata.category &&
+        lhs.filename == rhs.filename
     }
     
-    let metadata: UserScriptMetadata
+    let metadata: PluginMetadata
 
     let filename: String
     let provider: CodeProvider
-    
-    let id: String
-    let category: Plugin.Category
-    
-    var author: String? = nil
-    var version: String? = nil
 }
 
 fileprivate struct RemoteSection: View {
@@ -345,27 +331,12 @@ fileprivate struct RemoteSection: View {
             }
             
             let content = try String(contentsOf: temporaryURL)
-            guard let metadata = try UserScriptMetadata(content: content) else {
-                throw TaskError.metadataUnavailable
-            }
-            guard let id = metadata["id"] else {
-                throw TaskError.invalidMetadata(key: "id")
-            }
-            guard
-                let categoryString = metadata["category"],
-                let category = Plugin.Category(rawValue: categoryString)
-            else {
-                throw TaskError.invalidMetadata(key: "category")
-            }
+            let metadata = try UserScriptMetadataDecoder().decode(PluginMetadata.self, from: content)
             
             self.pluginInformation = .init(
                 metadata: metadata,
                 filename: filename,
-                provider: .temporaryFile(url: temporaryURL),
-                id: id,
-                category: category,
-                author: metadata["author"],
-                version: metadata["version"]
+                provider: .temporaryFile(url: temporaryURL)
             )
         } catch let error as TaskError {
             onError(error)
@@ -413,12 +384,7 @@ fileprivate struct CodeSection: View {
     }
     
     private func updateInformation() {
-        guard
-            let metadata = try? UserScriptMetadata(content: code),
-            let id = metadata["id"],
-            let categoryText = metadata["category"],
-            let category = Plugin.Category(rawValue: categoryText)
-        else {
+        guard let metadata = try? UserScriptMetadataDecoder().decode(PluginMetadata.self, from: code) else {
             pluginInformation = nil
             return
         }
@@ -428,11 +394,7 @@ fileprivate struct CodeSection: View {
         pluginInformation = .init(
             metadata: metadata,
             filename: filename,
-            provider: .code(code: code),
-            id: id,
-            category: category,
-            author: metadata["author"],
-            version: metadata["version"]
+            provider: .code(code: code)
         )
     }
 }
