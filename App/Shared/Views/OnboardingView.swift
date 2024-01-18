@@ -216,7 +216,7 @@ fileprivate enum TaskError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .localized(let error):
-            return error.errorDescription
+            return error.errorDescription ?? error.localizedDescription
         case .generic(let error):
             return error.localizedDescription
         }
@@ -225,7 +225,7 @@ fileprivate enum TaskError: Error, LocalizedError {
     var failureReason: String? {
         switch self {
         case .localized(let error):
-            return error.failureReason
+            return error.failureReason ?? error.localizedDescription
         case .generic(let error):
             return error.localizedDescription
         }

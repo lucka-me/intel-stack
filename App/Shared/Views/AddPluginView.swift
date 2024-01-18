@@ -66,15 +66,15 @@ struct AddPluginView: View {
 #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
 #endif
-            .alert(isPresented: $isAlertPresented, error: taskError) { _ in } message: { error in
-                if let reason = error.failureReason {
-                    Text(reason)
-                }
-            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     cancelButton
                 }
+            }
+        }
+        .alert(isPresented: $isAlertPresented, error: taskError) { _ in } message: { error in
+            if let reason = error.failureReason {
+                Text(reason)
             }
         }
         .onChange(of: method) {
@@ -220,7 +220,7 @@ fileprivate enum TaskError: Error, LocalizedError {
         case .invalidURL:
             return .init(localized: "AddPluginView.TaskError.InvalidURL")
         case .localized(let error):
-            return error.errorDescription
+            return error.errorDescription ?? error.localizedDescription
         case .generic(let error):
             return error.localizedDescription
         }
@@ -235,7 +235,7 @@ fileprivate enum TaskError: Error, LocalizedError {
         case .invalidURL:
             return .init(localized: "AddPluginView.TaskError.InvalidURL.Reason")
         case .localized(let error):
-            return error.failureReason
+            return error.failureReason ?? error.localizedDescription
         case .generic(let error):
             return error.localizedDescription
         }
