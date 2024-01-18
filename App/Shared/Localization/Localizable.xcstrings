@@ -257,22 +257,6 @@
         }
       }
     },
-    "AddPluginView.TaskError.InvalidHTTPResponse.Reason %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid HTTP response code: %lld"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无效的HTTP回应状态码：%lld"
-          }
-        }
-      }
-    },
     "AddPluginView.TaskError.InvalidURL" : {
       "localizations" : {
         "en" : {
@@ -546,22 +530,6 @@
       }
     },
     "ScriptManager.TaskError.InvalidHTTPResponse %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid HTTP response code: %lld"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无效的HTTP回应状态码：%lld"
-          }
-        }
-      }
-    },
-    "ScriptManager.TaskError.InvalidHTTPResponse.Reason %lld" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {

@@ -27,7 +27,7 @@ extension ScriptManager {
         var failureReason: String? {
             switch self {
             case .invalidHTTPResponse(let statusCode):
-                return .init(localized: "ScriptManager.TaskError.InvalidHTTPResponse.Reason \(statusCode)")
+                return HTTPURLResponse.localizedString(forStatusCode: statusCode)
             }
         }
     }

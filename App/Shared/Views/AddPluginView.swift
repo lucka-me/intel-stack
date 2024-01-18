@@ -231,7 +231,7 @@ fileprivate enum TaskError: Error, LocalizedError {
         case .externalLocationUnavailable:
             return .init(localized: "AddPluginView.TaskError.ExternalLocationUnavailable.Reason")
         case .invalidHTTPResponse(let statusCode):
-            return .init(localized: "AddPluginView.TaskError.InvalidHTTPResponse.Reason \(statusCode)")
+            return HTTPURLResponse.localizedString(forStatusCode: statusCode)
         case .invalidURL:
             return .init(localized: "AddPluginView.TaskError.InvalidURL.Reason")
         case .localized(let error):
