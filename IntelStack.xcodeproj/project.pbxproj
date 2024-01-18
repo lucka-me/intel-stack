@@ -36,6 +36,7 @@
 		8475D1902AD6EE1300D71F59 /* ModelExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8475D18F2AD6EE1300D71F59 /* ModelExecutor.swift */; };
 		8475D1932AD8333800D71F59 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8475D1922AD8333800D71F59 /* Localizable.xcstrings */; };
 		8475D1962ADAD19100D71F59 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 8475D1952ADAD19100D71F59 /* images */; };
+		84A917EF2B58EDCF009D53E8 /* UserScriptMetadataDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A917EE2B58EDCF009D53E8 /* UserScriptMetadataDecoderTests.swift */; };
 		84D068D92ABDB2EB00EC6E7E /* ModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D068D82ABDB2EB00EC6E7E /* ModelContainer.swift */; };
 		84D068DA2ABDB2EB00EC6E7E /* ModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D068D82ABDB2EB00EC6E7E /* ModelContainer.swift */; };
 		84D068DD2ABDB4D900EC6E7E /* FileConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D068DC2ABDB4D900EC6E7E /* FileConstants.swift */; };
@@ -68,6 +69,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 840F49B52AB70C3600012C44;
 			remoteInfo = WebExtension;
+		};
+		84A917F02B58EDCF009D53E8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8423187A2AB7053A000A0A09 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 842318812AB7053A000A0A09;
+			remoteInfo = "Intel Stack";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -117,6 +125,8 @@
 		8475D18F2AD6EE1300D71F59 /* ModelExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExecutor.swift; sourceTree = "<group>"; };
 		8475D1922AD8333800D71F59 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		8475D1952ADAD19100D71F59 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
+		84A917EC2B58EDCF009D53E8 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		84A917EE2B58EDCF009D53E8 /* UserScriptMetadataDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScriptMetadataDecoderTests.swift; sourceTree = "<group>"; };
 		84D068D82ABDB2EB00EC6E7E /* ModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainer.swift; sourceTree = "<group>"; };
 		84D068DC2ABDB4D900EC6E7E /* FileConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileConstants.swift; sourceTree = "<group>"; };
 		84D068E22ABEFDA000EC6E7E /* InternalPlugins.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = InternalPlugins.json; sourceTree = "<group>"; };
@@ -145,6 +155,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8423187F2AB7053A000A0A09 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84A917E92B58EDCF009D53E8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -230,6 +247,7 @@
 				840F49AC2AB7061200012C44 /* App */,
 				842318832AB7053A000A0A09 /* Products */,
 				84D8E95E2AB73C8F000234A9 /* Shared */,
+				84A917ED2B58EDCF009D53E8 /* Tests */,
 				840F49B12AB7095100012C44 /* Web Extension */,
 			);
 			sourceTree = "<group>";
@@ -239,6 +257,7 @@
 			children = (
 				842318822AB7053A000A0A09 /* Intel Stack.app */,
 				840F49B62AB70C3600012C44 /* Web Extension.appex */,
+				84A917EC2B58EDCF009D53E8 /* Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -285,6 +304,14 @@
 				8475D1922AD8333800D71F59 /* Localizable.xcstrings */,
 			);
 			path = Localization;
+			sourceTree = "<group>";
+		};
+		84A917ED2B58EDCF009D53E8 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				84A917EE2B58EDCF009D53E8 /* UserScriptMetadataDecoderTests.swift */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		84D068DB2ABDB44000EC6E7E /* Data */ = {
@@ -391,6 +418,24 @@
 			productReference = 842318822AB7053A000A0A09 /* Intel Stack.app */;
 			productType = "com.apple.product-type.application";
 		};
+		84A917EB2B58EDCF009D53E8 /* Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84A917F22B58EDCF009D53E8 /* Build configuration list for PBXNativeTarget "Tests" */;
+			buildPhases = (
+				84A917E82B58EDCF009D53E8 /* Sources */,
+				84A917E92B58EDCF009D53E8 /* Frameworks */,
+				84A917EA2B58EDCF009D53E8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				84A917F12B58EDCF009D53E8 /* PBXTargetDependency */,
+			);
+			name = Tests;
+			productName = Tests;
+			productReference = 84A917EC2B58EDCF009D53E8 /* Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -398,7 +443,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1510;
 				TargetAttributes = {
 					840F49B52AB70C3600012C44 = {
@@ -406,6 +451,10 @@
 					};
 					842318812AB7053A000A0A09 = {
 						CreatedOnToolsVersion = 15.0;
+					};
+					84A917EB2B58EDCF009D53E8 = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = 842318812AB7053A000A0A09;
 					};
 				};
 			};
@@ -425,6 +474,7 @@
 			targets = (
 				842318812AB7053A000A0A09 /* Intel Stack */,
 				840F49B52AB70C3600012C44 /* Web Extension */,
+				84A917EB2B58EDCF009D53E8 /* Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -451,6 +501,13 @@
 				8423188A2AB7053A000A0A09 /* Assets.xcassets in Resources */,
 				84D068E32ABEFDA000EC6E7E /* InternalPlugins.json in Resources */,
 				8475D1932AD8333800D71F59 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84A917EA2B58EDCF009D53E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,6 +569,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		84A917E82B58EDCF009D53E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84A917EF2B58EDCF009D53E8 /* UserScriptMetadataDecoderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -519,6 +584,11 @@
 			isa = PBXTargetDependency;
 			target = 840F49B52AB70C3600012C44 /* Web Extension */;
 			targetProxy = 840F49CC2AB70C3600012C44 /* PBXContainerItemProxy */;
+		};
+		84A917F12B58EDCF009D53E8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 842318812AB7053A000A0A09 /* Intel Stack */;
+			targetProxy = 84A917F02B58EDCF009D53E8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -804,6 +874,50 @@
 			};
 			name = Release;
 		};
+		84A917F32B58EDCF009D53E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4J48MW8HQS;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.lucka.IntelStack.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Intel Stack.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Intel Stack";
+			};
+			name = Debug;
+		};
+		84A917F42B58EDCF009D53E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 4J48MW8HQS;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.lucka.IntelStack.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Intel Stack.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Intel Stack";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -830,6 +944,15 @@
 			buildConfigurations = (
 				842318922AB7053A000A0A09 /* Debug */,
 				842318932AB7053A000A0A09 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		84A917F22B58EDCF009D53E8 /* Build configuration list for PBXNativeTarget "Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84A917F32B58EDCF009D53E8 /* Debug */,
+				84A917F42B58EDCF009D53E8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -15,7 +15,7 @@ class UserScriptMetadataDecoder {
 
 extension UserScriptMetadataDecoder {
     struct SyntaxError : LocalizedError {
-        enum Part {
+        enum Part : Equatable {
             case opening
             case configuration(line: String)
             case closing
