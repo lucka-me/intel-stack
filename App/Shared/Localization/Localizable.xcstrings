@@ -145,6 +145,22 @@
         }
       }
     },
+    "AddPluginView.PluginInformation.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The plugin will be saved as an external plugin."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个插件会被保存为外部插件。"
+          }
+        }
+      }
+    },
     "AddPluginView.PluginInformation.ID" : {
       "localizations" : {
         "en" : {

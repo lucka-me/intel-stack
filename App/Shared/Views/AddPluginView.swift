@@ -47,6 +47,8 @@ struct AddPluginView: View {
                             sectionContent(of: pluginInformation)
                         } header: {
                             Text("AddPluginView.PluginInformation.Title")
+                        } footer: {
+                            Text("AddPluginView.PluginInformation.Footer")
                         }
                     }
                 }
@@ -250,9 +252,9 @@ fileprivate struct ExternalPluginInformation : Equatable {
     }
     
     let metadata: PluginMetadata
-
-    let filename: String
     let provider: CodeProvider
+    
+    var filename: String
 }
 
 fileprivate struct RemoteSection: View {
@@ -335,8 +337,8 @@ fileprivate struct RemoteSection: View {
             
             self.pluginInformation = .init(
                 metadata: metadata,
-                filename: filename,
-                provider: .temporaryFile(url: temporaryURL)
+                provider: .temporaryFile(url: temporaryURL),
+                filename: filename
             )
         } catch let error as TaskError {
             onError(error)
@@ -381,6 +383,11 @@ fileprivate struct CodeSection: View {
             isCodeEditorFocused = true
         }
         .onChange(of: code, initial: false, updateInformation)
+        .onChange(of: filename) {
+            if pluginInformation?.filename != filename {
+                pluginInformation?.filename = filename
+            }
+        }
     }
     
     private func updateInformation() {
@@ -388,13 +395,17 @@ fileprivate struct CodeSection: View {
             pluginInformation = nil
             return
         }
+        var filename = self.filename
         if filename.isEmpty {
             filename = metadata.name.components(separatedBy: "/\\:?%*|\"<>").joined()
         }
         pluginInformation = .init(
             metadata: metadata,
-            filename: filename,
-            provider: .code(code: code)
+            provider: .code(code: code),
+            filename: filename
         )
+        if self.filename != filename {
+            self.filename = filename
+        }
     }
 }
