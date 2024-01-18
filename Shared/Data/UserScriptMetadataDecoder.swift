@@ -58,7 +58,7 @@ fileprivate struct Implementation {
             throw UserScriptMetadataDecoder.SyntaxError(part: .opening)
         }
         guard
-            let endIndex = string[startIndex ... string.endIndex].firstRange(of: Self.blockSuffix)?.lowerBound
+            let endIndex = string[startIndex ..< string.endIndex].firstRange(of: Self.blockSuffix)?.lowerBound
         else {
             throw UserScriptMetadataDecoder.SyntaxError(part: .closing)
         }
