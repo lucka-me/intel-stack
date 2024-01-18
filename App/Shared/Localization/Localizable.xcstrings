@@ -984,6 +984,70 @@
           }
         }
       }
+    },
+    "UserScriptMetadataDecoder.SyntaxError" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The syntax of metadata block is incorrect."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "元数据块存在语法错误"
+          }
+        }
+      }
+    },
+    "UserScriptMetadataDecoder.SyntaxError.Closing.Reason" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The closing line is missing."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "结束行不存在"
+          }
+        }
+      }
+    },
+    "UserScriptMetadataDecoder.SyntaxError.Configuration.Reason %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The configuration format is incorrect: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配置格式错误：%$@"
+          }
+        }
+      }
+    },
+    "UserScriptMetadataDecoder.SyntaxError.Opening.Reason" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The opening line is missing"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始行不存在"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

@@ -13,6 +13,33 @@ class UserScriptMetadataDecoder {
     }
 }
 
+extension UserScriptMetadataDecoder {
+    struct SyntaxError : LocalizedError {
+        enum Part {
+            case opening
+            case configuration(line: String)
+            case closing
+        }
+        
+        let part: Part
+        
+        var errorDescription: String? {
+            .init(localized: "UserScriptMetadataDecoder.SyntaxError")
+        }
+        
+        var failureReason: String? {
+            switch part {
+            case .opening:
+                return .init(localized: "UserScriptMetadataDecoder.SyntaxError.Opening.Reason")
+            case .configuration(let line):
+                return .init(localized: "UserScriptMetadataDecoder.SyntaxError.Configuration.Reason \(line)")
+            case .closing:
+                return .init(localized: "UserScriptMetadataDecoder.SyntaxError.Closing.Reason")
+            }
+        }
+    }
+}
+
 fileprivate struct Implementation {
     typealias Items = [ String : String ]
 
@@ -25,35 +52,23 @@ fileprivate struct Implementation {
     let items: Items
     
     init(from string: String) throws {
-        guard string.hasPrefix(Self.blockPrefix) else {
-            throw DecodingError.dataCorrupted(
-                .init(
-                    codingPath: [ ],
-                    debugDescription: "The beginning mark of metadata block does not exist"
-                )
-            )
+        guard
+            let startIndex = string.firstRange(of: Self.blockPrefix)?.upperBound
+        else {
+            throw UserScriptMetadataDecoder.SyntaxError(part: .opening)
         }
-        guard let endIndex = string.firstRange(of: Self.blockSuffix)?.lowerBound else {
-            throw DecodingError.dataCorrupted(
-                .init(
-                    codingPath: [ ],
-                    debugDescription: "The ending mark of metadata block does not exist"
-                )
-            )
+        guard
+            let endIndex = string[startIndex ... string.endIndex].firstRange(of: Self.blockSuffix)?.lowerBound
+        else {
+            throw UserScriptMetadataDecoder.SyntaxError(part: .closing)
         }
-        let startIndex = string.firstRange(of: Self.blockPrefix)!.upperBound
         self.items = try string[startIndex ..< endIndex].components(separatedBy: .newlines)
             .reduce(into: [ : ]) { result, line in
                 let trimmed = line.trimmingCharacters(in: .whitespaces)
                 guard !trimmed.isEmpty else { return }
                 let pattern = /\/\/ *@(.+?) +(.+?) */
                 guard let (_, key, value) = try? pattern.wholeMatch(in: trimmed)?.output else {
-                    throw DecodingError.dataCorrupted(
-                        .init(
-                            codingPath: [ ],
-                            debugDescription: "Unable to extract Key-Value pair from line \(line)"
-                        )
-                    )
+                    throw UserScriptMetadataDecoder.SyntaxError(part: .configuration(line: line))
                 }
                 result[.init(key)] = .init(value)
             }
@@ -176,7 +191,7 @@ fileprivate struct KeyedContainer<Key: CodingKey> : KeyedDecodingContainerProtoc
                 type,
                 .init(
                     codingPath: [ key ],
-                    debugDescription: "Unable to convert String into \(type)"
+                    debugDescription: "Unable to convert \(rawValue) into \(type)"
                 )
             )
         }
