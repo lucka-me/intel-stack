@@ -6,7 +6,7 @@
 
 IITC script and plugins manager designed for Safari.
 
-**This project is under development, nothing is guarateed, including the data structure, breaking changes, incoming features and continuing development.**
+**This project is a side project, new features, issue fixing and continuing maintenance are not guarateed.**
 
 ## Installation
 
