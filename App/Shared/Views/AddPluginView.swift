@@ -18,34 +18,45 @@ struct AddPluginView: View {
     
     var body: some View {
         NavigationStack {
-            Form {
-                Picker("AddPluginView.Method", selection: $method) {
-                    ForEach(Method.allCases, id: \.rawValue) { method in
-                        Text(method.titleKey)
-                            .tag(method)
+            ScrollViewReader { proxy in
+                Form {
+                    Picker("AddPluginView.Method", selection: $method) {
+                        ForEach(Method.allCases, id: \.rawValue) { method in
+                            Text(method.titleKey)
+                                .tag(method)
+                        }
                     }
-                }
-                .pickerStyle(.segmented)
+                    .pickerStyle(.segmented)
 #if !os(macOS)
-                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .listRowBackground(Color.clear)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .listRowBackground(Color.clear)
 #endif
-                
-                switch method {
-                case .remote:
-                    RemoteSection($pluginInformation) { error in
-                        taskError = error
-                        isAlertPresented = true
+                    
+                    switch method {
+                    case .remote:
+                        RemoteSection($pluginInformation) { error in
+                            taskError = error
+                            isAlertPresented = true
+                        }
+                    case .code:
+                        CodeSection($pluginInformation)
                     }
-                case .code:
-                    CodeSection($pluginInformation)
+                    
+                    if let pluginInformation {
+                        Section {
+                            sectionContent(of: pluginInformation)
+                        } header: {
+                            Text("AddPluginView.PluginInformation.Title")
+                        } footer: {
+                            Text("AddPluginView.PluginInformation.Footer")
+                        }
+                    }
                 }
-                
-                if let pluginInformation {
-                    Section {
-                        sectionContent(of: pluginInformation)
-                    } header: {
-                        Text("AddPluginView.PluginInformation.Title")
+                .onChange(of: pluginInformation, initial: false) { oldValue, newValue in
+                    if oldValue == nil, newValue != nil {
+                        // The bug of TextEditor / TextField in Form / List makes the height unlimited,
+                        // When parsing successes, scroll to bottom
+                        proxy.scrollTo(FormPosition.saveButton, anchor: .bottom)
                     }
                 }
             }
@@ -57,15 +68,15 @@ struct AddPluginView: View {
 #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
 #endif
-            .alert(isPresented: $isAlertPresented, error: taskError) { _ in } message: { error in
-                if let reason = error.failureReason {
-                    Text(reason)
-                }
-            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     cancelButton
                 }
+            }
+        }
+        .alert(isPresented: $isAlertPresented, error: taskError) { _ in } message: { error in
+            if let reason = error.failureReason {
+                Text(reason)
             }
         }
         .onChange(of: method) {
@@ -99,14 +110,17 @@ struct AddPluginView: View {
     private func sectionContent(of information: ExternalPluginInformation) -> some View {
         LabeledContent("AddPluginView.PluginInformation.Name", value: information.metadata.name)
         LabeledContent("AddPluginView.PluginInformation.ID") {
-            Text(information.id)
+            Text(information.metadata.id)
                 .monospaced()
         }
-        LabeledContent("AddPluginView.PluginInformation.Category", value: information.category.rawValue)
-        if let author = information.author {
+        LabeledContent(
+            "AddPluginView.PluginInformation.Category",
+            value: information.metadata.category.rawValue
+        )
+        if let author = information.metadata.author {
             LabeledContent("AddPluginView.PluginInformation.Author", value: author)
         }
-        if let version = information.version {
+        if let version = information.metadata.version {
             LabeledContent("AddPluginView.PluginInformation.Version") {
                 Text(version)
                     .monospaced()
@@ -115,6 +129,7 @@ struct AddPluginView: View {
         Button("AddPluginView.Add") {
             trySave(information: information)
         }
+        .id(FormPosition.saveButton)
     }
     
     private func trySave(information: ExternalPluginInformation) {
@@ -173,6 +188,10 @@ fileprivate enum CodeProvider {
     }
 }
 
+fileprivate enum FormPosition : Int, Hashable {
+    case saveButton
+}
+
 fileprivate enum Method : Int, CaseIterable {
     case remote
     case code
@@ -190,9 +209,7 @@ fileprivate enum Method : Int, CaseIterable {
 fileprivate enum TaskError: Error, LocalizedError {
     case externalLocationUnavailable
     case invalidHTTPResponse(statusCode: Int)
-    case invalidMetadata(key: String)
     case invalidURL
-    case metadataUnavailable
     case localized(error: LocalizedError)
     case generic(error: Error)
     
@@ -202,14 +219,10 @@ fileprivate enum TaskError: Error, LocalizedError {
             return .init(localized: "AddPluginView.TaskError.ExternalLocationUnavailable")
         case .invalidHTTPResponse(let statusCode):
             return .init(localized: "AddPluginView.TaskError.InvalidHTTPResponse \(statusCode)")
-        case .invalidMetadata(let key):
-            return .init(localized: "AddPluginView.TaskError.InvalidMetadata \(key)")
         case .invalidURL:
             return .init(localized: "AddPluginView.TaskError.InvalidURL")
-        case .metadataUnavailable:
-            return .init(localized: "AddPluginView.TaskError.MetadataUnavailable")
         case .localized(let error):
-            return error.errorDescription
+            return error.errorDescription ?? error.localizedDescription
         case .generic(let error):
             return error.localizedDescription
         }
@@ -220,32 +233,28 @@ fileprivate enum TaskError: Error, LocalizedError {
         case .externalLocationUnavailable:
             return .init(localized: "AddPluginView.TaskError.ExternalLocationUnavailable.Reason")
         case .invalidHTTPResponse(let statusCode):
-            return .init(localized: "AddPluginView.TaskError.InvalidHTTPResponse.Reason \(statusCode)")
-        case .invalidMetadata(let key):
-            return .init(localized: "AddPluginView.TaskError.InvalidMetadata.Reason \(key)")
+            return HTTPURLResponse.localizedString(forStatusCode: statusCode)
         case .invalidURL:
             return .init(localized: "AddPluginView.TaskError.InvalidURL.Reason")
-        case .metadataUnavailable:
-            return .init(localized: "AddPluginView.TaskError.MetadataUnavailable.Reason")
         case .localized(let error):
-            return error.failureReason
+            return error.failureReason ?? error.localizedDescription
         case .generic(let error):
             return error.localizedDescription
         }
     }
 }
 
-fileprivate struct ExternalPluginInformation {
-    let metadata: UserScriptMetadata
-
-    let filename: String
+fileprivate struct ExternalPluginInformation : Equatable {
+    static func == (lhs: ExternalPluginInformation, rhs: ExternalPluginInformation) -> Bool {
+        lhs.metadata.id == rhs.metadata.id &&
+        lhs.metadata.category == rhs.metadata.category &&
+        lhs.filename == rhs.filename
+    }
+    
+    let metadata: PluginMetadata
     let provider: CodeProvider
     
-    let id: String
-    let category: Plugin.Category
-    
-    var author: String? = nil
-    var version: String? = nil
+    var filename: String
 }
 
 fileprivate struct RemoteSection: View {
@@ -324,27 +333,12 @@ fileprivate struct RemoteSection: View {
             }
             
             let content = try String(contentsOf: temporaryURL)
-            guard let metadata = try UserScriptMetadata(content: content) else {
-                throw TaskError.metadataUnavailable
-            }
-            guard let id = metadata["id"] else {
-                throw TaskError.invalidMetadata(key: "id")
-            }
-            guard
-                let categoryString = metadata["category"],
-                let category = Plugin.Category(rawValue: categoryString)
-            else {
-                throw TaskError.invalidMetadata(key: "category")
-            }
+            let metadata = try UserScriptMetadataDecoder().decode(PluginMetadata.self, from: content)
             
             self.pluginInformation = .init(
                 metadata: metadata,
-                filename: filename,
                 provider: .temporaryFile(url: temporaryURL),
-                id: id,
-                category: category,
-                author: metadata["author"],
-                version: metadata["version"]
+                filename: filename
             )
         } catch let error as TaskError {
             onError(error)
@@ -361,8 +355,8 @@ fileprivate struct CodeSection: View {
     
     @FocusState private var isCodeEditorFocused: Bool
     
-    @State private var filename = ""
     @State private var code = ""
+    @State private var filename = ""
     
     init(_ pluginInformation: Binding<ExternalPluginInformation?>) {
         self._pluginInformation = pluginInformation
@@ -373,9 +367,11 @@ fileprivate struct CodeSection: View {
             TextEditor(text: $code)
                 .monospaced()
                 .focused($isCodeEditorFocused)
-#if !os(iOS)
+#if os(macOS)
+                // .lineLimit(_:reservesSpace:) does not work at all
                 // On iOS, the height of row will increase beyond the frame height
-                // This bug exists on visionOS but will not occurs if paste directly
+                // This bug exists on visionOS but will not occurs if paste without editing
+                // If the bug is fixed or there are other workarounds, remove these.
                 .frame(height: 180)
 #endif
 #if os(visionOS)
@@ -387,29 +383,29 @@ fileprivate struct CodeSection: View {
             isCodeEditorFocused = true
         }
         .onChange(of: code, initial: false, updateInformation)
+        .onChange(of: filename) {
+            if pluginInformation?.filename != filename {
+                pluginInformation?.filename = filename
+            }
+        }
     }
     
     private func updateInformation() {
-        guard
-            let metadata = try? UserScriptMetadata(content: code),
-            let id = metadata["id"],
-            let categoryText = metadata["category"],
-            let category = Plugin.Category(rawValue: categoryText)
-        else {
+        guard let metadata = try? UserScriptMetadataDecoder().decode(PluginMetadata.self, from: code) else {
             pluginInformation = nil
             return
         }
+        var filename = self.filename
         if filename.isEmpty {
             filename = metadata.name.components(separatedBy: "/\\:?%*|\"<>").joined()
         }
         pluginInformation = .init(
             metadata: metadata,
-            filename: filename,
             provider: .code(code: code),
-            id: id,
-            category: category,
-            author: metadata["author"],
-            version: metadata["version"]
+            filename: filename
         )
+        if self.filename != filename {
+            self.filename = filename
+        }
     }
 }

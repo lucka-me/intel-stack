@@ -65,43 +65,36 @@ extension Plugin {
 }
 
 extension Plugin {
-    convenience init?(metadata: UserScriptMetadata, isInternal: Bool, filename: String) {
-        guard
-            let idendifier = metadata["id"],
-            let categoryString = metadata["category"],
-            let category = Category(rawValue: categoryString)
-        else {
-            return nil
-        }
+    convenience init?(metadata: PluginMetadata, isInternal: Bool, filename: String) {        
+        self.init(
+            idendifier: metadata.id,
+            name: metadata.name,
+            category: metadata.category,
+            isInternal: isInternal,
+            filename: filename
+        )
         
-        self.init(idendifier: idendifier, name: metadata.name, category: category, isInternal: isInternal, filename: filename)
-        
-        self.author = metadata["author"]
-        self.scriptDescription = metadata["description"]
-        self.version = metadata["version"]
-        if let downloadURL = metadata["downloadURL"] {
+        self.author = metadata.author
+        self.scriptDescription = metadata.description
+        self.version = metadata.version
+        if let downloadURL = metadata.downloadURL {
             self.downloadURL = URL(string: downloadURL)
         }
-        if let updateURL = metadata["updateURL"] {
+        if let updateURL = metadata.updateURL {
             self.updateURL = URL(string: updateURL)
         }
     }
     
-    func update(from metadata: UserScriptMetadata) {
-        if let idendifier = metadata["id"] {
-            self.idendifier = idendifier
-        }
-        if let categoryString = metadata["category"],
-           let category = Category(rawValue: categoryString) {
-            self.category = category
-        }
-        self.author = metadata["author"]
-        self.scriptDescription = metadata["description"]
-        self.version = metadata["version"]
-        if let downloadURL = metadata["downloadURL"] {
+    func update(from metadata: PluginMetadata) {
+        self.idendifier = metadata.id
+        self.category = metadata.category
+        self.author = metadata.author
+        self.scriptDescription = metadata.description
+        self.version = metadata.version
+        if let downloadURL = metadata.downloadURL {
             self.downloadURL = URL(string: downloadURL)
         }
-        if let updateURL = metadata["updateURL"] {
+        if let updateURL = metadata.updateURL {
             self.updateURL = URL(string: updateURL)
         }
     }

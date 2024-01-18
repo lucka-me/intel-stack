@@ -145,6 +145,22 @@
         }
       }
     },
+    "AddPluginView.PluginInformation.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The plugin will be saved as an external plugin."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个插件会被保存为外部插件。"
+          }
+        }
+      }
+    },
     "AddPluginView.PluginInformation.ID" : {
       "localizations" : {
         "en" : {
@@ -257,54 +273,6 @@
         }
       }
     },
-    "AddPluginView.TaskError.InvalidHTTPResponse.Reason %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid HTTP response code: %lld"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无效的HTTP回应状态码：%lld"
-          }
-        }
-      }
-    },
-    "AddPluginView.TaskError.InvalidMetadata %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please check if the key \"%@\" exists and is valid in the metadata block"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请检查"
-          }
-        }
-      }
-    },
-    "AddPluginView.TaskError.InvalidMetadata.Reason %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The key \"%@\" is missing or invalid in the plugin metadata"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "元数据块中不存在“%@”或它的值无效"
-          }
-        }
-      }
-    },
     "AddPluginView.TaskError.InvalidURL" : {
       "localizations" : {
         "en" : {
@@ -333,38 +301,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请检查链接的格式，此外它应当以.user.js结尾"
-          }
-        }
-      }
-    },
-    "AddPluginView.TaskError.MetadataUnavailable" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unable to extract plugin metadata from the file"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法从文件中解析插件元数据"
-          }
-        }
-      }
-    },
-    "AddPluginView.TaskError.MetadataUnavailable.Reason" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please check the format and content of the metadata block"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请检查元数据块的格式与内容"
           }
         }
       }
@@ -621,86 +557,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无效的HTTP回应状态码：%lld"
-          }
-        }
-      }
-    },
-    "ScriptManager.TaskError.InvalidHTTPResponse.Reason %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid HTTP response code: %lld"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无效的HTTP回应状态码：%lld"
-          }
-        }
-      }
-    },
-    "ScriptManager.TaskError.InvalidMetadata" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unable to extract plugin metadata from the file"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无法从文件中解析插件元数据"
-          }
-        }
-      }
-    },
-    "ScriptManager.TaskError.InvalidMetadata.Reason" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please check the existance and format of the metadata block"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请检查元数据块是否存在以及格式是否正确"
-          }
-        }
-      }
-    },
-    "ScriptManager.TaskError.MissingConfiguration %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "The configuration \"%@\" is missing"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "缺少配置“%@”"
-          }
-        }
-      }
-    },
-    "ScriptManager.TaskError.MissingConfiguration.Reason %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please check if \"%@\" exists in the metadata block"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "请检查元数据块中是否存在“%@”"
           }
         }
       }
@@ -1141,6 +997,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Intel Stack"
+          }
+        }
+      }
+    },
+    "UserScriptMetadataDecoder.SyntaxError" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The syntax of metadata block is incorrect."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "元数据块存在语法错误"
+          }
+        }
+      }
+    },
+    "UserScriptMetadataDecoder.SyntaxError.Closing.Reason" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The closing line is missing."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "结束行不存在"
+          }
+        }
+      }
+    },
+    "UserScriptMetadataDecoder.SyntaxError.Configuration.Reason %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The configuration format is incorrect: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配置格式错误：%$@"
+          }
+        }
+      }
+    },
+    "UserScriptMetadataDecoder.SyntaxError.Opening.Reason" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The opening line is missing"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开始行不存在"
           }
         }
       }

@@ -6,7 +6,7 @@
 
 IITC script and plugins manager designed for Safari.
 
-**This project is under development, nothing is guarateed, including the data structure, breaking changes, incoming features and continuing development.**
+**This project is a side project, new features, issue fixing and continuing maintenance are not guarateed.**
 
 ## Installation
 
@@ -15,8 +15,9 @@ IITC script and plugins manager designed for Safari.
 The packages are also available as archives of the [latest release](https://github.com/lucka-me/intel-stack/releases/latest "Latest release").
 
 ### Requirements
-- macOS: Sonoma 14.0 or above
 - iOS / iPadOS: 17.0 or above
+- macOS: Sonoma 14.0 or above
+- visionOS: 1.0 or above
 - Xcode (for build): 15.0 or above
 
 ## FAQ
@@ -29,7 +30,7 @@ As you may have noticed, the [IITC Button](https://github.com/IITC-CE/IITC-Butto
 
 ### What's the difference with IITC Button?
 
-Intel Stack is designed exclusivly for Apple platforms (iOS, iPadOS and macOS so far), and most core features are implemented with Swift instead of JavaScript, including a full-featured native app made with SwiftUI.
+Intel Stack is designed exclusivly for Apple platforms (iOS, iPadOS, macOS and visionOS), and most core features are implemented with Swift instead of JavaScript, including a full-featured native app made with SwiftUI.
 
 ## Disclaimer
 

@@ -14,9 +14,9 @@ function buildScriptsSection(scriptsEnabled, mainNode) {
         iconNode.className = "icon icon-power";
         labelNode.appendChild(iconNode);
 
-        const spanNode = document.createElement("span");
-        spanNode.textContent = browser.i18n.getMessage("popup_scripts_enabled");
-        labelNode.appendChild(spanNode);
+        const textNode = document.createElement("span");
+        textNode.textContent = browser.i18n.getMessage("popup_scripts_enabled");
+        labelNode.appendChild(textNode);
 
         rowNode.appendChild(labelNode);
 

@@ -192,10 +192,10 @@ struct OnboardingView: View {
                 try await group.waitForAll()
             }
         } catch let error as LocalizedError {
-            self.taskError = .localizedError(error: error)
+            self.taskError = .localized(error: error)
             self.isAlertPresented = true
         } catch {
-            self.taskError = .genericError(error: error)
+            self.taskError = .generic(error: error)
             self.isAlertPresented = true
         }
         
@@ -210,23 +210,23 @@ struct OnboardingView: View {
 }
 
 fileprivate enum TaskError: Error, LocalizedError {
-    case localizedError(error: LocalizedError)
-    case genericError(error: Error)
+    case localized(error: LocalizedError)
+    case generic(error: Error)
     
     var errorDescription: String? {
         switch self {
-        case .localizedError(let error):
-            return error.errorDescription
-        case .genericError(let error):
+        case .localized(let error):
+            return error.errorDescription ?? error.localizedDescription
+        case .generic(let error):
             return error.localizedDescription
         }
     }
         
     var failureReason: String? {
         switch self {
-        case .localizedError(let error):
-            return error.failureReason
-        case .genericError(let error):
+        case .localized(let error):
+            return error.failureReason ?? error.localizedDescription
+        case .generic(let error):
             return error.localizedDescription
         }
     }
