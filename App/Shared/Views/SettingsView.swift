@@ -145,7 +145,6 @@ fileprivate struct AboutSection: View {
                 Label(shortVersionString, systemImage: "app.badge.checkmark")
                     .badge(version)
             }
-            
         } header: {
             Text("SettingsView.About.Title")
         } footer: {

@@ -43,8 +43,8 @@
 		84D068DE2ABDB4D900EC6E7E /* FileConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D068DC2ABDB4D900EC6E7E /* FileConstants.swift */; };
 		84D068E32ABEFDA000EC6E7E /* InternalPlugins.json in Resources */ = {isa = PBXBuildFile; fileRef = 84D068E22ABEFDA000EC6E7E /* InternalPlugins.json */; };
 		84D068E42ABEFDA000EC6E7E /* InternalPlugins.json in Resources */ = {isa = PBXBuildFile; fileRef = 84D068E22ABEFDA000EC6E7E /* InternalPlugins.json */; };
-		84D1F62E2B5A405200D260EB /* Bundle+BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1F62D2B5A405200D260EB /* Bundle+BundleExtension.swift */; platformFilters = (macos, ); };
-		84D1F62F2B5A405500D260EB /* Bundle+BundleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1F62D2B5A405200D260EB /* Bundle+BundleExtension.swift */; platformFilters = (macos, ); };
+		84D1F62E2B5A405200D260EB /* Bundle+AppExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1F62D2B5A405200D260EB /* Bundle+AppExtension.swift */; platformFilters = (macos, ); };
+		84D1F62F2B5A405500D260EB /* Bundle+AppExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1F62D2B5A405200D260EB /* Bundle+AppExtension.swift */; platformFilters = (macos, ); };
 		84D8E95B2AB7312C000234A9 /* ScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E95A2AB7312C000234A9 /* ScriptManager.swift */; };
 		84D8E95D2AB731AE000234A9 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E95C2AB731AE000234A9 /* Plugin.swift */; };
 		84D8E9612AB73CD9000234A9 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9602AB73CD9000234A9 /* FileManager.swift */; };
@@ -132,7 +132,7 @@
 		84D068D82ABDB2EB00EC6E7E /* ModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelContainer.swift; sourceTree = "<group>"; };
 		84D068DC2ABDB4D900EC6E7E /* FileConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileConstants.swift; sourceTree = "<group>"; };
 		84D068E22ABEFDA000EC6E7E /* InternalPlugins.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = InternalPlugins.json; sourceTree = "<group>"; };
-		84D1F62D2B5A405200D260EB /* Bundle+BundleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+BundleExtension.swift"; sourceTree = "<group>"; };
+		84D1F62D2B5A405200D260EB /* Bundle+AppExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+AppExtension.swift"; sourceTree = "<group>"; };
 		84D8E95A2AB7312C000234A9 /* ScriptManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptManager.swift; sourceTree = "<group>"; };
 		84D8E95C2AB731AE000234A9 /* Plugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
 		84D8E9602AB73CD9000234A9 /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
@@ -343,7 +343,7 @@
 		84D1F62C2B5A3FF600D260EB /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				84D1F62D2B5A405200D260EB /* Bundle+BundleExtension.swift */,
+				84D1F62D2B5A405200D260EB /* Bundle+AppExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -540,7 +540,7 @@
 			files = (
 				84D8E9632AB73E04000234A9 /* Plugin.swift in Sources */,
 				84D8E96B2AB87859000234A9 /* UserScriptMetadata.swift in Sources */,
-				84D1F62F2B5A405500D260EB /* Bundle+BundleExtension.swift in Sources */,
+				84D1F62F2B5A405500D260EB /* Bundle+AppExtension.swift in Sources */,
 				84D8E9652AB73E0B000234A9 /* FileManager.swift in Sources */,
 				84D068DE2ABDB4D900EC6E7E /* FileConstants.swift in Sources */,
 				840F49B92AB70C3600012C44 /* SafariWebExtensionHandler.swift in Sources */,
@@ -567,7 +567,7 @@
 				840F49D52AB7101F00012C44 /* SettingsView.swift in Sources */,
 				84D068DD2ABDB4D900EC6E7E /* FileConstants.swift in Sources */,
 				843FCB2F2AB9C0FA00C93D1E /* ScriptManager+Task.swift in Sources */,
-				84D1F62E2B5A405200D260EB /* Bundle+BundleExtension.swift in Sources */,
+				84D1F62E2B5A405200D260EB /* Bundle+AppExtension.swift in Sources */,
 				840F49D72AB7108200012C44 /* PluginListView.swift in Sources */,
 				84D8E95B2AB7312C000234A9 /* ScriptManager.swift in Sources */,
 				842FFA4C2B57A1F4006DF29F /* UserScriptMetadataDecoder.swift in Sources */,

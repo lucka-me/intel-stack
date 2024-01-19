@@ -1,5 +1,5 @@
 //
-//  Bundle+BundleExtension.swift
+//  Bundle+AppExtension.swift
 //  Intel Stack
 //
 //  Created by Lucka on 2024-01-19.
