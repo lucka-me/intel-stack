@@ -33,16 +33,16 @@ extension SafariWebExtensionHandler {
         var scripts = [ CodeWrapper.wrap(code: mainScriptContent, metadata: mainScriptMetadata) ]
         
         let externalURL: URL?
-        let accessingSecurityScopedResource: Bool
+        let isAccessingSecurityScopedResource: Bool
         if plugins.contains(where: { !$0.isInternal }) {
             externalURL = UserDefaults.shared.externalScriptsBookmarkURL
-            accessingSecurityScopedResource = externalURL?.startAccessingSecurityScopedResource() ?? false
+            isAccessingSecurityScopedResource = externalURL?.startAccessingSecurityScopedResource() ?? false
         } else {
             externalURL = nil
-            accessingSecurityScopedResource = false
+            isAccessingSecurityScopedResource = false
         }
         defer {
-            if let externalURL, accessingSecurityScopedResource {
+            if let externalURL, isAccessingSecurityScopedResource {
                 externalURL.stopAccessingSecurityScopedResource()
             }
         }

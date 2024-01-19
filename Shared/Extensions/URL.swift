@@ -9,15 +9,15 @@ import Foundation
 
 extension URL {
     init(resolvingSecurityScopedBookmarkData data: Data, bookmarkDataIsStale: inout Bool) throws {
-        #if os(macOS)
+#if os(macOS)
         try self.init(
             resolvingBookmarkData: data,
             options: .withSecurityScope,
             bookmarkDataIsStale: &bookmarkDataIsStale
         )
-        #else
+#else
         try self.init(resolvingBookmarkData: data, bookmarkDataIsStale: &bookmarkDataIsStale)
-        #endif
+#endif
     }
     
     init(resolvingSecurityScopedBookmarkData data: Data) throws {
