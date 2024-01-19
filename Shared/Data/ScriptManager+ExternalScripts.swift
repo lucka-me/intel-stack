@@ -55,16 +55,16 @@ extension ScriptManager {
     
     @discardableResult
     static func sync(with context: ModelContext = .init(.default)) throws -> URL? {
-        guard
-            let externalURL = UserDefaults.shared.externalScriptsBookmarkURL,
-            externalURL.startAccessingSecurityScopedResource()
-        else {
+        guard let externalURL = UserDefaults.shared.externalScriptsBookmarkURL else {
             try context.delete(model: Plugin.self, where: Plugin.externalPredicate)
             return nil
         }
         
+        let isAccessingSecurityScopedResource = externalURL.startAccessingSecurityScopedResource()
         defer {
-            externalURL.stopAccessingSecurityScopedResource()
+            if isAccessingSecurityScopedResource {
+                externalURL.stopAccessingSecurityScopedResource()
+            }
         }
         try sync(in: externalURL, with: context)
         
