@@ -465,7 +465,7 @@
         }
       }
     },
-    "PluginCardView.Author %@" : {
+    "PluginListView.Author %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -481,7 +481,39 @@
         }
       }
     },
-    "PluginCardView.External" : {
+    "PluginListView.Disabled" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disabled"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未启用"
+          }
+        }
+      }
+    },
+    "PluginListView.Enabled" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enabled"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已启用"
+          }
+        }
+      }
+    },
+    "PluginListView.External" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -497,7 +529,7 @@
         }
       }
     },
-    "PluginCardView.Internal" : {
+    "PluginListView.Internal" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -513,7 +545,7 @@
         }
       }
     },
-    "PluginCardView.NoDescriptions" : {
+    "PluginListView.NoDescriptions" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -529,7 +561,7 @@
         }
       }
     },
-    "PluginCardView.Updating" : {
+    "PluginListView.Updating" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {

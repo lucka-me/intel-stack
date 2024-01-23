@@ -40,7 +40,9 @@ struct PluginListView: View {
     
     @ViewBuilder
     private func card(of plugin: Plugin) -> some View {
+#if !os(visionOS)
         @Bindable var plugin = plugin
+#endif
         GroupBox {
             VStack(alignment: .leading) {
                 HStack(alignment: .firstTextBaseline) {
@@ -51,16 +53,16 @@ struct PluginListView: View {
                             
                     }
                     if plugin.isInternal {
-                        Text("PluginCardView.Internal")
+                        Text("PluginListView.Internal")
                             .capsule(.purple)
                     } else {
-                        Label("PluginCardView.External", systemImage: "arrow.up.right")
+                        Label("PluginListView.External", systemImage: "arrow.up.right")
                             .capsule(.indigo)
                             .onTapGesture {
                                 open(plugin)
                             }
                         if scriptManager.updatingPluginIds.contains(plugin.uuid) {
-                            Text("PluginCardView.Updating")
+                            Text("PluginListView.Updating")
                                 .capsule(.pink)
                         }
                     }
@@ -70,7 +72,7 @@ struct PluginListView: View {
                 
                 Spacer()
                 
-                Text(plugin.scriptDescription ?? .init(localized: "PluginCardView.NoDescriptions"))
+                Text(plugin.scriptDescription ?? .init(localized: "PluginListView.NoDescriptions"))
                     .italic(plugin.scriptDescription == nil)
                     .font(.callout)
                     .foregroundStyle(.secondary)
@@ -78,7 +80,7 @@ struct PluginListView: View {
                 
                 HStack {
                     Spacer()
-                    Text("PluginCardView.Author \(plugin.author ?? "")")
+                    Text("PluginListView.Author \(plugin.author ?? "")")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .italic()
@@ -87,21 +89,43 @@ struct PluginListView: View {
                 }
             }
         } label: {
+#if os(visionOS)
+            // Temporary fix for visionOS
+            // - Toggle leads to UI freezing, always
+            // - .animation(:value:) also leads to UI freezing with high possibility
+            HStack(alignment: .top) {
+                Text(plugin.displayName)
+                Spacer()
+                if plugin.enabled {
+                    Label("PluginListView.Enabled", systemImage: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                } else {
+                    Label("PluginListView.Disabled", systemImage: "circle")
+                        .foregroundStyle(.gray)
+                }
+            }
+            .labelStyle(.iconOnly)
+#else
             Toggle(isOn: $plugin.enabled) {
                 Text(plugin.displayName)
-                    #if os(macOS)
+#if os(macOS)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    #endif
+#endif
             }
             .lineLimit(2)
-            #if os(macOS)
+#if os(macOS)
             .toggleStyle(.switch)
-            #endif
+#endif
+#endif
         }
         .fixedSize(horizontal: false, vertical: false)
-        #if os(macOS)
+#if os(macOS)
         .groupBoxStyle(.card)
-        #endif
+#elseif os(visionOS)
+        .onTapGesture {
+            plugin.enabled.toggle()
+        }
+#endif
     }
     
     private func open(_ plugin: Plugin) {
