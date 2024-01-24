@@ -25,12 +25,13 @@ struct SidebarView: View {
     
     @Environment(\.scriptManager) private var scriptManager
 #if os(macOS)
-    @Environment(\.scenePhase) private var scenePhase : ScenePhase
+    @Environment(\.scenePhase) private var scenePhase
 #endif
     
     @State private var isAddPluginDialogPresented = false
 #if os(macOS)
     @State private var isExtensionEnabled: Bool? = nil
+    @State private var bottomBlockHeight: CGFloat = 0.0
 #endif
     
     init(selection: Binding<Selection?>) {
@@ -66,14 +67,13 @@ struct SidebarView: View {
                         Label(category.rawValue, systemImage: category.icon)
                     }
                 }
+#if !os(macOS)
                 if externalScriptsBookmark != nil {
                     Button("SidebarView.Plugins.Add", systemImage: "plus.circle") {
                         isAddPluginDialogPresented = true
                     }
-#if os(macOS)
-                    .buttonStyle(.plain)
-#endif
                 }
+#endif
             } header: {
                 Text("SidebarView.Plugins")
             }
@@ -105,10 +105,29 @@ struct SidebarView: View {
             }
 #endif
         }
+        .safeAreaPadding(.bottom, bottomBlockHeight)
         .navigationTitle("SidebarView.Title")
         .sheet(isPresented: $isAddPluginDialogPresented) {
             AddPluginView()
         }
+#if os(macOS)
+        .overlay(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 0) {
+                Divider()
+                    .layoutPriority(2)
+                HStack {
+                    Button("SidebarView.Plugins.Add", systemImage: "plus") {
+                        isAddPluginDialogPresented = true
+                    }
+                    .buttonStyle(.borderless)
+                    .labelStyle(.iconOnly)
+                    .disabled(externalScriptsBookmark == nil)
+                }
+                .padding(8)
+            }
+            .readSize(height: $bottomBlockHeight)
+        }
+#endif
     }
     
     @ViewBuilder
