@@ -10,12 +10,12 @@ import SwiftUI
 struct OnboardingView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scriptManager) private var scriptManager
+    @Environment(\.updateProgress) private var updateProgress
+    @Environment(\.updateScripts) private var updateScripts
+    @Environment(\.updateStatus) private var updateStatus
     
     @State private var isAlertPresented = false
-    @State private var isDownloading = false
     @State private var taskError: TaskError? = nil
-    
-    private var downloadProgress = Progress()
     
     var body: some View {
         VStack {
@@ -79,27 +79,27 @@ struct OnboardingView: View {
     @ViewBuilder
     private var downloadRow: some View {
         row("OnboardingView.Download") {
-            if downloadProgress.isFinished {
+            if updateProgress.isFinished {
                 Text("OnboardingView.Download.Content.Done")
             } else {
                 Text("OnboardingView.Download.Content")
                     .lineLimit(3, reservesSpace: true)
-                    .opacity(isDownloading ? 0 : 1)
+                    .opacity(updateStatus == .updating ? 0 : 1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .overlay {
-                        if isDownloading {
-                            ProgressView(downloadProgress)
+                        if updateStatus == .updating {
+                            ProgressView(updateProgress)
                         }
                     }
             }
             Spacer()
         } icon: {
-            if isDownloading {
+            if updateStatus == .updating {
                 Image(systemName: "arrow.down.circle.dotted")
                     .foregroundStyle(.blue.gradient)
                     .symbolRenderingMode(.multicolor)
                     .symbolEffect(.pulse, options: .repeating)
-            } else if downloadProgress.isFinished {
+            } else if updateProgress.isFinished {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundStyle(.green.gradient)
             } else {
@@ -112,14 +112,14 @@ struct OnboardingView: View {
     @ViewBuilder
     private var primaryActionButton: some View {
         Button {
-            if downloadProgress.isFinished {
+            if updateProgress.isFinished {
                 dismiss()
             } else {
                 Task { await tryDownload() }
             }
         } label: {
             Text(
-                downloadProgress.isFinished
+                updateProgress.isFinished
                 ? "OnboardingView.Action.Continue"
                 : "OnboardingView.Action.Download"
             )
@@ -129,7 +129,7 @@ struct OnboardingView: View {
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
-        .disabled(isDownloading)
+        .disabled(updateStatus == .updating)
     }
     
 #if os(iOS)
@@ -168,39 +168,13 @@ struct OnboardingView: View {
     
     private func tryDownload() async {
         do {
-            try ScriptManager.ensureInternalDirectories()
-            
-            let internalPluginNames = try ScriptManager.internalPluginNames
-            
-            await MainActor.run {
-                downloadProgress.totalUnitCount = .init(internalPluginNames.count + 1)
-                downloadProgress.completedUnitCount = 0
-                isDownloading = true
-            }
-            
-            try await ScriptManager.downloadMainScript(from: .release)
-            await MainActor.run { downloadProgress.completedUnitCount += 1 }
-            
-            try await withThrowingTaskGroup(of: Void.self) { group in
-                for name in internalPluginNames {
-                    group.addTask {
-                        try await ScriptManager.downloadInternalPlugin(name, from: .release)
-                        await MainActor.run { downloadProgress.completedUnitCount += 1 }
-                    }
-                }
-                
-                try await group.waitForAll()
-            }
+            try await updateScripts?()
         } catch let error as LocalizedError {
             self.taskError = .localized(error: error)
             self.isAlertPresented = true
         } catch {
             self.taskError = .generic(error: error)
             self.isAlertPresented = true
-        }
-        
-        await MainActor.run {
-            isDownloading = false
         }
     }
 }
