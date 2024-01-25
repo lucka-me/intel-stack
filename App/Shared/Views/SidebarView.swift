@@ -16,7 +16,9 @@ struct SidebarView: View {
         case plugins(category: Plugin.Category)
     }
     
+#if os(macOS)
     static private let extensionId = "dev.lucka.IntelStack.WebExtension"
+#endif
     
     @AppStorage(UserDefaults.Key.externalScriptsBookmark) private var externalScriptsBookmark: Data?
     @AppStorage(UserDefaults.Key.scriptsEnabled) private var scriptsEnabled = false
@@ -25,11 +27,12 @@ struct SidebarView: View {
     
     @Environment(\.scriptManager) private var scriptManager
 #if os(macOS)
-    @Environment(\.scenePhase) private var scenePhase : ScenePhase
+    @Environment(\.scenePhase) private var scenePhase
 #endif
     
     @State private var isAddPluginDialogPresented = false
 #if os(macOS)
+    @State private var bottomBlockHeight: CGFloat = 0.0
     @State private var isExtensionEnabled: Bool? = nil
 #endif
     
@@ -66,14 +69,11 @@ struct SidebarView: View {
                         Label(category.rawValue, systemImage: category.icon)
                     }
                 }
+#if os(iOS)
                 if externalScriptsBookmark != nil {
-                    Button("SidebarView.Plugins.Add", systemImage: "plus.circle") {
-                        isAddPluginDialogPresented = true
-                    }
-#if os(macOS)
-                    .buttonStyle(.plain)
-#endif
+                    addPluginButton
                 }
+#endif
             } header: {
                 Text("SidebarView.Plugins")
             }
@@ -104,10 +104,43 @@ struct SidebarView: View {
                 .disabled(scriptManager.status != .idle)
             }
 #endif
+#if os(visionOS)
+            ToolbarItem(placement: .bottomBar) {
+                if externalScriptsBookmark != nil {
+                    addPluginButton
+                }
+            }
+#endif
         }
+#if os(macOS)
+        .safeAreaPadding(.bottom, bottomBlockHeight)
+#endif
         .navigationTitle("SidebarView.Title")
         .sheet(isPresented: $isAddPluginDialogPresented) {
             AddPluginView()
+        }
+#if os(macOS)
+        .overlay(alignment: .bottom) {
+            VStack(alignment: .leading, spacing: 0) {
+                Divider()
+                    .layoutPriority(2)
+                HStack {
+                    addPluginButton
+                        .buttonStyle(.borderless)
+                        .labelStyle(.iconOnly)
+                        .disabled(externalScriptsBookmark == nil)
+                }
+                .padding(8)
+            }
+            .readSize(height: $bottomBlockHeight)
+        }
+#endif
+    }
+    
+    @ViewBuilder
+    private var addPluginButton: some View {
+        Button("SidebarView.Plugins.Add", systemImage: "plus") {
+            isAddPluginDialogPresented = true
         }
     }
     
