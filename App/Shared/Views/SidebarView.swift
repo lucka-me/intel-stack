@@ -99,7 +99,7 @@ struct SidebarView: View {
             }
 #if os(macOS)
             ToolbarItem(placement: .primaryAction) {
-                Button("SidebarView.Refresh", systemImage: "arrow.clockwise") {
+                Button("SidebarView.Update", systemImage: "arrow.clockwise") {
                     Task {
                         await tryUpdateScripts()
                     }
@@ -155,7 +155,7 @@ struct SidebarView: View {
 #endif
             .disabled(mainScriptVersion == nil)
         if updateStatus == .updating {
-            Label("SidebarView.Script.Downloading", systemImage: "arrow.down.circle.dotted")
+            Label("SidebarView.Script.Updating", systemImage: "arrow.down.circle.dotted")
                 .symbolRenderingMode(.multicolor)
                 .symbolEffect(.pulse, options: .repeating)
         } else if let mainScriptVersion {
