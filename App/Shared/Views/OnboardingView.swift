@@ -9,7 +9,6 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.scriptManager) private var scriptManager
     @Environment(\.updateProgress) private var updateProgress
     @Environment(\.updateScripts) private var updateScripts
     @Environment(\.updateStatus) private var updateStatus

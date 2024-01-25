@@ -8,9 +8,7 @@
 import SwiftData
 import SwiftUI
 
-struct PluginListView: View {
-    @Environment(\.scriptManager) private var scriptManager
-    
+struct PluginListView: View {    
 #if !os(macOS)
     @Environment(\.openURL) private var openURL
 #endif

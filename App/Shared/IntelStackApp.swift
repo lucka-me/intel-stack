@@ -11,13 +11,13 @@ import SwiftUI
 @main
 struct IntelStackApp: App {
     @AppStorage(UserDefaults.Key.externalScriptsBookmark, store: .shared) private var bookmark: Data?
-    @Environment(\.scriptManager) private var scriptManager
     @Environment(\.scenePhase) private var scenePhase
     
     @State private var mainScriptVersion: String? = ""
     @State private var monitor: ExternalFileMonitor? = nil
     @State private var updateStatus: UpdateStatus = .idle
     
+    private let scriptManager = ScriptManager.shared
     private let updateProgress = Progress()
     
     var body: some Scene {

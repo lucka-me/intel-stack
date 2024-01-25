@@ -10,7 +10,6 @@ import SwiftUI
 struct ContentView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.mainScriptVersion) private var mainScriptVersion
-    @Environment(\.scriptManager) private var scriptManager
     
     @State private var columnVisibility = NavigationSplitViewVisibility.doubleColumn
     @State private var isOnboardingSheetPresented = false

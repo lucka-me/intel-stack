@@ -25,7 +25,6 @@ struct SidebarView: View {
     
     @Binding private var selection: Selection?
     
-    @Environment(\.scriptManager) private var scriptManager
     @Environment(\.mainScriptVersion) private var mainScriptVersion
     @Environment(\.updateProgress) private var updateProgress
     @Environment(\.updateScripts) private var updateScripts
