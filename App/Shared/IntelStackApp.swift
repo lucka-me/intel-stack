@@ -26,6 +26,8 @@ struct IntelStackApp: App {
 #endif
         }
         .windowResizability(.contentSize)
+        .modelContainer(.default)
+        .defaultAppStorage(.shared)
         .onChange(of: bookmark, initial: false) {
             Task(priority: .background) {
                 await engageMonitor()
@@ -43,13 +45,7 @@ struct IntelStackApp: App {
                 monitor = nil
             }
         }
-        .onChange(of: scriptManager.status) {
-            if scriptManager.status == .idle {
-                scriptManager.updateMainScriptVersion()
-            }
-        }
-        .modelContainer(.default)
-        .defaultAppStorage(.shared)
+        .updatable(action: updatePlugins)
     }
     
     private func engageMonitor() async {
@@ -66,5 +62,11 @@ struct IntelStackApp: App {
                 }
             }
         }
+    }
+    
+    @MainActor
+    private func updatePlugins() async throws {
+        try await scriptManager.updateScripts()
+        scriptManager.updateMainScriptVersion()
     }
 }

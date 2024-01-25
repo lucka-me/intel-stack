@@ -26,6 +26,7 @@ struct SidebarView: View {
     @Binding private var selection: Selection?
     
     @Environment(\.scriptManager) private var scriptManager
+    @Environment(\.updateScripts) private var updateScripts
 #if os(macOS)
     @Environment(\.scenePhase) private var scenePhase
 #endif
@@ -200,8 +201,9 @@ struct SidebarView: View {
     @MainActor
     private func tryUpdateScripts() async {
         do {
-            try await scriptManager.updateScripts()
+            try await updateScripts?()
         } catch {
+            // TODO: Alert it
             print(error)
         }
     }

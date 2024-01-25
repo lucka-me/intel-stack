@@ -16,6 +16,7 @@
 		840F49D72AB7108200012C44 /* PluginListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F49D62AB7108200012C44 /* PluginListView.swift */; };
 		840F49D92AB710EA00012C44 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F49D82AB710EA00012C44 /* OnboardingView.swift */; };
 		84141C972B610D31005A07BC /* ReadViewHeightModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */; };
+		84141C9E2B6244A6005A07BC /* UpdatableEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */; };
 		842318862AB7053A000A0A09 /* IntelStackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318852AB7053A000A0A09 /* IntelStackApp.swift */; };
 		842318882AB7053A000A0A09 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318872AB7053A000A0A09 /* ContentView.swift */; };
 		8423188A2AB7053A000A0A09 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 842318892AB7053A000A0A09 /* Assets.xcassets */; };
@@ -107,6 +108,7 @@
 		840F49D62AB7108200012C44 /* PluginListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginListView.swift; sourceTree = "<group>"; };
 		840F49D82AB710EA00012C44 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadViewHeightModifier.swift; sourceTree = "<group>"; };
+		84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatableEnvironmentKey.swift; sourceTree = "<group>"; };
 		842318822AB7053A000A0A09 /* Intel Stack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Intel Stack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		842318852AB7053A000A0A09 /* IntelStackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntelStackApp.swift; sourceTree = "<group>"; };
 		842318872AB7053A000A0A09 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 				840F49D42AB7101F00012C44 /* SettingsView.swift */,
 				84424BE82ACEAB15009013A3 /* SidebarView.swift */,
 				8475D18C2AD6CF8000D71F59 /* Components */,
+				84141C982B6241BE005A07BC /* Environments */,
 				84141C952B610CC8005A07BC /* Modifiers */,
 			);
 			path = Views;
@@ -250,6 +253,14 @@
 				84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */,
 			);
 			path = Modifiers;
+			sourceTree = "<group>";
+		};
+		84141C982B6241BE005A07BC /* Environments */ = {
+			isa = PBXGroup;
+			children = (
+				84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */,
+			);
+			path = Environments;
 			sourceTree = "<group>";
 		};
 		842318792AB7053A000A0A09 = {
@@ -579,6 +590,7 @@
 				840F49D52AB7101F00012C44 /* SettingsView.swift in Sources */,
 				84D068DD2ABDB4D900EC6E7E /* FileConstants.swift in Sources */,
 				843FCB2F2AB9C0FA00C93D1E /* ScriptManager+Task.swift in Sources */,
+				84141C9E2B6244A6005A07BC /* UpdatableEnvironmentKey.swift in Sources */,
 				84D1F62E2B5A405200D260EB /* Bundle+AppExtension.swift in Sources */,
 				840F49D72AB7108200012C44 /* PluginListView.swift in Sources */,
 				84D8E95B2AB7312C000234A9 /* ScriptManager.swift in Sources */,
