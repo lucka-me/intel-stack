@@ -14,6 +14,7 @@ struct IntelStackApp: App {
     @Environment(\.scriptManager) private var scriptManager
     @Environment(\.scenePhase) private var scenePhase
     
+    @State private var mainScriptVersion: String? = ""
     @State private var monitor: ExternalFileMonitor? = nil
     @State private var updateStatus: UpdateStatus = .idle
     
@@ -31,6 +32,7 @@ struct IntelStackApp: App {
         .windowResizability(.contentSize)
         .modelContainer(.default)
         .defaultAppStorage(.shared)
+        .environment(\.mainScriptVersion, mainScriptVersion)
         .environment(\.updateProgress, updateProgress)
         .environment(\.updateStatus, updateStatus)
         .onChange(of: bookmark, initial: false) {
@@ -46,6 +48,7 @@ struct IntelStackApp: App {
                         await engageMonitor()
                     }
                 }
+                updateMainScriptVersion()
             default:
                 monitor = nil
             }
@@ -69,12 +72,29 @@ struct IntelStackApp: App {
         }
     }
     
+    private func updateMainScriptVersion() {
+        var version: String? = nil
+        defer {
+            mainScriptVersion = version
+        }
+        
+        let fileManager = FileManager.default
+        guard
+            fileManager.fileExists(at: FileConstants.mainScriptURL),
+            let content = try? String(contentsOf: FileConstants.mainScriptURL),
+            let metadata = try? UserScriptMetadataDecoder().decode(MainScriptMetadata.self, from: content)
+        else {
+            return
+        }
+        version = metadata.version
+    }
+    
     @MainActor
     private func updatePlugins() async throws {
         guard updateStatus == .idle else { return }
         updateStatus = .updating
         defer { updateStatus = .idle }
         try await scriptManager.updateScripts(reporting: updateProgress)
-        scriptManager.updateMainScriptVersion()
+        updateMainScriptVersion()
     }
 }

@@ -26,6 +26,7 @@ struct SidebarView: View {
     @Binding private var selection: Selection?
     
     @Environment(\.scriptManager) private var scriptManager
+    @Environment(\.mainScriptVersion) private var mainScriptVersion
     @Environment(\.updateProgress) private var updateProgress
     @Environment(\.updateScripts) private var updateScripts
     @Environment(\.updateStatus) private var updateStatus
@@ -149,19 +150,18 @@ struct SidebarView: View {
     
     @ViewBuilder
     private var scriptSectionContent: some View {
-        let version = scriptManager.mainScriptVersion
         Toggle("SidebarView.Script.Enabled", systemImage: "power", isOn: $scriptsEnabled)
 #if os(macOS)
             .toggleStyle(.switch)
 #endif
-            .disabled(version == nil)
+            .disabled(mainScriptVersion == nil)
         if updateStatus == .updating {
             Label("SidebarView.Script.Downloading", systemImage: "arrow.down.circle.dotted")
                 .symbolRenderingMode(.multicolor)
                 .symbolEffect(.pulse, options: .repeating)
-        } else if let version {
+        } else if let mainScriptVersion {
             if updateStatus == .idle {
-                Label(version, systemImage: "scroll")
+                Label(mainScriptVersion, systemImage: "scroll")
                     .monospaced()
             }
         } else {

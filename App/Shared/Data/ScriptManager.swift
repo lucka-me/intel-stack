@@ -13,7 +13,5 @@ import SwiftData
 class ScriptManager {
     static let shared = ScriptManager()
     
-    var mainScriptVersion: String? = nil
-    
     private init() { }
 }
