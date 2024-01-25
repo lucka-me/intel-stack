@@ -16,7 +16,9 @@ struct SidebarView: View {
         case plugins(category: Plugin.Category)
     }
     
+#if os(macOS)
     static private let extensionId = "dev.lucka.IntelStack.WebExtension"
+#endif
     
     @AppStorage(UserDefaults.Key.externalScriptsBookmark) private var externalScriptsBookmark: Data?
     @AppStorage(UserDefaults.Key.scriptsEnabled) private var scriptsEnabled = false
@@ -30,8 +32,8 @@ struct SidebarView: View {
     
     @State private var isAddPluginDialogPresented = false
 #if os(macOS)
-    @State private var isExtensionEnabled: Bool? = nil
     @State private var bottomBlockHeight: CGFloat = 0.0
+    @State private var isExtensionEnabled: Bool? = nil
 #endif
     
     init(selection: Binding<Selection?>) {
@@ -105,7 +107,9 @@ struct SidebarView: View {
             }
 #endif
         }
+#if os(macOS)
         .safeAreaPadding(.bottom, bottomBlockHeight)
+#endif
         .navigationTitle("SidebarView.Title")
         .sheet(isPresented: $isAddPluginDialogPresented) {
             AddPluginView()
