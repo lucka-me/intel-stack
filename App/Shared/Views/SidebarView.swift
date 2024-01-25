@@ -69,11 +69,9 @@ struct SidebarView: View {
                         Label(category.rawValue, systemImage: category.icon)
                     }
                 }
-#if !os(macOS)
+#if os(iOS)
                 if externalScriptsBookmark != nil {
-                    Button("SidebarView.Plugins.Add", systemImage: "plus.circle") {
-                        isAddPluginDialogPresented = true
-                    }
+                    addPluginButton
                 }
 #endif
             } header: {
@@ -106,6 +104,13 @@ struct SidebarView: View {
                 .disabled(scriptManager.status != .idle)
             }
 #endif
+#if os(visionOS)
+            ToolbarItem(placement: .bottomBar) {
+                if externalScriptsBookmark != nil {
+                    addPluginButton
+                }
+            }
+#endif
         }
 #if os(macOS)
         .safeAreaPadding(.bottom, bottomBlockHeight)
@@ -120,18 +125,23 @@ struct SidebarView: View {
                 Divider()
                     .layoutPriority(2)
                 HStack {
-                    Button("SidebarView.Plugins.Add", systemImage: "plus") {
-                        isAddPluginDialogPresented = true
-                    }
-                    .buttonStyle(.borderless)
-                    .labelStyle(.iconOnly)
-                    .disabled(externalScriptsBookmark == nil)
+                    addPluginButton
+                        .buttonStyle(.borderless)
+                        .labelStyle(.iconOnly)
+                        .disabled(externalScriptsBookmark == nil)
                 }
                 .padding(8)
             }
             .readSize(height: $bottomBlockHeight)
         }
 #endif
+    }
+    
+    @ViewBuilder
+    private var addPluginButton: some View {
+        Button("SidebarView.Plugins.Add", systemImage: "plus") {
+            isAddPluginDialogPresented = true
+        }
     }
     
     @ViewBuilder
