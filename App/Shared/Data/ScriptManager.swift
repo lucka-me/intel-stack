@@ -13,18 +13,7 @@ import SwiftData
 class ScriptManager {
     static let shared = ScriptManager()
     
-    let downloadProgress = Progress()
-    
     var mainScriptVersion: String? = nil
-    var status = Status.idle
-    var updatingPluginIds: Set<UUID> = [ ]
     
     private init() { }
-}
-
-extension ScriptManager {
-    enum Status: Equatable {
-        case downloading
-        case idle
-    }
 }

@@ -61,10 +61,6 @@ struct PluginListView: View {
                             .onTapGesture {
                                 open(plugin)
                             }
-                        if scriptManager.updatingPluginIds.contains(plugin.uuid) {
-                            Text("PluginListView.Updating")
-                                .capsule(.pink)
-                        }
                     }
                 }
                 .font(.caption)

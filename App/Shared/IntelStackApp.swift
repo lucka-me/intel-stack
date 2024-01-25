@@ -15,6 +15,9 @@ struct IntelStackApp: App {
     @Environment(\.scenePhase) private var scenePhase
     
     @State private var monitor: ExternalFileMonitor? = nil
+    @State private var updateStatus: UpdateStatus = .idle
+    
+    private let updateProgress = Progress()
     
     var body: some Scene {
         WindowGroup {
@@ -28,6 +31,8 @@ struct IntelStackApp: App {
         .windowResizability(.contentSize)
         .modelContainer(.default)
         .defaultAppStorage(.shared)
+        .environment(\.updateProgress, updateProgress)
+        .environment(\.updateStatus, updateStatus)
         .onChange(of: bookmark, initial: false) {
             Task(priority: .background) {
                 await engageMonitor()
@@ -66,7 +71,10 @@ struct IntelStackApp: App {
     
     @MainActor
     private func updatePlugins() async throws {
-        try await scriptManager.updateScripts()
+        guard updateStatus == .idle else { return }
+        updateStatus = .updating
+        defer { updateStatus = .idle }
+        try await scriptManager.updateScripts(reporting: updateProgress)
         scriptManager.updateMainScriptVersion()
     }
 }

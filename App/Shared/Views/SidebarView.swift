@@ -26,7 +26,9 @@ struct SidebarView: View {
     @Binding private var selection: Selection?
     
     @Environment(\.scriptManager) private var scriptManager
+    @Environment(\.updateProgress) private var updateProgress
     @Environment(\.updateScripts) private var updateScripts
+    @Environment(\.updateStatus) private var updateStatus
 #if os(macOS)
     @Environment(\.scenePhase) private var scenePhase
 #endif
@@ -91,8 +93,8 @@ struct SidebarView: View {
 #endif
         .toolbar {
             ToolbarItem(placement: .principal) {
-                if scriptManager.status == .downloading {
-                    ProgressView(scriptManager.downloadProgress)
+                if updateStatus == .updating {
+                    ProgressView(updateProgress)
                 }
             }
 #if os(macOS)
@@ -102,7 +104,7 @@ struct SidebarView: View {
                         await tryUpdateScripts()
                     }
                 }
-                .disabled(scriptManager.status != .idle)
+                .disabled(updateStatus != .idle)
             }
 #endif
 #if os(visionOS)
@@ -153,12 +155,12 @@ struct SidebarView: View {
             .toggleStyle(.switch)
 #endif
             .disabled(version == nil)
-        if scriptManager.status == .downloading {
+        if updateStatus == .updating {
             Label("SidebarView.Script.Downloading", systemImage: "arrow.down.circle.dotted")
                 .symbolRenderingMode(.multicolor)
                 .symbolEffect(.pulse, options: .repeating)
         } else if let version {
-            if scriptManager.status == .idle {
+            if updateStatus == .idle {
                 Label(version, systemImage: "scroll")
                     .monospaced()
             }

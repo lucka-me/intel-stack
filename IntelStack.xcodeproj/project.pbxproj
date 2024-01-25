@@ -16,6 +16,8 @@
 		840F49D72AB7108200012C44 /* PluginListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F49D62AB7108200012C44 /* PluginListView.swift */; };
 		840F49D92AB710EA00012C44 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F49D82AB710EA00012C44 /* OnboardingView.swift */; };
 		84141C972B610D31005A07BC /* ReadViewHeightModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */; };
+		84141C9A2B624230005A07BC /* UpdateProgressEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C992B624230005A07BC /* UpdateProgressEnvironmentKey.swift */; };
+		84141C9C2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9B2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift */; };
 		84141C9E2B6244A6005A07BC /* UpdatableEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */; };
 		842318862AB7053A000A0A09 /* IntelStackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318852AB7053A000A0A09 /* IntelStackApp.swift */; };
 		842318882AB7053A000A0A09 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318872AB7053A000A0A09 /* ContentView.swift */; };
@@ -108,6 +110,8 @@
 		840F49D62AB7108200012C44 /* PluginListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginListView.swift; sourceTree = "<group>"; };
 		840F49D82AB710EA00012C44 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadViewHeightModifier.swift; sourceTree = "<group>"; };
+		84141C992B624230005A07BC /* UpdateProgressEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProgressEnvironmentKey.swift; sourceTree = "<group>"; };
+		84141C9B2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateStatusEnvironmentKey.swift; sourceTree = "<group>"; };
 		84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatableEnvironmentKey.swift; sourceTree = "<group>"; };
 		842318822AB7053A000A0A09 /* Intel Stack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Intel Stack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		842318852AB7053A000A0A09 /* IntelStackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntelStackApp.swift; sourceTree = "<group>"; };
@@ -259,6 +263,8 @@
 			isa = PBXGroup;
 			children = (
 				84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */,
+				84141C992B624230005A07BC /* UpdateProgressEnvironmentKey.swift */,
+				84141C9B2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift */,
 			);
 			path = Environments;
 			sourceTree = "<group>";
@@ -596,6 +602,7 @@
 				84D8E95B2AB7312C000234A9 /* ScriptManager.swift in Sources */,
 				842FFA4C2B57A1F4006DF29F /* UserScriptMetadataDecoder.swift in Sources */,
 				84D8E9612AB73CD9000234A9 /* FileManager.swift in Sources */,
+				84141C9A2B624230005A07BC /* UpdateProgressEnvironmentKey.swift in Sources */,
 				8471FBB22B47AE0A00A67749 /* AddPluginView.swift in Sources */,
 				8437CD132ABB3D7D008AF3A5 /* UserDefaults+Bookmark.swift in Sources */,
 				84F3A1112AC1C19100C1F4BE /* ScriptManager+MainScript.swift in Sources */,
@@ -605,6 +612,7 @@
 				84D068D92ABDB2EB00EC6E7E /* ModelContainer.swift in Sources */,
 				842318882AB7053A000A0A09 /* ContentView.swift in Sources */,
 				84D8E96A2AB87859000234A9 /* UserScriptMetadata.swift in Sources */,
+				84141C9C2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift in Sources */,
 				842F9D022AC47F80002E750B /* CardGroupBoxStyle.swift in Sources */,
 				84F3A1162AC1C85E00C1F4BE /* URL.swift in Sources */,
 				840F49D92AB710EA00012C44 /* OnboardingView.swift in Sources */,

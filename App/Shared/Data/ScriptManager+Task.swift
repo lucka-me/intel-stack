@@ -49,27 +49,19 @@ extension ScriptManager {
 }
 
 extension ScriptManager {
-    func updateScripts() async throws {
-        guard status == .idle else { return }
-        status = .downloading
+    func updateScripts(reporting progress: Progress) async throws {
         defer {
-            status = .idle
-            downloadProgress.completedUnitCount = 0
+            progress.completedUnitCount = 0
         }
         
         try Self.ensureInternalDirectories()
         
         let internalPlugins = try Self.internalPluginNames
         
-        let externalPlugins = try await ModelExecutor.shared.allUpdatableExternalPlugins.filter {
-            !self.updatingPluginIds.contains($0.uuid)
-        }
+        let externalPlugins = try await ModelExecutor.shared.allUpdatableExternalPlugins
         
-        let uuids = Set(externalPlugins.map { $0.uuid })
-        self.updatingPluginIds.formUnion(uuids)
-        
-        downloadProgress.completedUnitCount = 0
-        downloadProgress.totalUnitCount = .init(1 + internalPlugins.count + externalPlugins.count)
+        progress.completedUnitCount = 0
+        progress.totalUnitCount = .init(1 + internalPlugins.count + externalPlugins.count)
         
         let externalURL = UserDefaults.shared.externalScriptsBookmarkURL
         var accessingSecurityScopedResource = false
@@ -79,19 +71,17 @@ extension ScriptManager {
             }
         }
         
-        defer { updatingPluginIds.subtract(uuids) }
-        
         let channel = UserDefaults.shared.buildChannel
         try await withThrowingTaskGroup(of: Void.self) { group in
             group.addTask {
                 try await Self.downloadMainScript(from: channel)
-                await MainActor.run { self.downloadProgress.completedUnitCount += 1 }
+                await MainActor.run { progress.completedUnitCount += 1 }
             }
             
             for filename in internalPlugins {
                 group.addTask {
                     try await Self.downloadInternalPlugin(filename, from: channel)
-                    await MainActor.run { self.downloadProgress.completedUnitCount += 1 }
+                    await MainActor.run { progress.completedUnitCount += 1 }
                 }
             }
             
@@ -100,7 +90,7 @@ extension ScriptManager {
                 for plugin in externalPlugins {
                     group.addTask {
                         try await self.updateExternalPlugin(plugin, in: externalURL)
-                        await MainActor.run { self.downloadProgress.completedUnitCount += 1 }
+                        await MainActor.run { progress.completedUnitCount += 1 }
                     }
                 }
             }

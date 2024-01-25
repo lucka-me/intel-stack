@@ -561,22 +561,6 @@
         }
       }
     },
-    "PluginListView.Updating" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Updating"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在更新"
-          }
-        }
-      }
-    },
     "ScriptManager.TaskError.InvalidHTTPResponse %lld" : {
       "localizations" : {
         "en" : {
