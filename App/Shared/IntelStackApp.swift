@@ -57,16 +57,18 @@ struct IntelStackApp: App {
     }
     
     private func engageMonitor() async {
-        guard let externalURL = try? ScriptManager.sync() else {
+        guard let externalURL = try? await scriptManager.sync() else {
             await MainActor.run { monitor = nil }
             return
         }
         await MainActor.run {
             monitor = .init(url: externalURL) { url in
-                do {
-                    try ScriptManager.sync(in: url)
-                } catch {
-                    print(error)
+                Task(priority: .background) {
+                    do {
+                        try await scriptManager.sync(in: url)
+                    } catch {
+                        print(error)
+                    }
                 }
             }
         }

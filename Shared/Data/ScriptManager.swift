@@ -5,10 +5,9 @@
 //  Created by Lucka on 2023-09-17.
 //
 
-import Foundation
+import SwiftData
 
-class ScriptManager {
-    static let shared = ScriptManager()
-    
-    private init() { }
+@ModelActor
+actor ScriptManager {
+    static let shared = ScriptManager(modelContainer: .default)
 }

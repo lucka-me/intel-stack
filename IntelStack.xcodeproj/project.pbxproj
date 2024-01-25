@@ -39,7 +39,6 @@
 		844AF6972ABC882500D90B0F /* ScriptManager+ExternalScripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844AF6962ABC882500D90B0F /* ScriptManager+ExternalScripts.swift */; };
 		8471FBB22B47AE0A00A67749 /* AddPluginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8471FBB12B47AE0A00A67749 /* AddPluginView.swift */; };
 		8475D18E2AD6CF8F00D71F59 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8475D18D2AD6CF8F00D71F59 /* AppIcon.swift */; };
-		8475D1902AD6EE1300D71F59 /* ModelExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8475D18F2AD6EE1300D71F59 /* ModelExecutor.swift */; };
 		8475D1932AD8333800D71F59 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8475D1922AD8333800D71F59 /* Localizable.xcstrings */; };
 		8475D1962ADAD19100D71F59 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 8475D1952ADAD19100D71F59 /* images */; };
 		84A917EF2B58EDCF009D53E8 /* UserScriptMetadataDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A917EE2B58EDCF009D53E8 /* UserScriptMetadataDecoderTests.swift */; };
@@ -132,7 +131,6 @@
 		844AF6962ABC882500D90B0F /* ScriptManager+ExternalScripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptManager+ExternalScripts.swift"; sourceTree = "<group>"; };
 		8471FBB12B47AE0A00A67749 /* AddPluginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPluginView.swift; sourceTree = "<group>"; };
 		8475D18D2AD6CF8F00D71F59 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
-		8475D18F2AD6EE1300D71F59 /* ModelExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExecutor.swift; sourceTree = "<group>"; };
 		8475D1922AD8333800D71F59 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		8475D1952ADAD19100D71F59 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		84A917EC2B58EDCF009D53E8 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -348,7 +346,6 @@
 			children = (
 				84D068E22ABEFDA000EC6E7E /* InternalPlugins.json */,
 				842F9D032ACD3556002E750B /* ExternalFileMonitor.swift */,
-				8475D18F2AD6EE1300D71F59 /* ModelExecutor.swift */,
 				84D8E96D2AB87DFB000234A9 /* Plugin+SwiftUI.swift */,
 				843FCB2E2AB9C0FA00C93D1E /* ScriptManager+Task.swift */,
 			);
@@ -585,7 +582,6 @@
 			files = (
 				84D8E9722AB88715000234A9 /* UserDefaults.swift in Sources */,
 				84141CA02B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift in Sources */,
-				8475D1902AD6EE1300D71F59 /* ModelExecutor.swift in Sources */,
 				844AF6972ABC882500D90B0F /* ScriptManager+ExternalScripts.swift in Sources */,
 				84141C972B610D31005A07BC /* ReadViewHeightModifier.swift in Sources */,
 				8475D18E2AD6CF8F00D71F59 /* AppIcon.swift in Sources */,
