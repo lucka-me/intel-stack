@@ -662,7 +662,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In the next refresh, Intel Stack will download IITC main script and internal plugins from the selected channel."
+            "value" : "In the next update, Intel Stack will download IITC main script and internal plugins from the selected channel."
           }
         },
         "zh-Hans" : {
