@@ -30,7 +30,7 @@ struct SidebarView: View {
     @Environment(\.updateScripts) private var updateScripts
     @Environment(\.updateStatus) private var updateStatus
 #if os(macOS)
-    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.controlActiveState) private var controlActiveState
 #endif
     
     @State private var isAddPluginDialogPresented = false
@@ -60,7 +60,9 @@ struct SidebarView: View {
                 }
                 .buttonStyle(.link)
                 .foregroundStyle(extensionSateColor)
-                .onChange(of: scenePhase, initial: true, fetchExtensionState)
+                .onChange(of: controlActiveState, initial: true) {
+                    Task { await updateExtensionState() }
+                }
             } header: {
                 Text("SidebarView.Extension")
             }
@@ -210,12 +212,18 @@ struct SidebarView: View {
     }
     
 #if os(macOS)
-    private func fetchExtensionState() {
-        SFSafariExtensionManager.getStateOfSafariExtension(withIdentifier: Self.extensionId) { state, error in
-            DispatchQueue.main.async {
-                isExtensionEnabled = state?.isEnabled
-            }
+    @MainActor
+    private func updateExtensionState() async {
+        guard controlActiveState == .key else { return }
+        guard
+            let state = try? await SFSafariExtensionManager.stateOfSafariExtension(
+                withIdentifier: Self.extensionId
+            )
+        else {
+            isExtensionEnabled = nil
+            return
         }
+        isExtensionEnabled = state.isEnabled
     }
 #endif
 }
