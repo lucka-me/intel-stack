@@ -8,13 +8,12 @@
 import SwiftUI
 
 struct AddPluginView: View {
+    @Environment(\.alert) private var alert
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     
-    @State private var isAlertPresented = false
     @State private var method = Method.remote
     @State private var pluginInformation: ExternalPluginInformation? = nil
-    @State private var taskError: TaskError? = nil
     
     var body: some View {
         NavigationStack {
@@ -34,10 +33,7 @@ struct AddPluginView: View {
                     
                     switch method {
                     case .remote:
-                        RemoteSection($pluginInformation) { error in
-                            taskError = error
-                            isAlertPresented = true
-                        }
+                        RemoteSection($pluginInformation)
                     case .code:
                         CodeSection($pluginInformation)
                     }
@@ -45,6 +41,7 @@ struct AddPluginView: View {
                     if let pluginInformation {
                         Section {
                             sectionContent(of: pluginInformation)
+                                .lineLimit(1)
                         } header: {
                             Text("AddPluginView.PluginInformation.Title")
                         } footer: {
@@ -72,11 +69,6 @@ struct AddPluginView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     cancelButton
                 }
-            }
-        }
-        .alert(isPresented: $isAlertPresented, error: taskError) { _ in } message: { error in
-            if let reason = error.failureReason {
-                Text(reason)
             }
         }
         .onChange(of: method) {
@@ -137,8 +129,7 @@ struct AddPluginView: View {
             let externalURL = UserDefaults.shared.externalScriptsBookmarkURL,
             externalURL.startAccessingSecurityScopedResource()
         else {
-            self.taskError = .externalLocationUnavailable
-            self.isAlertPresented = true
+            alert?(.localized(error: TaskError.externalLocationUnavailable))
             return
         }
         defer {
@@ -162,12 +153,10 @@ struct AddPluginView: View {
             try modelContext.save()
             dismiss()
         } catch let error as LocalizedError {
-            self.taskError = .localized(error: error)
-            self.isAlertPresented = true
+            alert?(.localized(error: error))
             return
         } catch {
-            self.taskError = .generic(error: error)
-            self.isAlertPresented = true
+            alert?(.generic(error: error))
             return
         }
     }
@@ -210,8 +199,6 @@ fileprivate enum TaskError: Error, LocalizedError {
     case externalLocationUnavailable
     case invalidHTTPResponse(statusCode: Int)
     case invalidURL
-    case localized(error: LocalizedError)
-    case generic(error: Error)
     
     var errorDescription: String? {
         switch self {
@@ -221,10 +208,6 @@ fileprivate enum TaskError: Error, LocalizedError {
             return .init(localized: "AddPluginView.TaskError.InvalidHTTPResponse \(statusCode)")
         case .invalidURL:
             return .init(localized: "AddPluginView.TaskError.InvalidURL")
-        case .localized(let error):
-            return error.errorDescription ?? error.localizedDescription
-        case .generic(let error):
-            return error.localizedDescription
         }
     }
     
@@ -236,10 +219,6 @@ fileprivate enum TaskError: Error, LocalizedError {
             return HTTPURLResponse.localizedString(forStatusCode: statusCode)
         case .invalidURL:
             return .init(localized: "AddPluginView.TaskError.InvalidURL.Reason")
-        case .localized(let error):
-            return error.failureReason ?? error.localizedDescription
-        case .generic(let error):
-            return error.localizedDescription
         }
     }
 }
@@ -260,16 +239,15 @@ fileprivate struct ExternalPluginInformation : Equatable {
 fileprivate struct RemoteSection: View {
     @Binding private var pluginInformation: ExternalPluginInformation?
     
+    @Environment(\.alert) private var alert
+    
     @FocusState private var isTextFieldFocused: Bool
     
     @State private var isDownloading = false
     @State private var urlText: String = ""
     
-    private let onError: (TaskError) -> Void
-    
-    init(_ pluginInformation: Binding<ExternalPluginInformation?>, onError: @escaping (TaskError) -> Void) {
+    init(_ pluginInformation: Binding<ExternalPluginInformation?>) {
         self._pluginInformation = pluginInformation
-        self.onError = onError
     }
     
     var body: some View {
@@ -340,12 +318,10 @@ fileprivate struct RemoteSection: View {
                 provider: .temporaryFile(url: temporaryURL),
                 filename: filename
             )
-        } catch let error as TaskError {
-            onError(error)
         } catch let error as LocalizedError {
-            onError(.localized(error: error))
+            alert?(.localized(error: error))
         } catch {
-            onError(.generic(error: error))
+            alert?(.generic(error: error))
         }
     }
 }

@@ -8,13 +8,11 @@
 import SwiftUI
 
 struct OnboardingView: View {
+    @Environment(\.alert) private var alert
     @Environment(\.dismiss) private var dismiss
     @Environment(\.updateProgress) private var updateProgress
     @Environment(\.updateScripts) private var updateScripts
     @Environment(\.updateStatus) private var updateStatus
-    
-    @State private var isAlertPresented = false
-    @State private var taskError: TaskError? = nil
     
     var body: some View {
         VStack {
@@ -68,11 +66,6 @@ struct OnboardingView: View {
         }
 #endif
         .padding([ .horizontal, .bottom ])
-        .alert(isPresented: $isAlertPresented, error: taskError) { _ in } message: { error in
-            if let reason = error.failureReason {
-                Text(reason)
-            }
-        }
     }
     
     @ViewBuilder
@@ -169,38 +162,13 @@ struct OnboardingView: View {
         do {
             try await updateScripts?()
         } catch let error as LocalizedError {
-            self.taskError = .localized(error: error)
-            self.isAlertPresented = true
+            alert?(.localized(error: error))
         } catch {
-            self.taskError = .generic(error: error)
-            self.isAlertPresented = true
+            alert?(.generic(error: error))
         }
     }
 }
 
 #Preview {
     OnboardingView()
-}
-
-fileprivate enum TaskError: Error, LocalizedError {
-    case localized(error: LocalizedError)
-    case generic(error: Error)
-    
-    var errorDescription: String? {
-        switch self {
-        case .localized(let error):
-            return error.errorDescription ?? error.localizedDescription
-        case .generic(let error):
-            return error.localizedDescription
-        }
-    }
-        
-    var failureReason: String? {
-        switch self {
-        case .localized(let error):
-            return error.failureReason ?? error.localizedDescription
-        case .generic(let error):
-            return error.localizedDescription
-        }
-    }
 }
