@@ -21,6 +21,7 @@
 		84141C9E2B6244A6005A07BC /* UpdatableEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */; };
 		84141CA02B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9F2B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift */; };
 		84141CA12B6256E3005A07BC /* ScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E95A2AB7312C000234A9 /* ScriptManager.swift */; };
+		84141CAD2B63AEA0005A07BC /* AlertableModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141CAC2B63AEA0005A07BC /* AlertableModifier.swift */; };
 		842318862AB7053A000A0A09 /* IntelStackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318852AB7053A000A0A09 /* IntelStackApp.swift */; };
 		842318882AB7053A000A0A09 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318872AB7053A000A0A09 /* ContentView.swift */; };
 		8423188A2AB7053A000A0A09 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 842318892AB7053A000A0A09 /* Assets.xcassets */; };
@@ -112,6 +113,7 @@
 		84141C9B2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateStatusEnvironmentKey.swift; sourceTree = "<group>"; };
 		84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatableEnvironmentKey.swift; sourceTree = "<group>"; };
 		84141C9F2B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScriptVersionEnvironmentKey.swift; sourceTree = "<group>"; };
+		84141CAC2B63AEA0005A07BC /* AlertableModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertableModifier.swift; sourceTree = "<group>"; };
 		842318822AB7053A000A0A09 /* Intel Stack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Intel Stack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		842318852AB7053A000A0A09 /* IntelStackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntelStackApp.swift; sourceTree = "<group>"; };
 		842318872AB7053A000A0A09 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 		84141C952B610CC8005A07BC /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
+				84141CAC2B63AEA0005A07BC /* AlertableModifier.swift */,
 				84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */,
 			);
 			path = Modifiers;
@@ -608,6 +611,7 @@
 				84F3A1162AC1C85E00C1F4BE /* URL.swift in Sources */,
 				840F49D92AB710EA00012C44 /* OnboardingView.swift in Sources */,
 				84424BE92ACEAB15009013A3 /* SidebarView.swift in Sources */,
+				84141CAD2B63AEA0005A07BC /* AlertableModifier.swift in Sources */,
 				8437CD162ABB3DEB008AF3A5 /* UserDefaults+Key.swift in Sources */,
 				842318862AB7053A000A0A09 /* IntelStackApp.swift in Sources */,
 			);

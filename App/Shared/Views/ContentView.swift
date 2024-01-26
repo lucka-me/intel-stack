@@ -33,10 +33,12 @@ struct ContentView: View {
                 }
             }
         }
+        .alertable()
         .navigationSplitViewStyle(.balanced)
         .sheet(isPresented: $isOnboardingSheetPresented) {
             OnboardingView()
                 .interactiveDismissDisabled()
+                .alertable()
         }
         .onChange(of: mainScriptVersion, initial: false) {
             isOnboardingSheetPresented = mainScriptVersion == nil
