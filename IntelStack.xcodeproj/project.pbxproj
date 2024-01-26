@@ -21,7 +21,11 @@
 		84141C9E2B6244A6005A07BC /* UpdatableEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */; };
 		84141CA02B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9F2B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift */; };
 		84141CA12B6256E3005A07BC /* ScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E95A2AB7312C000234A9 /* ScriptManager.swift */; };
-		84141CAD2B63AEA0005A07BC /* AlertableModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141CAC2B63AEA0005A07BC /* AlertableModifier.swift */; };
+		84141CA32B638874005A07BC /* MainScriptMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141CA22B638874005A07BC /* MainScriptMetadata.swift */; };
+		84141CA42B638874005A07BC /* MainScriptMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141CA22B638874005A07BC /* MainScriptMetadata.swift */; };
+		84141CA62B638FE5005A07BC /* Plugin+Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141CA52B638FE5005A07BC /* Plugin+Category.swift */; };
+		84141CA72B638FE5005A07BC /* Plugin+Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141CA52B638FE5005A07BC /* Plugin+Category.swift */; };
+		84141CB12B63B205005A07BC /* AlertableModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141CB02B63B205005A07BC /* AlertableModifier.swift */; };
 		842318862AB7053A000A0A09 /* IntelStackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318852AB7053A000A0A09 /* IntelStackApp.swift */; };
 		842318882AB7053A000A0A09 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318872AB7053A000A0A09 /* ContentView.swift */; };
 		8423188A2AB7053A000A0A09 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 842318892AB7053A000A0A09 /* Assets.xcassets */; };
@@ -56,8 +60,8 @@
 		84D8E9612AB73CD9000234A9 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9602AB73CD9000234A9 /* FileManager.swift */; };
 		84D8E9632AB73E04000234A9 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E95C2AB731AE000234A9 /* Plugin.swift */; };
 		84D8E9652AB73E0B000234A9 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9602AB73CD9000234A9 /* FileManager.swift */; };
-		84D8E96A2AB87859000234A9 /* UserScriptMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9692AB87859000234A9 /* UserScriptMetadata.swift */; };
-		84D8E96B2AB87859000234A9 /* UserScriptMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9692AB87859000234A9 /* UserScriptMetadata.swift */; };
+		84D8E96A2AB87859000234A9 /* PluginMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9692AB87859000234A9 /* PluginMetadata.swift */; };
+		84D8E96B2AB87859000234A9 /* PluginMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9692AB87859000234A9 /* PluginMetadata.swift */; };
 		84D8E96E2AB87DFB000234A9 /* Plugin+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E96D2AB87DFB000234A9 /* Plugin+SwiftUI.swift */; };
 		84D8E9722AB88715000234A9 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9712AB88715000234A9 /* UserDefaults.swift */; };
 		84D8E9732AB88715000234A9 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9712AB88715000234A9 /* UserDefaults.swift */; };
@@ -113,7 +117,9 @@
 		84141C9B2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateStatusEnvironmentKey.swift; sourceTree = "<group>"; };
 		84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatableEnvironmentKey.swift; sourceTree = "<group>"; };
 		84141C9F2B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScriptVersionEnvironmentKey.swift; sourceTree = "<group>"; };
-		84141CAC2B63AEA0005A07BC /* AlertableModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertableModifier.swift; sourceTree = "<group>"; };
+		84141CA22B638874005A07BC /* MainScriptMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScriptMetadata.swift; sourceTree = "<group>"; };
+		84141CA52B638FE5005A07BC /* Plugin+Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Plugin+Category.swift"; sourceTree = "<group>"; };
+		84141CB02B63B205005A07BC /* AlertableModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertableModifier.swift; sourceTree = "<group>"; };
 		842318822AB7053A000A0A09 /* Intel Stack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Intel Stack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		842318852AB7053A000A0A09 /* IntelStackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntelStackApp.swift; sourceTree = "<group>"; };
 		842318872AB7053A000A0A09 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -144,7 +150,7 @@
 		84D8E95A2AB7312C000234A9 /* ScriptManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptManager.swift; sourceTree = "<group>"; };
 		84D8E95C2AB731AE000234A9 /* Plugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
 		84D8E9602AB73CD9000234A9 /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
-		84D8E9692AB87859000234A9 /* UserScriptMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScriptMetadata.swift; sourceTree = "<group>"; };
+		84D8E9692AB87859000234A9 /* PluginMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginMetadata.swift; sourceTree = "<group>"; };
 		84D8E96D2AB87DFB000234A9 /* Plugin+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Plugin+SwiftUI.swift"; sourceTree = "<group>"; };
 		84D8E9712AB88715000234A9 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		84F3A1082ABFDD0A00C1F4BE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -251,7 +257,7 @@
 		84141C952B610CC8005A07BC /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
-				84141CAC2B63AEA0005A07BC /* AlertableModifier.swift */,
+				84141CB02B63B205005A07BC /* AlertableModifier.swift */,
 				84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */,
 			);
 			path = Modifiers;
@@ -375,11 +381,13 @@
 			isa = PBXGroup;
 			children = (
 				84D068DC2ABDB4D900EC6E7E /* FileConstants.swift */,
+				84141CA22B638874005A07BC /* MainScriptMetadata.swift */,
 				84D8E95C2AB731AE000234A9 /* Plugin.swift */,
+				84D8E9692AB87859000234A9 /* PluginMetadata.swift */,
 				84D8E95A2AB7312C000234A9 /* ScriptManager.swift */,
 				844AF6962ABC882500D90B0F /* ScriptManager+ExternalScripts.swift */,
-				84D8E9692AB87859000234A9 /* UserScriptMetadata.swift */,
 				842FFA4B2B57A1F4006DF29F /* UserScriptMetadataDecoder.swift */,
+				84141CA52B638FE5005A07BC /* Plugin+Category.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -561,8 +569,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84141CA72B638FE5005A07BC /* Plugin+Category.swift in Sources */,
 				84D8E9632AB73E04000234A9 /* Plugin.swift in Sources */,
-				84D8E96B2AB87859000234A9 /* UserScriptMetadata.swift in Sources */,
+				84D8E96B2AB87859000234A9 /* PluginMetadata.swift in Sources */,
 				84D1F62F2B5A405500D260EB /* Bundle+AppExtension.swift in Sources */,
 				84D8E9652AB73E0B000234A9 /* FileManager.swift in Sources */,
 				84D068DE2ABDB4D900EC6E7E /* FileConstants.swift in Sources */,
@@ -575,6 +584,7 @@
 				842FFA4D2B57A1F4006DF29F /* UserScriptMetadataDecoder.swift in Sources */,
 				84D068DA2ABDB2EB00EC6E7E /* ModelContainer.swift in Sources */,
 				84F3A1172AC1C85E00C1F4BE /* URL.swift in Sources */,
+				84141CA42B638874005A07BC /* MainScriptMetadata.swift in Sources */,
 				84F3A1192AC444C100C1F4BE /* CodeWrapper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -591,27 +601,29 @@
 				840F49D52AB7101F00012C44 /* SettingsView.swift in Sources */,
 				84D068DD2ABDB4D900EC6E7E /* FileConstants.swift in Sources */,
 				843FCB2F2AB9C0FA00C93D1E /* ScriptManager+Task.swift in Sources */,
+				84141CA62B638FE5005A07BC /* Plugin+Category.swift in Sources */,
 				84141C9E2B6244A6005A07BC /* UpdatableEnvironmentKey.swift in Sources */,
 				84D1F62E2B5A405200D260EB /* Bundle+AppExtension.swift in Sources */,
 				840F49D72AB7108200012C44 /* PluginListView.swift in Sources */,
 				84D8E95B2AB7312C000234A9 /* ScriptManager.swift in Sources */,
 				842FFA4C2B57A1F4006DF29F /* UserScriptMetadataDecoder.swift in Sources */,
 				84D8E9612AB73CD9000234A9 /* FileManager.swift in Sources */,
+				84141CB12B63B205005A07BC /* AlertableModifier.swift in Sources */,
 				84141C9A2B624230005A07BC /* UpdateProgressEnvironmentKey.swift in Sources */,
 				8471FBB22B47AE0A00A67749 /* AddPluginView.swift in Sources */,
 				8437CD132ABB3D7D008AF3A5 /* UserDefaults+Bookmark.swift in Sources */,
+				84141CA32B638874005A07BC /* MainScriptMetadata.swift in Sources */,
 				842F9D042ACD3556002E750B /* ExternalFileMonitor.swift in Sources */,
 				84D8E96E2AB87DFB000234A9 /* Plugin+SwiftUI.swift in Sources */,
 				84D8E95D2AB731AE000234A9 /* Plugin.swift in Sources */,
 				84D068D92ABDB2EB00EC6E7E /* ModelContainer.swift in Sources */,
 				842318882AB7053A000A0A09 /* ContentView.swift in Sources */,
-				84D8E96A2AB87859000234A9 /* UserScriptMetadata.swift in Sources */,
+				84D8E96A2AB87859000234A9 /* PluginMetadata.swift in Sources */,
 				84141C9C2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift in Sources */,
 				842F9D022AC47F80002E750B /* CardGroupBoxStyle.swift in Sources */,
 				84F3A1162AC1C85E00C1F4BE /* URL.swift in Sources */,
 				840F49D92AB710EA00012C44 /* OnboardingView.swift in Sources */,
 				84424BE92ACEAB15009013A3 /* SidebarView.swift in Sources */,
-				84141CAD2B63AEA0005A07BC /* AlertableModifier.swift in Sources */,
 				8437CD162ABB3DEB008AF3A5 /* UserDefaults+Key.swift in Sources */,
 				842318862AB7053A000A0A09 /* IntelStackApp.swift in Sources */,
 			);

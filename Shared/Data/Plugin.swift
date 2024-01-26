@@ -29,7 +29,14 @@ class Plugin {
     var downloadURL: URL?
     var updateURL: URL?
     
-    init(uuid: UUID = .init(), idendifier: String, name: String, category: Category, isInternal: Bool, filename: String) {
+    init(
+        uuid: UUID = .init(),
+        idendifier: String,
+        name: String,
+        category: Category,
+        isInternal: Bool,
+        filename: String
+    ) {
         self.uuid = uuid
         self.idendifier = idendifier
         self.name = name
@@ -37,67 +44,10 @@ class Plugin {
         self.isInternal = isInternal
         self.filename = filename
     }
-    
-    var category: Category {
-        get { .init(rawValue: categoryValue) ?? .misc }
-        set { categoryValue = newValue.rawValue }
-    }
-}
-
-extension Plugin {
-    enum Category: String, CaseIterable, Codable {
-        case cache = "Cache"
-        case controls = "Controls"
-        case draw = "Draw"
-        case highlighter = "Highlighter"
-        case info = "Info"
-        case layer = "Layer"
-        case mapTiles = "Map Tiles"
-        case portalInfo = "Portal Info"
-        case tweaks = "Tweaks"
-        case misc = "Misc"
-        case debug = "Debug"
-    }
 }
 
 extension Plugin {
     static let externalPredicate = #Predicate<Plugin> { !$0.isInternal }
-}
-
-extension Plugin {
-    convenience init?(metadata: PluginMetadata, isInternal: Bool, filename: String) {        
-        self.init(
-            idendifier: metadata.id,
-            name: metadata.name,
-            category: metadata.category,
-            isInternal: isInternal,
-            filename: filename
-        )
-        
-        self.author = metadata.author
-        self.scriptDescription = metadata.description
-        self.version = metadata.version
-        if let downloadURL = metadata.downloadURL {
-            self.downloadURL = URL(string: downloadURL)
-        }
-        if let updateURL = metadata.updateURL {
-            self.updateURL = URL(string: updateURL)
-        }
-    }
-    
-    func update(from metadata: PluginMetadata) {
-        self.idendifier = metadata.id
-        self.category = metadata.category
-        self.author = metadata.author
-        self.scriptDescription = metadata.description
-        self.version = metadata.version
-        if let downloadURL = metadata.downloadURL {
-            self.downloadURL = URL(string: downloadURL)
-        }
-        if let updateURL = metadata.updateURL {
-            self.updateURL = URL(string: updateURL)
-        }
-    }
 }
 
 extension Plugin {

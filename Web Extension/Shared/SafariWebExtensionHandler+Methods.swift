@@ -100,16 +100,16 @@ extension SafariWebExtensionHandler {
             result[item.categoryValue] = value
         }
         
-        response["categories"] =  Plugin.Category.allCases.map { category in
+        response["categories"] = categoriedPlugins.sorted { $0.key < $1.key }.map { category in
             [
-                "name" : category.rawValue,
-                "plugins": categoriedPlugins[category.rawValue]?.map { item in
+                "name": category.key,
+                "plugins": category.value.map { item in
                     [
                         "uuid": item.uuid.uuidString,
                         "name": item.displayName,
                         "enabled": item.enabled
                     ]
-                } ?? [ ]
+                }
             ]
         }
         

@@ -865,6 +865,40 @@
         }
       }
     },
+    "SidebarView.Plugins.Footer %lld" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld plugin in total."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld plugins in total."
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "variations" : {
+            "plural" : {
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "共%lld个插件。"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "SidebarView.Script" : {
       "localizations" : {
         "en" : {

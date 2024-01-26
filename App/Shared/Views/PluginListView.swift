@@ -18,8 +18,9 @@ struct PluginListView: View {
     private let title: String
     
     init(category: Plugin.Category) {
+        let categoryValue = category.rawValue
         self._plugins = Query(
-            filter: #Predicate { $0.categoryValue == category.rawValue },
+            filter: #Predicate { $0.categoryValue == categoryValue },
             sort: \.name,
             animation: .default
         )
