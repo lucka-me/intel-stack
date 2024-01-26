@@ -5,7 +5,9 @@
 //  Created by Lucka on 2023-10-05.
 //
 
+import SwiftData
 import SwiftUI
+
 #if os(macOS)
 import SafariServices
 #endif
@@ -33,6 +35,8 @@ struct SidebarView: View {
     @Environment(\.controlActiveState) private var controlActiveState
 #endif
     
+    @Query private var plugins: [ Plugin ]
+    
     @State private var isAddPluginDialogPresented = false
 #if os(macOS)
     @State private var bottomBlockHeight: CGFloat = 0.0
@@ -41,6 +45,9 @@ struct SidebarView: View {
     
     init(selection: Binding<Selection?>) {
         self._selection = selection
+        var descriptor = FetchDescriptor<Plugin>()
+        descriptor.propertiesToFetch = [ \.categoryValue ]
+        self._plugins = .init(descriptor)
     }
     
     var body: some View {
@@ -69,7 +76,7 @@ struct SidebarView: View {
 #endif
             
             Section {
-                ForEach(Plugin.Category.allCases, id: \.rawValue) { category in
+                ForEach(categories, id: \.rawValue) { category in
                     NavigationLink(value: Selection.plugins(category: category)) {
                         Label(category.rawValue, systemImage: category.icon)
                     }
@@ -81,6 +88,8 @@ struct SidebarView: View {
 #endif
             } header: {
                 Text("SidebarView.Plugins")
+            } footer: {
+                Text("SidebarView.Plugins.Footer \(plugins.count)")
             }
         }
 #if os(iOS)
@@ -173,6 +182,12 @@ struct SidebarView: View {
         NavigationLink(value: Selection.settings) {
             Label("SidebarView.Settings", systemImage: "gear")
         }
+    }
+    
+    private var categories: [ Plugin.Category ] {
+        plugins
+            .reduce(into: Set<Plugin.Category>()) { $0.insert($1.category) }
+            .sorted { $0.rawValue < $1.rawValue }
     }
     
 #if os(macOS)
