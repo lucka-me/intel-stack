@@ -34,42 +34,19 @@ extension ScriptManager {
 }
 
 extension ScriptManager {
-    static var internalPluginNames: [ String ] {
-        get throws {
-            try JSONDecoder().decode(
-                [ String ].self,
-                from: try Data(
-                    contentsOf: Bundle.main.url(
-                        forResource: "InternalPlugins", withExtension: "json"
-                    )!
-                )
-            )
-        }
-    }
-}
-
-extension ScriptManager {
-    func updateScripts() async throws {
-        guard status == .idle else { return }
-        status = .downloading
+    func updateScripts(reporting progress: Progress) async throws {
         defer {
-            status = .idle
-            downloadProgress.completedUnitCount = 0
+            progress.completedUnitCount = 0
         }
         
         try Self.ensureInternalDirectories()
         
-        let internalPlugins = try Self.internalPluginNames
+        let internalPlugins = try internalPluginNames
         
-        let externalPlugins = try await ModelExecutor.shared.allUpdatableExternalPlugins.filter {
-            !self.updatingPluginIds.contains($0.uuid)
-        }
+        let externalPlugins = try allUpdatableExternalPlugins
         
-        let uuids = Set(externalPlugins.map { $0.uuid })
-        self.updatingPluginIds.formUnion(uuids)
-        
-        downloadProgress.completedUnitCount = 0
-        downloadProgress.totalUnitCount = .init(1 + internalPlugins.count + externalPlugins.count)
+        progress.completedUnitCount = 0
+        progress.totalUnitCount = .init(1 + internalPlugins.count + externalPlugins.count)
         
         let externalURL = UserDefaults.shared.externalScriptsBookmarkURL
         var accessingSecurityScopedResource = false
@@ -79,19 +56,17 @@ extension ScriptManager {
             }
         }
         
-        defer { updatingPluginIds.subtract(uuids) }
-        
         let channel = UserDefaults.shared.buildChannel
         try await withThrowingTaskGroup(of: Void.self) { group in
             group.addTask {
                 try await Self.downloadMainScript(from: channel)
-                await MainActor.run { self.downloadProgress.completedUnitCount += 1 }
+                await MainActor.run { progress.completedUnitCount += 1 }
             }
             
             for filename in internalPlugins {
                 group.addTask {
-                    try await Self.downloadInternalPlugin(filename, from: channel)
-                    await MainActor.run { self.downloadProgress.completedUnitCount += 1 }
+                    try await self.downloadInternalPlugin(filename, from: channel)
+                    await MainActor.run { progress.completedUnitCount += 1 }
                 }
             }
             
@@ -99,14 +74,16 @@ extension ScriptManager {
                 accessingSecurityScopedResource = externalURL.startAccessingSecurityScopedResource()
                 for plugin in externalPlugins {
                     group.addTask {
-                        try await self.updateExternalPlugin(plugin, in: externalURL)
-                        await MainActor.run { self.downloadProgress.completedUnitCount += 1 }
+                        try await self.updateExternal(plugin: plugin, in: externalURL)
+                        await MainActor.run { progress.completedUnitCount += 1 }
                     }
                 }
             }
             
             try await group.waitForAll()
         }
+        
+        try modelContext.save()
     }
 }
 
@@ -151,7 +128,7 @@ extension ScriptManager {
         succeed = true
     }
     
-    static func downloadInternalPlugin(_ filename: String, from channel: BuildChannel) async throws {
+    func downloadInternalPlugin(_ filename: String, from channel: BuildChannel) async throws {
         let downloadURL = Self.websiteBuildURL
             .appending(path: channel.rawValue)
             .appending(path: "plugins")
@@ -184,18 +161,43 @@ extension ScriptManager {
         }
         try fileManager.moveItem(at: temporaryURL, to: destinationURL)
         
-        try await ModelExecutor.shared.updateInternalPlugin(with: metadata, filename: filename)
+        let predicate = #Predicate<Plugin> {
+            $0.isInternal && $0.filename == filename
+        }
+        var descriptor = FetchDescriptor(predicate: predicate)
+        descriptor.fetchLimit = 1
+        if let item = try modelContext.fetch(descriptor).first {
+            item.update(from: metadata)
+        } else {
+            let item = Plugin(metadata: metadata, isInternal: true, filename: filename)!
+            modelContext.insert(item)
+        }
         
         succeed = true
     }
 }
 
 fileprivate extension ScriptManager {
+    var internalPluginNames: [ String ] {
+        get throws {
+            try JSONDecoder().decode(
+                [ String ].self,
+                from: try Data(
+                    contentsOf: Bundle.main.url(
+                        forResource: "InternalPlugins", withExtension: "json"
+                    )!
+                )
+            )
+        }
+    }
+}
+
+fileprivate extension ScriptManager {
     static let websiteBuildURL = URL(string: "https://iitc.app/build/")!
     
-    private func updateExternalPlugin(_ information: ExternalPluginUpdateInformation, in externalURL: URL) async throws {
+    private func updateExternal(plugin: Plugin, in externalURL: URL) async throws {
         // TODO: Use updateURL to fetch metadata
-        guard let downloadURL = information.downloadURL else { return }
+        guard let downloadURL = plugin.downloadURL else { return }
 
         let (temporaryURL, response) = try await URLSession.shared.download(from: downloadURL)
 
@@ -208,71 +210,30 @@ fileprivate extension ScriptManager {
         }
         
         let destinationURL = externalURL
-            .appending(path: information.filename)
+            .appending(path: plugin.filename)
             .appendingPathExtension(FileConstants.userScriptExtension)
         guard fileManager.fileExists(at: destinationURL) else { return }
         
         let content = try String(contentsOf: temporaryURL)
         let metadata = try UserScriptMetadataDecoder().decode(PluginMetadata.self, from: content)
         
-        guard let newVersion = metadata.version, newVersion != information.version else {
+        guard let newVersion = metadata.version, newVersion != plugin.version else {
             return
         }
         
         try fileManager.replaceItem(at: destinationURL, withItemAt: temporaryURL, backupItemName: nil, resultingItemURL: nil)
-        try await ModelExecutor.shared.updateExternalPlugin(information.identifier, with: metadata)
+        plugin.update(from: metadata)
     }
 }
 
-fileprivate extension ModelExecutor {
-    var allUpdatableExternalPlugins: [ ExternalPluginUpdateInformation ] {
+fileprivate extension ScriptManager {
+    var allUpdatableExternalPlugins: [ Plugin ] {
         get throws {
             try modelContext.fetch(
                 FetchDescriptor<Plugin>(
                     predicate: #Predicate { !$0.isInternal && $0.version != nil && ($0.downloadURL != nil || $0.updateURL != nil) }
                 )
-            ).map {
-                .init($0)
-            }
+            )
         }
-    }
-    
-    func updateInternalPlugin(with metadata: PluginMetadata, filename: String) throws {
-        let predicate = #Predicate<Plugin> {
-            $0.isInternal && $0.filename == filename
-        }
-        var descriptor = FetchDescriptor(predicate: predicate)
-        descriptor.fetchLimit = 1
-        if let item = try modelContext.fetch(descriptor).first {
-            item.update(from: metadata)
-        } else {
-            let item = Plugin(metadata: metadata, isInternal: true, filename: filename)!
-            modelContext.insert(item)
-        }
-        try modelContext.save()
-    }
-    
-    func updateExternalPlugin(_ identifier: PersistentIdentifier, with metadata: PluginMetadata) throws {
-        guard let item = self[identifier, as: Plugin.self] else { return }
-        item.update(from: metadata)
-        try modelContext.save()
-    }
-}
-
-fileprivate struct ExternalPluginUpdateInformation {
-    let identifier: PersistentIdentifier
-    let uuid: UUID
-    let filename: String
-    let version: String
-    let updateURL: URL?
-    let downloadURL: URL?
-    
-    init(_ plugin: Plugin) {
-        identifier = plugin.persistentModelID
-        uuid = plugin.uuid
-        filename = plugin.filename
-        version = plugin.version!
-        updateURL = plugin.updateURL
-        downloadURL = plugin.downloadURL
     }
 }

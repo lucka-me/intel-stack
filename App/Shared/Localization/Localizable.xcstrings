@@ -561,22 +561,6 @@
         }
       }
     },
-    "PluginListView.Updating" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Updating"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在更新"
-          }
-        }
-      }
-    },
     "ScriptManager.TaskError.InvalidHTTPResponse %lld" : {
       "localizations" : {
         "en" : {
@@ -678,7 +662,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In the next refresh, Intel Stack will download IITC main script and internal plugins from the selected channel."
+            "value" : "In the next update, Intel Stack will download IITC main script and internal plugins from the selected channel."
           }
         },
         "zh-Hans" : {
@@ -881,22 +865,6 @@
         }
       }
     },
-    "SidebarView.Refresh" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Refresh"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "刷新"
-          }
-        }
-      }
-    },
     "SidebarView.Script" : {
       "localizations" : {
         "en" : {
@@ -909,22 +877,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "IITC脚本"
-          }
-        }
-      }
-    },
-    "SidebarView.Script.Downloading" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Downloading"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在下载"
           }
         }
       }
@@ -953,7 +905,7 @@
               "mac" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Click Refresh button to update scripts."
+                  "value" : "Click Update button to update scripts."
                 }
               },
               "other" : {
@@ -971,13 +923,13 @@
               "mac" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "点按刷新按钮以刷新脚本。"
+                  "value" : "点按更新按钮以更新脚本。"
                 }
               },
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "下拉以刷新脚本。"
+                  "value" : "下拉以更新脚本。"
                 }
               }
             }
@@ -997,6 +949,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "不可用"
+          }
+        }
+      }
+    },
+    "SidebarView.Script.Updating" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updating"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在更新"
           }
         }
       }
@@ -1029,6 +997,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Intel Stack"
+          }
+        }
+      }
+    },
+    "SidebarView.Update" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新"
           }
         }
       }

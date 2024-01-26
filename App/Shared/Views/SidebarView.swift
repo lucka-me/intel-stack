@@ -25,7 +25,10 @@ struct SidebarView: View {
     
     @Binding private var selection: Selection?
     
-    @Environment(\.scriptManager) private var scriptManager
+    @Environment(\.mainScriptVersion) private var mainScriptVersion
+    @Environment(\.updateProgress) private var updateProgress
+    @Environment(\.updateScripts) private var updateScripts
+    @Environment(\.updateStatus) private var updateStatus
 #if os(macOS)
     @Environment(\.scenePhase) private var scenePhase
 #endif
@@ -90,18 +93,18 @@ struct SidebarView: View {
 #endif
         .toolbar {
             ToolbarItem(placement: .principal) {
-                if scriptManager.status == .downloading {
-                    ProgressView(scriptManager.downloadProgress)
+                if updateStatus == .updating {
+                    ProgressView(updateProgress)
                 }
             }
 #if os(macOS)
             ToolbarItem(placement: .primaryAction) {
-                Button("SidebarView.Refresh", systemImage: "arrow.clockwise") {
+                Button("SidebarView.Update", systemImage: "arrow.clockwise") {
                     Task {
                         await tryUpdateScripts()
                     }
                 }
-                .disabled(scriptManager.status != .idle)
+                .disabled(updateStatus != .idle)
             }
 #endif
 #if os(visionOS)
@@ -146,19 +149,18 @@ struct SidebarView: View {
     
     @ViewBuilder
     private var scriptSectionContent: some View {
-        let version = scriptManager.mainScriptVersion
         Toggle("SidebarView.Script.Enabled", systemImage: "power", isOn: $scriptsEnabled)
 #if os(macOS)
             .toggleStyle(.switch)
 #endif
-            .disabled(version == nil)
-        if scriptManager.status == .downloading {
-            Label("SidebarView.Script.Downloading", systemImage: "arrow.down.circle.dotted")
+            .disabled(mainScriptVersion == nil)
+        if updateStatus == .updating {
+            Label("SidebarView.Script.Updating", systemImage: "arrow.down.circle.dotted")
                 .symbolRenderingMode(.multicolor)
                 .symbolEffect(.pulse, options: .repeating)
-        } else if let version {
-            if scriptManager.status == .idle {
-                Label(version, systemImage: "scroll")
+        } else if let mainScriptVersion {
+            if updateStatus == .idle {
+                Label(mainScriptVersion, systemImage: "scroll")
                     .monospaced()
             }
         } else {
@@ -200,8 +202,9 @@ struct SidebarView: View {
     @MainActor
     private func tryUpdateScripts() async {
         do {
-            try await scriptManager.updateScripts()
+            try await updateScripts?()
         } catch {
+            // TODO: Alert it
             print(error)
         }
     }

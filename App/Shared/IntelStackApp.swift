@@ -11,10 +11,14 @@ import SwiftUI
 @main
 struct IntelStackApp: App {
     @AppStorage(UserDefaults.Key.externalScriptsBookmark, store: .shared) private var bookmark: Data?
-    @Environment(\.scriptManager) private var scriptManager
     @Environment(\.scenePhase) private var scenePhase
     
+    @State private var mainScriptVersion: String? = ""
     @State private var monitor: ExternalFileMonitor? = nil
+    @State private var updateStatus: UpdateStatus = .idle
+    
+    private let scriptManager = ScriptManager.shared
+    private let updateProgress = Progress()
     
     var body: some Scene {
         WindowGroup {
@@ -26,6 +30,11 @@ struct IntelStackApp: App {
 #endif
         }
         .windowResizability(.contentSize)
+        .modelContainer(.default)
+        .defaultAppStorage(.shared)
+        .environment(\.mainScriptVersion, mainScriptVersion)
+        .environment(\.updateProgress, updateProgress)
+        .environment(\.updateStatus, updateStatus)
         .onChange(of: bookmark, initial: false) {
             Task(priority: .background) {
                 await engageMonitor()
@@ -39,32 +48,55 @@ struct IntelStackApp: App {
                         await engageMonitor()
                     }
                 }
+                updateMainScriptVersion()
             default:
                 monitor = nil
             }
         }
-        .onChange(of: scriptManager.status) {
-            if scriptManager.status == .idle {
-                scriptManager.updateMainScriptVersion()
-            }
-        }
-        .modelContainer(.default)
-        .defaultAppStorage(.shared)
+        .updatable(action: updatePlugins)
     }
     
     private func engageMonitor() async {
-        guard let externalURL = try? ScriptManager.sync() else {
+        guard let externalURL = try? await scriptManager.sync() else {
             await MainActor.run { monitor = nil }
             return
         }
         await MainActor.run {
             monitor = .init(url: externalURL) { url in
-                do {
-                    try ScriptManager.sync(in: url)
-                } catch {
-                    print(error)
+                Task(priority: .background) {
+                    do {
+                        try await scriptManager.sync(in: url)
+                    } catch {
+                        print(error)
+                    }
                 }
             }
         }
+    }
+    
+    private func updateMainScriptVersion() {
+        var version: String? = nil
+        defer {
+            mainScriptVersion = version
+        }
+        
+        let fileManager = FileManager.default
+        guard
+            fileManager.fileExists(at: FileConstants.mainScriptURL),
+            let content = try? String(contentsOf: FileConstants.mainScriptURL),
+            let metadata = try? UserScriptMetadataDecoder().decode(MainScriptMetadata.self, from: content)
+        else {
+            return
+        }
+        version = metadata.version
+    }
+    
+    @MainActor
+    private func updatePlugins() async throws {
+        guard updateStatus == .idle else { return }
+        updateStatus = .updating
+        defer { updateStatus = .idle }
+        try await scriptManager.updateScripts(reporting: updateProgress)
+        updateMainScriptVersion()
     }
 }

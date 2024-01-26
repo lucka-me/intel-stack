@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(\.scriptManager) private var scriptManager
+    @Environment(\.mainScriptVersion) private var mainScriptVersion
     
     @State private var columnVisibility = NavigationSplitViewVisibility.doubleColumn
     @State private var isOnboardingSheetPresented = false
@@ -35,14 +35,11 @@ struct ContentView: View {
         }
         .navigationSplitViewStyle(.balanced)
         .sheet(isPresented: $isOnboardingSheetPresented) {
-            scriptManager.updateMainScriptVersion()
-        } content: {
             OnboardingView()
                 .interactiveDismissDisabled()
         }
-        .onAppear {
-            scriptManager.updateMainScriptVersion()
-            isOnboardingSheetPresented = scriptManager.mainScriptVersion == nil
+        .onChange(of: mainScriptVersion, initial: false) {
+            isOnboardingSheetPresented = mainScriptVersion == nil
         }
         .onChange(of: horizontalSizeClass, initial: true) {
 #if os(macOS)

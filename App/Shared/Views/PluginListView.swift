@@ -8,9 +8,7 @@
 import SwiftData
 import SwiftUI
 
-struct PluginListView: View {
-    @Environment(\.scriptManager) private var scriptManager
-    
+struct PluginListView: View {    
 #if !os(macOS)
     @Environment(\.openURL) private var openURL
 #endif
@@ -61,10 +59,6 @@ struct PluginListView: View {
                             .onTapGesture {
                                 open(plugin)
                             }
-                        if scriptManager.updatingPluginIds.contains(plugin.uuid) {
-                            Text("PluginListView.Updating")
-                                .capsule(.pink)
-                        }
                     }
                 }
                 .font(.caption)

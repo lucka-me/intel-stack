@@ -16,6 +16,11 @@
 		840F49D72AB7108200012C44 /* PluginListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F49D62AB7108200012C44 /* PluginListView.swift */; };
 		840F49D92AB710EA00012C44 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F49D82AB710EA00012C44 /* OnboardingView.swift */; };
 		84141C972B610D31005A07BC /* ReadViewHeightModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */; };
+		84141C9A2B624230005A07BC /* UpdateProgressEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C992B624230005A07BC /* UpdateProgressEnvironmentKey.swift */; };
+		84141C9C2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9B2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift */; };
+		84141C9E2B6244A6005A07BC /* UpdatableEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */; };
+		84141CA02B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9F2B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift */; };
+		84141CA12B6256E3005A07BC /* ScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E95A2AB7312C000234A9 /* ScriptManager.swift */; };
 		842318862AB7053A000A0A09 /* IntelStackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318852AB7053A000A0A09 /* IntelStackApp.swift */; };
 		842318882AB7053A000A0A09 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318872AB7053A000A0A09 /* ContentView.swift */; };
 		8423188A2AB7053A000A0A09 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 842318892AB7053A000A0A09 /* Assets.xcassets */; };
@@ -34,7 +39,6 @@
 		844AF6972ABC882500D90B0F /* ScriptManager+ExternalScripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844AF6962ABC882500D90B0F /* ScriptManager+ExternalScripts.swift */; };
 		8471FBB22B47AE0A00A67749 /* AddPluginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8471FBB12B47AE0A00A67749 /* AddPluginView.swift */; };
 		8475D18E2AD6CF8F00D71F59 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8475D18D2AD6CF8F00D71F59 /* AppIcon.swift */; };
-		8475D1902AD6EE1300D71F59 /* ModelExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8475D18F2AD6EE1300D71F59 /* ModelExecutor.swift */; };
 		8475D1932AD8333800D71F59 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8475D1922AD8333800D71F59 /* Localizable.xcstrings */; };
 		8475D1962ADAD19100D71F59 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 8475D1952ADAD19100D71F59 /* images */; };
 		84A917EF2B58EDCF009D53E8 /* UserScriptMetadataDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A917EE2B58EDCF009D53E8 /* UserScriptMetadataDecoderTests.swift */; };
@@ -56,10 +60,7 @@
 		84D8E96E2AB87DFB000234A9 /* Plugin+SwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E96D2AB87DFB000234A9 /* Plugin+SwiftUI.swift */; };
 		84D8E9722AB88715000234A9 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9712AB88715000234A9 /* UserDefaults.swift */; };
 		84D8E9732AB88715000234A9 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9712AB88715000234A9 /* UserDefaults.swift */; };
-		84D8E9752AB88D60000234A9 /* ScriptManager+EnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D8E9742AB88D60000234A9 /* ScriptManager+EnvironmentKey.swift */; };
-		84F3A10C2AC1BF4300C1F4BE /* ScriptManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F3A10B2AC1BF4300C1F4BE /* ScriptManager.swift */; };
 		84F3A10F2AC1BFE800C1F4BE /* ScriptManager+ExternalScripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844AF6962ABC882500D90B0F /* ScriptManager+ExternalScripts.swift */; };
-		84F3A1112AC1C19100C1F4BE /* ScriptManager+MainScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F3A1102AC1C19100C1F4BE /* ScriptManager+MainScript.swift */; };
 		84F3A1162AC1C85E00C1F4BE /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F3A1152AC1C85E00C1F4BE /* URL.swift */; };
 		84F3A1172AC1C85E00C1F4BE /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F3A1152AC1C85E00C1F4BE /* URL.swift */; };
 		84F3A1192AC444C100C1F4BE /* CodeWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F3A1182AC444C100C1F4BE /* CodeWrapper.swift */; };
@@ -107,6 +108,10 @@
 		840F49D62AB7108200012C44 /* PluginListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginListView.swift; sourceTree = "<group>"; };
 		840F49D82AB710EA00012C44 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadViewHeightModifier.swift; sourceTree = "<group>"; };
+		84141C992B624230005A07BC /* UpdateProgressEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProgressEnvironmentKey.swift; sourceTree = "<group>"; };
+		84141C9B2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateStatusEnvironmentKey.swift; sourceTree = "<group>"; };
+		84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatableEnvironmentKey.swift; sourceTree = "<group>"; };
+		84141C9F2B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScriptVersionEnvironmentKey.swift; sourceTree = "<group>"; };
 		842318822AB7053A000A0A09 /* Intel Stack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Intel Stack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		842318852AB7053A000A0A09 /* IntelStackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntelStackApp.swift; sourceTree = "<group>"; };
 		842318872AB7053A000A0A09 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -126,7 +131,6 @@
 		844AF6962ABC882500D90B0F /* ScriptManager+ExternalScripts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptManager+ExternalScripts.swift"; sourceTree = "<group>"; };
 		8471FBB12B47AE0A00A67749 /* AddPluginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPluginView.swift; sourceTree = "<group>"; };
 		8475D18D2AD6CF8F00D71F59 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
-		8475D18F2AD6EE1300D71F59 /* ModelExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelExecutor.swift; sourceTree = "<group>"; };
 		8475D1922AD8333800D71F59 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		8475D1952ADAD19100D71F59 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		84A917EC2B58EDCF009D53E8 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -141,12 +145,9 @@
 		84D8E9692AB87859000234A9 /* UserScriptMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScriptMetadata.swift; sourceTree = "<group>"; };
 		84D8E96D2AB87DFB000234A9 /* Plugin+SwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Plugin+SwiftUI.swift"; sourceTree = "<group>"; };
 		84D8E9712AB88715000234A9 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
-		84D8E9742AB88D60000234A9 /* ScriptManager+EnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptManager+EnvironmentKey.swift"; sourceTree = "<group>"; };
 		84F3A1082ABFDD0A00C1F4BE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		84F3A1092ABFDD0A00C1F4BE /* PRIVACY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PRIVACY.md; sourceTree = "<group>"; };
 		84F3A10A2ABFDD0A00C1F4BE /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		84F3A10B2AC1BF4300C1F4BE /* ScriptManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptManager.swift; sourceTree = "<group>"; };
-		84F3A1102AC1C19100C1F4BE /* ScriptManager+MainScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScriptManager+MainScript.swift"; sourceTree = "<group>"; };
 		84F3A1152AC1C85E00C1F4BE /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		84F3A1182AC444C100C1F4BE /* CodeWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeWrapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -217,6 +218,7 @@
 				840F49D42AB7101F00012C44 /* SettingsView.swift */,
 				84424BE82ACEAB15009013A3 /* SidebarView.swift */,
 				8475D18C2AD6CF8000D71F59 /* Components */,
+				84141C982B6241BE005A07BC /* Environments */,
 				84141C952B610CC8005A07BC /* Modifiers */,
 			);
 			path = Views;
@@ -250,6 +252,17 @@
 				84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */,
 			);
 			path = Modifiers;
+			sourceTree = "<group>";
+		};
+		84141C982B6241BE005A07BC /* Environments */ = {
+			isa = PBXGroup;
+			children = (
+				84141C9F2B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift */,
+				84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */,
+				84141C992B624230005A07BC /* UpdateProgressEnvironmentKey.swift */,
+				84141C9B2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift */,
+			);
+			path = Environments;
 			sourceTree = "<group>";
 		};
 		842318792AB7053A000A0A09 = {
@@ -333,11 +346,7 @@
 			children = (
 				84D068E22ABEFDA000EC6E7E /* InternalPlugins.json */,
 				842F9D032ACD3556002E750B /* ExternalFileMonitor.swift */,
-				8475D18F2AD6EE1300D71F59 /* ModelExecutor.swift */,
 				84D8E96D2AB87DFB000234A9 /* Plugin+SwiftUI.swift */,
-				84D8E95A2AB7312C000234A9 /* ScriptManager.swift */,
-				84D8E9742AB88D60000234A9 /* ScriptManager+EnvironmentKey.swift */,
-				84F3A1102AC1C19100C1F4BE /* ScriptManager+MainScript.swift */,
 				843FCB2E2AB9C0FA00C93D1E /* ScriptManager+Task.swift */,
 			);
 			path = Data;
@@ -364,6 +373,7 @@
 			children = (
 				84D068DC2ABDB4D900EC6E7E /* FileConstants.swift */,
 				84D8E95C2AB731AE000234A9 /* Plugin.swift */,
+				84D8E95A2AB7312C000234A9 /* ScriptManager.swift */,
 				844AF6962ABC882500D90B0F /* ScriptManager+ExternalScripts.swift */,
 				84D8E9692AB87859000234A9 /* UserScriptMetadata.swift */,
 				842FFA4B2B57A1F4006DF29F /* UserScriptMetadataDecoder.swift */,
@@ -405,7 +415,6 @@
 			isa = PBXGroup;
 			children = (
 				84F3A1182AC444C100C1F4BE /* CodeWrapper.swift */,
-				84F3A10B2AC1BF4300C1F4BE /* ScriptManager.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -557,10 +566,10 @@
 				840F49B92AB70C3600012C44 /* SafariWebExtensionHandler.swift in Sources */,
 				84F3A10F2AC1BFE800C1F4BE /* ScriptManager+ExternalScripts.swift in Sources */,
 				8437CD142ABB3D7D008AF3A5 /* UserDefaults+Bookmark.swift in Sources */,
+				84141CA12B6256E3005A07BC /* ScriptManager.swift in Sources */,
 				84D8E9732AB88715000234A9 /* UserDefaults.swift in Sources */,
 				844AF6952ABC64B800D90B0F /* SafariWebExtensionHandler+Methods.swift in Sources */,
 				842FFA4D2B57A1F4006DF29F /* UserScriptMetadataDecoder.swift in Sources */,
-				84F3A10C2AC1BF4300C1F4BE /* ScriptManager.swift in Sources */,
 				84D068DA2ABDB2EB00EC6E7E /* ModelContainer.swift in Sources */,
 				84F3A1172AC1C85E00C1F4BE /* URL.swift in Sources */,
 				84F3A1192AC444C100C1F4BE /* CodeWrapper.swift in Sources */,
@@ -572,33 +581,34 @@
 			buildActionMask = 2147483647;
 			files = (
 				84D8E9722AB88715000234A9 /* UserDefaults.swift in Sources */,
-				8475D1902AD6EE1300D71F59 /* ModelExecutor.swift in Sources */,
+				84141CA02B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift in Sources */,
 				844AF6972ABC882500D90B0F /* ScriptManager+ExternalScripts.swift in Sources */,
 				84141C972B610D31005A07BC /* ReadViewHeightModifier.swift in Sources */,
 				8475D18E2AD6CF8F00D71F59 /* AppIcon.swift in Sources */,
 				840F49D52AB7101F00012C44 /* SettingsView.swift in Sources */,
 				84D068DD2ABDB4D900EC6E7E /* FileConstants.swift in Sources */,
 				843FCB2F2AB9C0FA00C93D1E /* ScriptManager+Task.swift in Sources */,
+				84141C9E2B6244A6005A07BC /* UpdatableEnvironmentKey.swift in Sources */,
 				84D1F62E2B5A405200D260EB /* Bundle+AppExtension.swift in Sources */,
 				840F49D72AB7108200012C44 /* PluginListView.swift in Sources */,
 				84D8E95B2AB7312C000234A9 /* ScriptManager.swift in Sources */,
 				842FFA4C2B57A1F4006DF29F /* UserScriptMetadataDecoder.swift in Sources */,
 				84D8E9612AB73CD9000234A9 /* FileManager.swift in Sources */,
+				84141C9A2B624230005A07BC /* UpdateProgressEnvironmentKey.swift in Sources */,
 				8471FBB22B47AE0A00A67749 /* AddPluginView.swift in Sources */,
 				8437CD132ABB3D7D008AF3A5 /* UserDefaults+Bookmark.swift in Sources */,
-				84F3A1112AC1C19100C1F4BE /* ScriptManager+MainScript.swift in Sources */,
 				842F9D042ACD3556002E750B /* ExternalFileMonitor.swift in Sources */,
 				84D8E96E2AB87DFB000234A9 /* Plugin+SwiftUI.swift in Sources */,
 				84D8E95D2AB731AE000234A9 /* Plugin.swift in Sources */,
 				84D068D92ABDB2EB00EC6E7E /* ModelContainer.swift in Sources */,
 				842318882AB7053A000A0A09 /* ContentView.swift in Sources */,
 				84D8E96A2AB87859000234A9 /* UserScriptMetadata.swift in Sources */,
+				84141C9C2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift in Sources */,
 				842F9D022AC47F80002E750B /* CardGroupBoxStyle.swift in Sources */,
 				84F3A1162AC1C85E00C1F4BE /* URL.swift in Sources */,
 				840F49D92AB710EA00012C44 /* OnboardingView.swift in Sources */,
 				84424BE92ACEAB15009013A3 /* SidebarView.swift in Sources */,
 				8437CD162ABB3DEB008AF3A5 /* UserDefaults+Key.swift in Sources */,
-				84D8E9752AB88D60000234A9 /* ScriptManager+EnvironmentKey.swift in Sources */,
 				842318862AB7053A000A0A09 /* IntelStackApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
