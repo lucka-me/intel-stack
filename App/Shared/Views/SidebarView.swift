@@ -25,6 +25,7 @@ struct SidebarView: View {
     
     @Binding private var selection: Selection?
     
+    @Environment(\.alert) private var alert
     @Environment(\.mainScriptVersion) private var mainScriptVersion
     @Environment(\.updateProgress) private var updateProgress
     @Environment(\.updateScripts) private var updateScripts
@@ -123,6 +124,7 @@ struct SidebarView: View {
         .navigationTitle("SidebarView.Title")
         .sheet(isPresented: $isAddPluginDialogPresented) {
             AddPluginView()
+                .alertable()
         }
 #if os(macOS)
         .overlay(alignment: .bottom) {
@@ -205,9 +207,10 @@ struct SidebarView: View {
     private func tryUpdateScripts() async {
         do {
             try await updateScripts?()
+        } catch let error as LocalizedError {
+            alert?(.localized(error: error))
         } catch {
-            // TODO: Alert it
-            print(error)
+            alert?(.generic(error: error))
         }
     }
     
