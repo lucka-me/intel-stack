@@ -34,7 +34,7 @@ final class UserScriptMetadataDecoderTests: XCTestCase {
     func testDecodePluginMetadata() throws {
         let id = "test-plugin"
         let name = "Test Plugin"
-        let category = Plugin.Category.highlighter
+        let category = Plugin.Category.default(value: .highlighter)
         let author = "lucka-me"
         let description = "A testing plugin"
         let updateURL = "https://example.com/plugin.user.js"
