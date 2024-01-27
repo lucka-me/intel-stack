@@ -257,22 +257,6 @@
         }
       }
     },
-    "AddPluginView.TaskError.InvalidHTTPResponse %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid HTTP response code: %lld"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无效的HTTP回应状态码：%lld"
-          }
-        }
-      }
-    },
     "AddPluginView.TaskError.InvalidURL" : {
       "localizations" : {
         "en" : {
@@ -365,6 +349,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "从边栏中选择"
+          }
+        }
+      }
+    },
+    "HTTPResponseError.InvalidHTTPResponse %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid HTTP response code: %lld"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无效的HTTP回应状态码：%lld"
+          }
+        }
+      }
+    },
+    "HTTPResponseError.InvalidResponseType" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid response type"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无效的回应类型"
+          }
+        }
+      }
+    },
+    "HTTPResponseError.InvalidResponseType.Reason" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The response is not a HTTPURLResponse object"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "回应不是一个HTTPURLResponse类型的对象"
           }
         }
       }
@@ -557,22 +589,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "（没有描述）"
-          }
-        }
-      }
-    },
-    "ScriptManager.TaskError.InvalidHTTPResponse %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid HTTP response code: %lld"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无效的HTTP回应状态码：%lld"
           }
         }
       }
