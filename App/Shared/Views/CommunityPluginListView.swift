@@ -14,14 +14,16 @@ struct CommunityPluginListView: View {
     
     @State private var isFetching: Bool = true
     @State private var previews: [ PluginPreview ] = [ ]
+    @State private var searchText: String = ""
     @State private var sorting: Sorting = .byName
     
     var body: some View {
         ScrollView(.vertical) {
             LazyVGrid(columns: [ .init(.adaptive(minimum: 300, maximum: .infinity)) ]) {
-                ForEach(previews, content: card(of:))
+                ForEach(presentedPreviews, content: card(of:))
             }
         }
+        .searchable(text: $searchText)
         .contentMargins(15, for: .scrollContent)
         .overlay(alignment: .center) {
             if isFetching {
@@ -32,9 +34,8 @@ struct CommunityPluginListView: View {
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Picker("CommunityPluginsView.Sort", systemImage: "arrow.up.arrow.down", selection: $sorting) {
-                    ForEach(Sorting.allCases, id: \.hashValue) { item in
+                    ForEach(Sorting.allCases) { item in
                         Text(item.titleKey)
-                            .tag(item)
                     }
                 }
                 .pickerStyle(.menu)
@@ -45,6 +46,33 @@ struct CommunityPluginListView: View {
         }
         .onChange(of: sorting, initial: false) {
             previews.sort(by: sorting.method)
+        }
+    }
+    
+    private var presentedPreviews: [ PluginPreview ] {
+        if searchText.isEmpty { return previews }
+        
+        // Make search
+        let words = searchText
+            .components(separatedBy: .whitespaces)
+            .filter { !$0.isEmpty }
+            .map { $0.lowercased() }
+        return previews.filter { item in
+            for word in words {
+                if item.metadata.name.lowercased().contains(word) {
+                    return true
+                }
+                if item.metadata.category.rawValue.lowercased() == word {
+                    return true
+                }
+                if let author = item.metadata.author, author.lowercased().contains(word) {
+                    return true
+                }
+                if let description = item.metadata.description, description.lowercased().contains(word) {
+                    return true
+                }
+            }
+            return false
         }
     }
     
@@ -110,10 +138,23 @@ struct CommunityPluginListView: View {
     }
 }
 
-fileprivate enum Sorting : Hashable, CaseIterable {
+fileprivate enum Sorting : Hashable, CaseIterable, Identifiable {
     case byAuthor
     case byCategory
     case byName
+    
+    var id: Self { self }
+    
+    var method: (PluginPreview, PluginPreview) -> Bool {
+        switch self {
+        case .byAuthor:
+            { $0.metadata.author ?? $0.author < $1.metadata.author ?? $1.author }
+        case .byCategory:
+            { $0.metadata.category.rawValue < $1.metadata.category.rawValue }
+        case .byName:
+            { $0.metadata.name.localizedStandardCompare($1.metadata.name) == .orderedAscending }
+        }
+    }
     
     var titleKey: LocalizedStringKey {
         switch self {
@@ -123,17 +164,6 @@ fileprivate enum Sorting : Hashable, CaseIterable {
             "CommunityPluginListView.Sorting.ByCategory"
         case .byName:
             "CommunityPluginListView.Sorting.ByName"
-        }
-    }
-    
-    var method: (PluginPreview, PluginPreview) -> Bool {
-        switch self {
-        case .byAuthor:
-            { $0.author < $1.author }
-        case .byCategory:
-            { $0.metadata.category.rawValue < $1.metadata.category.rawValue }
-        case .byName:
-            { $0.metadata.name.localizedStandardCompare($1.metadata.name) == .orderedAscending }
         }
     }
 }
