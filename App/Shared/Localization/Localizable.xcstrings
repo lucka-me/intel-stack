@@ -337,6 +337,54 @@
         }
       }
     },
+    "CommunityPluginListView.Sorting.ByAuthor" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By Author"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按名称"
+          }
+        }
+      }
+    },
+    "CommunityPluginListView.Sorting.ByCategory" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By Category"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按分类"
+          }
+        }
+      }
+    },
+    "CommunityPluginListView.Sorting.ByName" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By Name"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按作者"
+          }
+        }
+      }
+    },
     "CommunityPluginsView.Add" : {
       "localizations" : {
         "en" : {
@@ -381,6 +429,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在保存"
+          }
+        }
+      }
+    },
+    "CommunityPluginsView.Sort" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "排序"
           }
         }
       }

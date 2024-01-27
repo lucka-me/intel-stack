@@ -14,6 +14,7 @@ struct CommunityPluginListView: View {
     
     @State private var isFetching: Bool = true
     @State private var previews: [ PluginPreview ] = [ ]
+    @State private var sorting: Sorting = .byName
     
     var body: some View {
         ScrollView(.vertical) {
@@ -23,13 +24,27 @@ struct CommunityPluginListView: View {
         }
         .contentMargins(15, for: .scrollContent)
         .overlay(alignment: .center) {
-            if previews.isEmpty {
+            if isFetching {
                 ProgressView()
             }
         }
         .navigationTitle("CommunityPluginsView.Title")
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Picker("CommunityPluginsView.Sort", systemImage: "arrow.up.arrow.down", selection: $sorting) {
+                    ForEach(Sorting.allCases, id: \.hashValue) { item in
+                        Text(item.titleKey)
+                            .tag(item)
+                    }
+                }
+                .pickerStyle(.menu)
+            }
+        }
         .task {
             await tryFetchPreviews()
+        }
+        .onChange(of: sorting, initial: false) {
+            previews.sort(by: sorting.method)
         }
     }
     
@@ -72,7 +87,7 @@ struct CommunityPluginListView: View {
                 Spacer()
                 switch preview.state {
                 case .available:
-                    Button("CommunityPluginsView.Add", systemImage: "arrow.down") {
+                    Button("CommunityPluginsView.Add", systemImage: "plus.circle.fill") {
                         Task { await trySave(preview) }
                     }
                     .buttonStyle(.borderless)
@@ -82,7 +97,7 @@ struct CommunityPluginListView: View {
                         .symbolRenderingMode(.multicolor)
                         .symbolEffect(.pulse, options: .repeating)
                 case .saved:
-                    Label("CommunityPluginsView.Added", systemImage: "checkmark")
+                    Label("CommunityPluginsView.Added", systemImage: "checkmark.circle.fill")
                         .foregroundStyle(.green)
                 }
             }
@@ -92,6 +107,34 @@ struct CommunityPluginListView: View {
 #if os(macOS)
         .groupBoxStyle(.card)
 #endif
+    }
+}
+
+fileprivate enum Sorting : Hashable, CaseIterable {
+    case byAuthor
+    case byCategory
+    case byName
+    
+    var titleKey: LocalizedStringKey {
+        switch self {
+        case .byAuthor:
+            "CommunityPluginListView.Sorting.ByAuthor"
+        case .byCategory:
+            "CommunityPluginListView.Sorting.ByCategory"
+        case .byName:
+            "CommunityPluginListView.Sorting.ByName"
+        }
+    }
+    
+    var method: (PluginPreview, PluginPreview) -> Bool {
+        switch self {
+        case .byAuthor:
+            { $0.author < $1.author }
+        case .byCategory:
+            { $0.metadata.category.rawValue < $1.metadata.category.rawValue }
+        case .byName:
+            { $0.metadata.name.localizedStandardCompare($1.metadata.name) == .orderedAscending }
+        }
     }
 }
 
@@ -168,7 +211,7 @@ fileprivate extension CommunityPluginListView {
                 return await group
                     .compactMap { $0 }
                     .reduce(into: [ ]) { $0.append($1) }
-            }.sorted { $0.metadata.name < $1.metadata.name }
+            }.sorted(by: sorting.method)
         } catch let error as LocalizedError {
             alert?(.localized(error: error))
         } catch {
