@@ -142,13 +142,9 @@ struct AddPluginView: View {
         
         do {
             try information.provider.save(to: destinationURL)
-            guard
-                let plugin = Plugin(
-                    metadata: information.metadata, isInternal: false, filename: information.filename
-                )
-            else {
-                return
-            }
+            let plugin = Plugin(
+                metadata: information.metadata, isInternal: false, filename: information.filename
+            )
             modelContext.insert(plugin)
             try modelContext.save()
             dismiss()
@@ -197,15 +193,12 @@ fileprivate enum Method : Int, CaseIterable {
 
 fileprivate enum TaskError: Error, LocalizedError {
     case externalLocationUnavailable
-    case invalidHTTPResponse(statusCode: Int)
     case invalidURL
     
     var errorDescription: String? {
         switch self {
         case .externalLocationUnavailable:
             return .init(localized: "AddPluginView.TaskError.ExternalLocationUnavailable")
-        case .invalidHTTPResponse(let statusCode):
-            return .init(localized: "AddPluginView.TaskError.InvalidHTTPResponse \(statusCode)")
         case .invalidURL:
             return .init(localized: "AddPluginView.TaskError.InvalidURL")
         }
@@ -215,8 +208,6 @@ fileprivate enum TaskError: Error, LocalizedError {
         switch self {
         case .externalLocationUnavailable:
             return .init(localized: "AddPluginView.TaskError.ExternalLocationUnavailable.Reason")
-        case .invalidHTTPResponse(let statusCode):
-            return HTTPURLResponse.localizedString(forStatusCode: statusCode)
         case .invalidURL:
             return .init(localized: "AddPluginView.TaskError.InvalidURL.Reason")
         }
@@ -296,18 +287,13 @@ fileprivate struct RemoteSection: View {
                 throw TaskError.invalidURL
             }
             
-            let (temporaryURL, response) = try await URLSession.shared.download(from: downloadURL)
+            let temporaryURL = try await URLSession.shared.download(from: downloadURL)
             
             let fileManager = FileManager.default
             defer {
                 if (self.pluginInformation == nil) {
                     try? fileManager.removeItem(at: temporaryURL)
                 }
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse else { return }
-            guard httpResponse.statusCode == 200 else {
-                throw TaskError.invalidHTTPResponse(statusCode: httpResponse.statusCode)
             }
             
             let content = try String(contentsOf: temporaryURL)

@@ -43,11 +43,7 @@ extension ScriptManager {
             plugin.update(from: value.1)
         }
         for metadata in metadatas {
-            guard
-                let plugin = Plugin(metadata: metadata.value.1, isInternal: false, filename: metadata.value.0)
-            else {
-                continue
-            }
+            let plugin = Plugin(metadata: metadata.value.1, isInternal: false, filename: metadata.value.0)
             context.insert(plugin)
         }
         try context.save()

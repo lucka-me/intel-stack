@@ -20,7 +20,7 @@ struct PluginMetadata : Decodable {
 }
 
 extension Plugin {
-    convenience init?(metadata: PluginMetadata, isInternal: Bool, filename: String) {
+    convenience init(metadata: PluginMetadata, isInternal: Bool, filename: String) {
         self.init(
             idendifier: metadata.id,
             name: metadata.name,

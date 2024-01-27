@@ -13,24 +13,6 @@ extension ScriptManager {
         case release = "release"
         case beta = "beta"
     }
-
-    enum TaskError: Error, LocalizedError {
-        case invalidHTTPResponse(statusCode: Int)
-        
-        var errorDescription: String? {
-            switch self {
-            case .invalidHTTPResponse(let statusCode):
-                return .init(localized: "ScriptManager.TaskError.InvalidHTTPResponse \(statusCode)")
-            }
-        }
-        
-        var failureReason: String? {
-            switch self {
-            case .invalidHTTPResponse(let statusCode):
-                return HTTPURLResponse.localizedString(forStatusCode: statusCode)
-            }
-        }
-    }
 }
 
 extension ScriptManager {
@@ -103,7 +85,8 @@ extension ScriptManager {
             .appending(path: channel.rawValue)
             .appending(path: FileConstants.mainScriptFilename)
             .appendingPathExtension("user.js")
-        let (temporaryURL, response) = try await URLSession.shared.download(from: downloadURL)
+
+        let temporaryURL = try await URLSession.shared.download(from: downloadURL)
         
         let fileManager = FileManager.default
         var succeed = false
@@ -111,11 +94,6 @@ extension ScriptManager {
             if !succeed {
                 try? fileManager.removeItem(at: temporaryURL)
             }
-        }
-        
-        guard let httpResponse = response as? HTTPURLResponse else { return }
-        guard httpResponse.statusCode == 200 else {
-            throw TaskError.invalidHTTPResponse(statusCode: httpResponse.statusCode)
         }
         
         let content = try String(contentsOf: temporaryURL)
@@ -131,11 +109,9 @@ extension ScriptManager {
     func downloadInternalPlugin(_ filename: String, from channel: BuildChannel) async throws {
         let downloadURL = Self.websiteBuildURL
             .appending(path: channel.rawValue)
-            .appending(path: "plugins")
-            .appending(path: filename)
+            .appending(path: FileConstants.mainScriptFilename)
             .appendingPathExtension("user.js")
-        
-        let (temporaryURL, response) = try await URLSession.shared.download(from: downloadURL)
+        let temporaryURL = try await URLSession.shared.download(from: downloadURL)
         
         let fileManager = FileManager.default
         var succeed = false
@@ -143,11 +119,6 @@ extension ScriptManager {
             if !succeed {
                 try? fileManager.removeItem(at: temporaryURL)
             }
-        }
-        
-        guard let httpResponse = response as? HTTPURLResponse else { return }
-        guard httpResponse.statusCode == 200 else {
-            throw TaskError.invalidHTTPResponse(statusCode: httpResponse.statusCode)
         }
         
         let content = try String(contentsOf: temporaryURL)
@@ -169,7 +140,7 @@ extension ScriptManager {
         if let item = try modelContext.fetch(descriptor).first {
             item.update(from: metadata)
         } else {
-            let item = Plugin(metadata: metadata, isInternal: true, filename: filename)!
+            let item = Plugin(metadata: metadata, isInternal: true, filename: filename)
             modelContext.insert(item)
         }
         
@@ -198,16 +169,10 @@ fileprivate extension ScriptManager {
     private func updateExternal(plugin: Plugin, in externalURL: URL) async throws {
         // TODO: Use updateURL to fetch metadata
         guard let downloadURL = plugin.downloadURL else { return }
-
-        let (temporaryURL, response) = try await URLSession.shared.download(from: downloadURL)
+        let temporaryURL = try await URLSession.shared.download(from: downloadURL)
 
         let fileManager = FileManager.default
         defer { try? fileManager.removeItem(at: temporaryURL) }
-        
-        guard let httpResponse = response as? HTTPURLResponse else { return }
-        guard httpResponse.statusCode == 200 else {
-            throw TaskError.invalidHTTPResponse(statusCode: httpResponse.statusCode)
-        }
         
         let destinationURL = externalURL
             .appending(path: plugin.filename)
@@ -221,7 +186,9 @@ fileprivate extension ScriptManager {
             return
         }
         
-        try fileManager.replaceItem(at: destinationURL, withItemAt: temporaryURL, backupItemName: nil, resultingItemURL: nil)
+        try fileManager.replaceItem(
+            at: destinationURL, withItemAt: temporaryURL, backupItemName: nil, resultingItemURL: nil
+        )
         plugin.update(from: metadata)
     }
 }
@@ -231,7 +198,9 @@ fileprivate extension ScriptManager {
         get throws {
             try modelContext.fetch(
                 FetchDescriptor<Plugin>(
-                    predicate: #Predicate { !$0.isInternal && $0.version != nil && ($0.downloadURL != nil || $0.updateURL != nil) }
+                    predicate: #Predicate {
+                        !$0.isInternal && $0.version != nil && ($0.downloadURL != nil || $0.updateURL != nil)
+                    }
                 )
             )
         }
