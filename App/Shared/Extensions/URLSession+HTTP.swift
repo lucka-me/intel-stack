@@ -5,6 +5,7 @@
 //  Created by Lucka on 2024-01-26.
 //
 
+import Combine
 import Foundation
 
 enum HTTPResponseError : LocalizedError {
@@ -27,6 +28,20 @@ enum HTTPResponseError : LocalizedError {
         case .invalidHTTPResponse(let statusCode):
             return HTTPURLResponse.localizedString(forStatusCode: statusCode)
         }
+    }
+}
+
+extension URLSession {
+    func data(from url: URL) async throws -> Data {
+        let (data, response) = try await URLSession.shared.data(from: url)
+        try Self.checkHTTP(response: response)
+        return data
+    }
+    
+    func decoded<D: TopLevelDecoder, T: Decodable>(
+        _ type: T.Type, from url: URL, by decoder: D
+    ) async throws -> T where D.Input == Data {
+        try decoder.decode(type, from: try await data(from: url))
     }
 }
 

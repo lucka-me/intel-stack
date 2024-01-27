@@ -28,6 +28,8 @@ struct ContentView: View {
                     SettingsView()
                 case .plugins(let category):
                     PluginListView(category: category)
+                case .communityPlugins:
+                    CommunityPluginListView()
                 case nil:
                     Text("ContentView.EmptyHint")
                 }
