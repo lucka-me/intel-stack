@@ -35,7 +35,7 @@ extension ScriptManager {
             }
         let plugins = try context.fetch(.init(predicate: Plugin.externalPredicate))
         for plugin in plugins {
-            guard let value = metadatas.removeValue(forKey: plugin.idendifier) else {
+            guard let value = metadatas.removeValue(forKey: plugin.identifier) else {
                 context.delete(plugin)
                 continue
             }
