@@ -28,6 +28,7 @@
 		84141CB12B63B205005A07BC /* AlertableModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141CB02B63B205005A07BC /* AlertableModifier.swift */; };
 		84141CB32B63B2C6005A07BC /* CommunityPluginListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141CB22B63B2C6005A07BC /* CommunityPluginListView.swift */; };
 		84141CB52B63DDE5005A07BC /* URLSession+HTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141CB42B63DDE5005A07BC /* URLSession+HTTP.swift */; };
+		84177A2E2B6561B700E934BD /* CapsuleModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84177A2D2B6561B700E934BD /* CapsuleModifier.swift */; };
 		842318862AB7053A000A0A09 /* IntelStackApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318852AB7053A000A0A09 /* IntelStackApp.swift */; };
 		842318882AB7053A000A0A09 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842318872AB7053A000A0A09 /* ContentView.swift */; };
 		8423188A2AB7053A000A0A09 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 842318892AB7053A000A0A09 /* Assets.xcassets */; };
@@ -124,6 +125,7 @@
 		84141CB02B63B205005A07BC /* AlertableModifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertableModifier.swift; sourceTree = "<group>"; };
 		84141CB22B63B2C6005A07BC /* CommunityPluginListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityPluginListView.swift; sourceTree = "<group>"; };
 		84141CB42B63DDE5005A07BC /* URLSession+HTTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+HTTP.swift"; sourceTree = "<group>"; };
+		84177A2D2B6561B700E934BD /* CapsuleModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleModifier.swift; sourceTree = "<group>"; };
 		842318822AB7053A000A0A09 /* Intel Stack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Intel Stack.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		842318852AB7053A000A0A09 /* IntelStackApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntelStackApp.swift; sourceTree = "<group>"; };
 		842318872AB7053A000A0A09 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 			isa = PBXGroup;
 			children = (
 				84141CB02B63B205005A07BC /* AlertableModifier.swift */,
+				84177A2D2B6561B700E934BD /* CapsuleModifier.swift */,
 				84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */,
 			);
 			path = Modifiers;
@@ -627,6 +630,7 @@
 				84141CB52B63DDE5005A07BC /* URLSession+HTTP.swift in Sources */,
 				842318882AB7053A000A0A09 /* ContentView.swift in Sources */,
 				84D8E96A2AB87859000234A9 /* PluginMetadata.swift in Sources */,
+				84177A2E2B6561B700E934BD /* CapsuleModifier.swift in Sources */,
 				84141C9C2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift in Sources */,
 				842F9D022AC47F80002E750B /* CardGroupBoxStyle.swift in Sources */,
 				84F3A1162AC1C85E00C1F4BE /* URL.swift in Sources */,

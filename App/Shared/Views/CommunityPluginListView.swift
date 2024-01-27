@@ -95,15 +95,6 @@ struct CommunityPluginListView: View {
     }
 }
 
-fileprivate extension View {
-    func capsule(_ color: Color) -> some View {
-        self
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(color.gradient, in: Capsule(style: .continuous))
-    }
-}
-
 @Observable
 fileprivate class PluginPreview : Identifiable {
     enum State {
