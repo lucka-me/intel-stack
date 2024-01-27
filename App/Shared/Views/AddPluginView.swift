@@ -142,13 +142,9 @@ struct AddPluginView: View {
         
         do {
             try information.provider.save(to: destinationURL)
-            guard
-                let plugin = Plugin(
-                    metadata: information.metadata, isInternal: false, filename: information.filename
-                )
-            else {
-                return
-            }
+            let plugin = Plugin(
+                metadata: information.metadata, isInternal: false, filename: information.filename
+            )
             modelContext.insert(plugin)
             try modelContext.save()
             dismiss()

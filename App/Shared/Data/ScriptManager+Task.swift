@@ -140,7 +140,7 @@ extension ScriptManager {
         if let item = try modelContext.fetch(descriptor).first {
             item.update(from: metadata)
         } else {
-            let item = Plugin(metadata: metadata, isInternal: true, filename: filename)!
+            let item = Plugin(metadata: metadata, isInternal: true, filename: filename)
             modelContext.insert(item)
         }
         

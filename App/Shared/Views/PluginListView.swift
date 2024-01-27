@@ -49,7 +49,6 @@ struct PluginListView: View {
                         Text(version)
                             .monospaced()
                             .capsule(.blue)
-                            
                     }
                     if plugin.isInternal {
                         Text("PluginListView.Internal")
