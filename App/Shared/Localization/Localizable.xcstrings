@@ -417,6 +417,54 @@
         }
       }
     },
+    "CommunityPluginsView.Option" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Options"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选项"
+          }
+        }
+      }
+    },
+    "CommunityPluginsView.Option.HideAddedPlugins" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide added plugins"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隐藏已加入的插件"
+          }
+        }
+      }
+    },
+    "CommunityPluginsView.Option.Sort" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "排序"
+          }
+        }
+      }
+    },
     "CommunityPluginsView.Saving" : {
       "localizations" : {
         "en" : {
@@ -429,22 +477,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在保存"
-          }
-        }
-      }
-    },
-    "CommunityPluginsView.Sort" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sort"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "排序"
           }
         }
       }

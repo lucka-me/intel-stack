@@ -12,6 +12,7 @@ struct CommunityPluginListView: View {
     @Environment(\.alert) private var alert
     @Environment(\.modelContext) private var modelContext
     
+    @State private var hideAddedPlugins: Bool = false
     @State private var isFetching: Bool = true
     @State private var previews: [ PluginPreview ] = [ ]
     @State private var searchText: String = ""
@@ -33,12 +34,15 @@ struct CommunityPluginListView: View {
         .navigationTitle("CommunityPluginsView.Title")
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Picker("CommunityPluginsView.Sort", systemImage: "arrow.up.arrow.down", selection: $sorting) {
-                    ForEach(Sorting.allCases) { item in
-                        Text(item.titleKey)
+                Menu("CommunityPluginsView.Option", systemImage: "slider.vertical.3") {
+                    Picker("CommunityPluginsView.Option.Sort", selection: $sorting) {
+                        ForEach(Sorting.allCases) { item in
+                            Text(item.titleKey)
+                        }
                     }
+                    .pickerStyle(.inline)
+                    Toggle("CommunityPluginsView.Option.HideAddedPlugins", isOn: $hideAddedPlugins)
                 }
-                .pickerStyle(.menu)
             }
         }
         .task {
@@ -50,7 +54,12 @@ struct CommunityPluginListView: View {
     }
     
     private var presentedPreviews: [ PluginPreview ] {
-        if searchText.isEmpty { return previews }
+        var result = previews
+        if hideAddedPlugins {
+            result = result.filter { $0.state != .saved }
+        }
+        
+        if searchText.isEmpty { return result }
         
         // Make search
         let words = searchText
