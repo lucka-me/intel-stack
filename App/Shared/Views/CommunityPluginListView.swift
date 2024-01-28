@@ -195,31 +195,21 @@ fileprivate class PluginPreview : Identifiable {
 }
 
 fileprivate extension CommunityPluginListView {
+    private static var indexURL : URL {
+        .init(string: "https://lucka-me.github.io/iitc-community-plugins-index/")!
+    }
     private static var repository : String { "IITC-CE/Community-plugins" }
     
     @MainActor
     private func tryFetchPreviews() async {
         defer { isFetching = false }
         do {
-            let authors = try await GitHub
-                .contents(in: Self.repository, path: "metadata")
-                .compactMap { $0.type == "dir" ? $0.name : nil }
-            
-            let filenamesByAuthor: [ String : [ String ] ] = try await withThrowingTaskGroup(
-                of: (String, [ String ]).self
-            ) { group in
-                for author in authors {
-                    group.addTask {
-                        (author, try await self.filenames(of: author))
-                    }
-                }
-                return try await group.reduce(into: [ : ]) { result, item in
-                    result[item.0] = item.1
-                }
-            }
+            let index = try await URLSession.shared.decoded(
+                [ String : [ String ] ].self, from: Self.indexURL, by: JSONDecoder()
+            )
             
             previews = await withTaskGroup(of: PluginPreview?.self) { group in
-                for authorAndFilename in filenamesByAuthor {
+                for authorAndFilename in index {
                     for filename in authorAndFilename.value {
                         group.addTask {
                             guard
@@ -241,23 +231,13 @@ fileprivate extension CommunityPluginListView {
                 return await group
                     .compactMap { $0 }
                     .reduce(into: [ ]) { $0.append($1) }
-            }.sorted(by: sorting.method)
+            }
+            .sorted(by: sorting.method)
         } catch let error as LocalizedError {
             alert?(.localized(error: error))
         } catch {
             alert?(.generic(error: error))
         }
-    }
-    
-    private func filenames(of author: String) async throws -> [ String ] {
-        return try await GitHub
-            .contents(in: Self.repository, path: "metadata/\(author)")
-            .compactMap {
-                guard $0.type == "file", $0.name.hasSuffix(".yml") else {
-                    return nil
-                }
-                return $0.name.replacing(".yml", with: "")
-            }
     }
     
     private func metadata(of author: String, filename: String) async throws -> PluginMetadata? {
@@ -337,25 +317,7 @@ fileprivate extension ScriptManager {
 }
 
 fileprivate struct GitHub {
-    private static var restAPI: URL { .init(string: "https://api.github.com/repos/")! }
     private static var rawContent: URL { .init(string: "https://raw.githubusercontent.com/")! }
-}
-
-fileprivate extension GitHub {
-    struct RepositoryContentItem : Decodable {
-        var name: String
-        var type: String
-    }
-    
-    static func contents(in repository: String, path: String) async throws -> [ RepositoryContentItem ] {
-        let url = restAPI
-            .appending(path: repository)
-            .appending(path: "contents")
-            .appending(path: path)
-        return try await URLSession.shared.decoded(
-            [ RepositoryContentItem ].self, from: url, by: JSONDecoder()
-        )
-    }
 }
 
 fileprivate extension GitHub {
