@@ -353,6 +353,54 @@
         }
       }
     },
+    "CommunityPluginListView.SearchPrompt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type # to search by author or category"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入#来搜索作者或分类"
+          }
+        }
+      }
+    },
+    "CommunityPluginListView.SearchToken.Target.Author" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Author"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作者"
+          }
+        }
+      }
+    },
+    "CommunityPluginListView.SearchToken.Target.Category" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Category"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分类"
+          }
+        }
+      }
+    },
     "CommunityPluginListView.Sorting.ByAuthor" : {
       "localizations" : {
         "en" : {

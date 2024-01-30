@@ -16,6 +16,7 @@ struct CommunityPluginListView: View {
     @State private var isFetching: Bool = true
     @State private var previews: [ PluginPreview ] = [ ]
     @State private var searchText: String = ""
+    @State private var searchTokens: [ SearchToken ] = [ ]
     @State private var sorting: Sorting = .byName
     
     var body: some View {
@@ -33,7 +34,16 @@ struct CommunityPluginListView: View {
                 }
             }
         }
-        .searchable(text: $searchText)
+        .searchable(
+            text: $searchText, tokens: $searchTokens, prompt: Text("CommunityPluginListView.SearchPrompt")
+        ) { token in
+            Label(token.text, systemImage: token.icon)
+        }
+        .searchSuggestions {
+            if searchText == "#" {
+                searchSuggestions
+            }
+        }
         .contentMargins(15, for: .scrollContent)
         .overlay(alignment: .center) {
             if isFetching {
@@ -62,35 +72,29 @@ struct CommunityPluginListView: View {
         }
     }
     
-    private var presentedPreviews: [ PluginPreview ] {
-        var result = previews
-        if hideAddedPlugins {
-            result = result.filter { $0.state != .saved }
-        }
-        
-        if searchText.isEmpty { return result }
-        
-        // Make search
-        let words = searchText
-            .components(separatedBy: .whitespaces)
-            .filter { !$0.isEmpty }
-            .map { $0.lowercased() }
-        return previews.filter { item in
-            for word in words {
-                if item.metadata.name.lowercased().contains(word) {
-                    return true
+    @ViewBuilder
+    private var searchSuggestions: some View {
+        if !searchTokens.contains(where: { $0.target == .category }) {
+            Section {
+                ForEach(availableCategories, id: \.self) { category in
+                    let token = SearchToken(target: .category, text: category)
+                    Label(category, systemImage: token.icon)
+                        .searchCompletion(token)
                 }
-                if item.metadata.category.rawValue.lowercased() == word {
-                    return true
-                }
-                if let author = item.metadata.author, author.lowercased().contains(word) {
-                    return true
-                }
-                if let description = item.metadata.description, description.lowercased().contains(word) {
-                    return true
-                }
+            } header: {
+                Text(SearchToken.Target.category.titleKey)
             }
-            return false
+        }
+        if !searchTokens.contains(where: { $0.target == .author }) {
+            Section {
+                ForEach(availableAuthors, id: \.self) { author in
+                    let token = SearchToken(target: .author, text: author)
+                    Label(author, systemImage: token.icon)
+                        .searchCompletion(token)
+                }
+            } header: {
+                Text(SearchToken.Target.author.titleKey)
+            }
         }
     }
     
@@ -156,6 +160,54 @@ struct CommunityPluginListView: View {
     }
 }
 
+fileprivate extension CommunityPluginListView {
+    private var presentedPreviews: [ PluginPreview ] {
+        var result = previews
+        if hideAddedPlugins {
+            result = result.filter { $0.state != .saved }
+        }
+        
+        if searchText.isEmpty && searchTokens.isEmpty { return result }
+        
+        // Make search
+        let words = searchText
+            .components(separatedBy: .whitespaces)
+            .filter { !$0.isEmpty }
+            .map { $0.lowercased() }
+        return previews.filter { item in
+            for token in searchTokens {
+                if !token.matches(item) {
+                    return false
+                }
+            }
+            guard !words.isEmpty else {
+                return true
+            }
+            for word in words {
+                if item.metadata.name.lowercased().contains(word) {
+                    return true
+                }
+                if let description = item.metadata.description, description.lowercased().contains(word) {
+                    return true
+                }
+            }
+            return false
+        }
+    }
+    
+    private var availableAuthors: [ String ] {
+        previews
+            .reduce(into: Set<String>()) { $0.insert(($1.author)) }
+            .sorted()
+    }
+    
+    private var availableCategories: [ String ] {
+        previews
+            .reduce(into: Set<String>()) { $0.insert($1.metadata.category.rawValue) }
+            .sorted()
+    }
+}
+
 fileprivate enum Sorting : Hashable, CaseIterable, Identifiable {
     case byAuthor
     case byCategory
@@ -182,6 +234,47 @@ fileprivate enum Sorting : Hashable, CaseIterable, Identifiable {
             "CommunityPluginListView.Sorting.ByCategory"
         case .byName:
             "CommunityPluginListView.Sorting.ByName"
+        }
+    }
+}
+
+fileprivate struct SearchToken : Identifiable {
+    enum Target {
+        case author
+        case category
+    }
+    
+    var target: Target
+    var text: String
+    
+    var id: Target { target }
+    
+    var icon: String {
+        switch target {
+        case .author:
+            "signature"
+        case .category:
+            Plugin.Category(rawValue: text).icon
+        }
+    }
+    
+    func matches(_ preview: PluginPreview) -> Bool {
+        switch target {
+        case .author:
+            preview.author == text
+        case .category:
+            preview.metadata.category.rawValue == text
+        }
+    }
+}
+
+fileprivate extension SearchToken.Target {
+    var titleKey: LocalizedStringKey {
+        switch self {
+        case .author:
+            "CommunityPluginListView.SearchToken.Target.Author"
+        case .category:
+            "CommunityPluginListView.SearchToken.Target.Category"
         }
     }
 }
