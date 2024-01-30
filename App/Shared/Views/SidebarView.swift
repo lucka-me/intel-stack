@@ -40,7 +40,6 @@ struct SidebarView: View {
     
     @State private var isAddPluginDialogPresented = false
 #if os(macOS)
-    @State private var bottomBlockHeight: CGFloat = 0.0
     @State private var isExtensionEnabled: Bool? = nil
 #endif
     
@@ -127,16 +126,13 @@ struct SidebarView: View {
             }
 #endif
         }
-#if os(macOS)
-        .safeAreaPadding(.bottom, bottomBlockHeight)
-#endif
         .navigationTitle("SidebarView.Title")
         .sheet(isPresented: $isAddPluginDialogPresented) {
             AddPluginView()
                 .alertable()
         }
 #if os(macOS)
-        .overlay(alignment: .bottom) {
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 Divider()
                     .layoutPriority(2)
@@ -148,7 +144,6 @@ struct SidebarView: View {
                 }
                 .padding(8)
             }
-            .readSize(height: $bottomBlockHeight)
         }
 #endif
     }

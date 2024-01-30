@@ -15,7 +15,6 @@
 		840F49D52AB7101F00012C44 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F49D42AB7101F00012C44 /* SettingsView.swift */; };
 		840F49D72AB7108200012C44 /* PluginListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F49D62AB7108200012C44 /* PluginListView.swift */; };
 		840F49D92AB710EA00012C44 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F49D82AB710EA00012C44 /* OnboardingView.swift */; };
-		84141C972B610D31005A07BC /* ReadViewHeightModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */; };
 		84141C9A2B624230005A07BC /* UpdateProgressEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C992B624230005A07BC /* UpdateProgressEnvironmentKey.swift */; };
 		84141C9C2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9B2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift */; };
 		84141C9E2B6244A6005A07BC /* UpdatableEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */; };
@@ -113,7 +112,6 @@
 		840F49D42AB7101F00012C44 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		840F49D62AB7108200012C44 /* PluginListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginListView.swift; sourceTree = "<group>"; };
 		840F49D82AB710EA00012C44 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadViewHeightModifier.swift; sourceTree = "<group>"; };
 		84141C992B624230005A07BC /* UpdateProgressEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProgressEnvironmentKey.swift; sourceTree = "<group>"; };
 		84141C9B2B6242D3005A07BC /* UpdateStatusEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateStatusEnvironmentKey.swift; sourceTree = "<group>"; };
 		84141C9D2B6244A6005A07BC /* UpdatableEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatableEnvironmentKey.swift; sourceTree = "<group>"; };
@@ -260,7 +258,6 @@
 			isa = PBXGroup;
 			children = (
 				84141CB02B63B205005A07BC /* AlertableModifier.swift */,
-				84141C962B610D31005A07BC /* ReadViewHeightModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -599,7 +596,6 @@
 				84D8E9722AB88715000234A9 /* UserDefaults.swift in Sources */,
 				84141CA02B62493B005A07BC /* MainScriptVersionEnvironmentKey.swift in Sources */,
 				844AF6972ABC882500D90B0F /* ScriptManager+ExternalScripts.swift in Sources */,
-				84141C972B610D31005A07BC /* ReadViewHeightModifier.swift in Sources */,
 				8475D18E2AD6CF8F00D71F59 /* AppIcon.swift in Sources */,
 				840F49D52AB7101F00012C44 /* SettingsView.swift in Sources */,
 				84D068DD2ABDB4D900EC6E7E /* FileConstants.swift in Sources */,
