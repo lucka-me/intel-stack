@@ -364,7 +364,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "输入#来搜索作者或分类"
+            "value" : "输入#来搜索作者或类别"
           }
         }
       }
@@ -396,7 +396,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "分类"
+            "value" : "类别"
           }
         }
       }
