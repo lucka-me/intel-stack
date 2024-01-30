@@ -348,7 +348,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "按名称"
+            "value" : "按作者"
           }
         }
       }
@@ -380,7 +380,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "按作者"
+            "value" : "按名称"
           }
         }
       }
