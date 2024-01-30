@@ -21,7 +21,16 @@ struct CommunityPluginListView: View {
     var body: some View {
         ScrollView(.vertical) {
             LazyVGrid(columns: [ .init(.adaptive(minimum: 300, maximum: .infinity)) ]) {
-                ForEach(presentedPreviews, content: card(of:))
+                Section {
+                    ForEach(presentedPreviews, content: card(of:))
+                } footer: {
+                    if !isFetching {
+                        Text("CommunityPluginListView.Footer \(previews.count)")
+                            .foregroundStyle(.secondary)
+                            .font(.footnote)
+                            .padding(.horizontal, 10)
+                    }
+                }
             }
         }
         .searchable(text: $searchText)
