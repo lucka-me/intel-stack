@@ -364,7 +364,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "按分类"
+            "value" : "按类别"
           }
         }
       }
@@ -396,7 +396,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "加入"
+            "value" : "添加"
           }
         }
       }
@@ -412,7 +412,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "已加入"
+            "value" : "已添加"
           }
         }
       }
@@ -444,7 +444,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "隐藏已加入的插件"
+            "value" : "隐藏已添加的插件"
           }
         }
       }
@@ -476,7 +476,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "正在保存"
+            "value" : "正在存储"
           }
         }
       }
