@@ -12,7 +12,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "加入"
+            "value" : "添加"
           }
         }
       }
@@ -140,7 +140,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "分类"
+            "value" : "类别"
           }
         }
       }
@@ -156,7 +156,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "这个插件会被保存为外部插件。"
+            "value" : "这个插件会被存储为外部插件。"
           }
         }
       }
@@ -246,13 +246,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Please ensure the location is selected in Settings and existing"
+            "value" : "Please ensure the location is selected in Settings and existing."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请确保在设置页面设置了位置，并且这个位置存在"
+            "value" : "请确保在设置页面设置了位置，并且这个位置存在。"
           }
         }
       }
@@ -278,13 +278,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Please check the format of URL, and it should end up with .user.js"
+            "value" : "Please check the format of URL, and it often end up with \".user.js\"."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请检查链接的格式，此外它应当以.user.js结尾"
+            "value" : "请检查链接的格式，此外它通常以“.user.js”结尾。"
           }
         }
       }
@@ -316,7 +316,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "链接"
+            "value" : "URL"
           }
         }
       }
@@ -358,13 +358,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Invalid HTTP response code: %lld"
+            "value" : "Invalid HTTP response: %lld"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无效的HTTP回应状态码：%lld"
+            "value" : "无效的HTTP响应：%lld"
           }
         }
       }
@@ -380,7 +380,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "无效的回应类型"
+            "value" : "无效的响应类型"
           }
         }
       }
@@ -390,13 +390,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The response is not a HTTPURLResponse object"
+            "value" : "The response is not a HTTPURLResponse object."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "回应不是一个HTTPURLResponse类型的对象"
+            "value" : "响应不是一个HTTPURLResponse类型的对象。"
           }
         }
       }
@@ -476,7 +476,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "IITC主脚本和内部插件下载完成。"
+            "value" : "已下载IITC主脚本和内部插件。"
           }
         }
       }
@@ -524,7 +524,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "未启用"
+            "value" : "已停用"
           }
         }
       }
@@ -620,7 +620,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "IITC-CE 网站"
+            "value" : "IITC-CE网站"
           }
         }
       }
@@ -732,7 +732,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Intel Stack会从选择的位置中加载用户脚本。"
+            "value" : "Intel Stack会从选择的位置载入用户脚本。"
           }
         }
       }
@@ -1072,7 +1072,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The syntax of metadata block is incorrect."
+            "value" : "The syntax of metadata block is incorrect"
           }
         },
         "zh-Hans" : {
@@ -1094,7 +1094,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "结束行不存在"
+            "value" : "结束行缺失。"
           }
         }
       }
@@ -1120,13 +1120,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The opening line is missing"
+            "value" : "The opening line is missing."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "开始行不存在"
+            "value" : "开始行缺失。"
           }
         }
       }
