@@ -16,6 +16,7 @@ struct SidebarView: View {
     enum Selection : Hashable {
         case settings
         case plugins(category: Plugin.Category)
+        case communityPlugins
     }
     
 #if os(macOS)
@@ -90,6 +91,14 @@ struct SidebarView: View {
                 Text("SidebarView.Plugins")
             } footer: {
                 Text("SidebarView.Plugins.Footer \(plugins.count)")
+            }
+            
+            if externalScriptsBookmark != nil {
+                Section {
+                    NavigationLink(value: Selection.communityPlugins) {
+                        Label("SidebarView.CommunityPlugins", systemImage: "bag")
+                    }
+                }
             }
         }
 #if os(iOS)
