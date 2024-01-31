@@ -24,7 +24,7 @@ struct CommunityPluginListView: View {
                         card(of: preview)
                     }
                 } footer: {
-                    if !viewModel.isFetching && !viewModel.isSearching {
+                    if viewModel.isIdle {
                         Text("CommunityPluginListView.Footer \(viewModel.previews.count)")
                             .foregroundStyle(.secondary)
                             .font(.footnote)
@@ -53,6 +53,12 @@ struct CommunityPluginListView: View {
             } else if presentedPreviews.isEmpty {
                 if viewModel.isSearching {
                     ContentUnavailableView.search
+                } else {
+                    ContentUnavailableView(
+                        "CommunityPluginListView.NoData",
+                        systemImage: "globe",
+                        description: .init("CommunityPluginListView.NoData.Description")
+                    )
                 }
             }
         }
@@ -298,6 +304,12 @@ fileprivate class ViewModel {
     
     var searchText: String = ""
     var searchTokens: [ SearchToken ] = [ ]
+}
+
+fileprivate extension ViewModel {
+    var isIdle: Bool {
+        !isFetching && !isSearching && !previews.isEmpty
+    }
 }
 
 fileprivate extension ViewModel {

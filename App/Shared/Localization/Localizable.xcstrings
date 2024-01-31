@@ -353,6 +353,38 @@
         }
       }
     },
+    "CommunityPluginListView.NoData" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to fetch data"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法获取数据"
+          }
+        }
+      }
+    },
+    "CommunityPluginListView.NoData.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please check the network, it's also possible that the GitHub is down."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请检查网络，但也可能是GitHub宕机。"
+          }
+        }
+      }
+    },
     "CommunityPluginListView.SearchPrompt" : {
       "localizations" : {
         "en" : {
