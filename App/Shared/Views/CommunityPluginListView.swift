@@ -387,27 +387,27 @@ fileprivate extension ViewModel {
         defer { isFetching = false }
         
         let index = try await URLSession.shared.decoded(
-            [ String : [ String ] ].self, from: Self.indexURL, by: JSONDecoder()
+            [ AuthorIndexItem ].self, from: Self.indexURL, by: JSONDecoder()
         )
         
         fetchingProgress.completedUnitCount = 0
-        fetchingProgress.totalUnitCount = index.reduce(Int64(0)) { $0 + Int64($1.value.count) }
+        fetchingProgress.totalUnitCount = index.reduce(Int64(0)) { $0 + Int64($1.plugins.count) }
         
         previews = await withTaskGroup(of: PluginPreview?.self) { group in
-            for authorAndFilename in index {
-                for filename in authorAndFilename.value {
+            for authorIndex in index {
+                for pluginIndex in authorIndex.plugins {
                     group.addTask {
                         defer { self.fetchingProgress.completedUnitCount += 1 }
                         guard
                             let metadata = try? await self.metadata(
-                                of: authorAndFilename.key, filename: filename
+                                of: authorIndex.name, filename: pluginIndex.filename
                             )
                         else {
                             return nil
                         }
                         return .init(
-                            author: authorAndFilename.key,
-                            filename: filename,
+                            author: authorIndex.name,
+                            filename: pluginIndex.filename,
                             isSaved: await ScriptManager.shared.isExistingPlugin(metadata.id),
                             metadata: metadata
                         )
@@ -489,6 +489,15 @@ fileprivate extension ScriptManager {
         }
         return count > 0
     }
+}
+
+fileprivate struct AuthorIndexItem: Decodable {
+    var name: String
+    var plugins: [ PluginIndexItem ]
+}
+
+fileprivate struct PluginIndexItem: Decodable {
+    var filename: String
 }
 
 fileprivate struct GitHub {
