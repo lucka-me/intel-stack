@@ -32,6 +32,9 @@ As you may have noticed, the [IITC Button](https://github.com/IITC-CE/IITC-Butto
 
 Intel Stack is designed exclusivly for Apple platforms (iOS, iPadOS, macOS and visionOS), and most core features are implemented with Swift instead of JavaScript, including a full-featured native app made with SwiftUI.
 
+## Related Projects
+- [lucka-me/iitc-community-plugins-index](https://github.com/lucka-me/iitc-community-plugins-index): Generate index of [IITC-CE/Community-plugins](https://github.com/IITC-CE/Community-plugins) in JSON
+
 ## Disclaimer
 
 This project is NOT officially affiliated with Ingress, Niantic Labs or IITC-CE.
