@@ -48,7 +48,8 @@ struct CommunityPluginListView: View {
         .contentMargins(15, for: .scrollContent)
         .overlay(alignment: .center) {
             if viewModel.isFetching {
-                ProgressView()
+                ProgressView(viewModel.fetchingProgress)
+                    .padding()
             } else if presentedPreviews.isEmpty {
                 if viewModel.isSearching {
                     ContentUnavailableView.search
@@ -288,6 +289,7 @@ fileprivate class PluginPreview : Identifiable {
 @Observable
 fileprivate class ViewModel {
     var isFetching: Bool = true
+    let fetchingProgress = Progress()
     
     var hideAddedPlugins: Bool = false
     var sorting: Sorting = .byName
@@ -376,10 +378,14 @@ fileprivate extension ViewModel {
             [ String : [ String ] ].self, from: Self.indexURL, by: JSONDecoder()
         )
         
+        fetchingProgress.completedUnitCount = 0
+        fetchingProgress.totalUnitCount = index.reduce(Int64(0)) { $0 + Int64($1.value.count) }
+        
         previews = await withTaskGroup(of: PluginPreview?.self) { group in
             for authorAndFilename in index {
                 for filename in authorAndFilename.value {
                     group.addTask {
+                        defer { self.fetchingProgress.completedUnitCount += 1 }
                         guard
                             let metadata = try? await self.metadata(
                                 of: authorAndFilename.key, filename: filename
