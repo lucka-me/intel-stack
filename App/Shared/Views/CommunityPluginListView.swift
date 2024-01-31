@@ -20,12 +20,13 @@ struct CommunityPluginListView: View {
     @State private var sorting: Sorting = .byName
     
     var body: some View {
+        let presentedPreviews = presentedPreviews
         ScrollView(.vertical) {
             LazyVGrid(columns: [ .init(.adaptive(minimum: 300, maximum: .infinity)) ]) {
                 Section {
                     ForEach(presentedPreviews, content: card(of:))
                 } footer: {
-                    if !isFetching {
+                    if !isFetching && !isSearching {
                         Text("CommunityPluginListView.Footer \(previews.count)")
                             .foregroundStyle(.secondary)
                             .font(.footnote)
@@ -48,6 +49,10 @@ struct CommunityPluginListView: View {
         .overlay(alignment: .center) {
             if isFetching {
                 ProgressView()
+            } else if presentedPreviews.isEmpty {
+                if isSearching {
+                    ContentUnavailableView.search
+                }
             }
         }
         .navigationTitle("CommunityPluginsView.Title")
@@ -105,6 +110,13 @@ struct CommunityPluginListView: View {
                 HStack(alignment: .firstTextBaseline) {
                     Label(preview.metadata.category.rawValue, systemImage: preview.metadata.category.icon)
                         .capsule(.pink)
+                        .onTapGesture {
+                            if !searchTokens.contains(where: { $0.target == .category }) {
+                                searchTokens.append(
+                                    .init(target: .category, text: preview.metadata.category.rawValue)
+                                )
+                            }
+                        }
                     if let version = preview.metadata.version {
                         Text(version)
                             .monospaced()
@@ -129,6 +141,11 @@ struct CommunityPluginListView: View {
                         .foregroundStyle(.secondary)
                         .italic()
                         .lineLimit(1, reservesSpace: true)
+                        .onTapGesture {
+                            if !searchTokens.contains(where: { $0.target == .author }) {
+                                searchTokens.append(.init(target: .author, text: preview.author))
+                            }
+                        }
                 }
             }
         } label: {
@@ -161,6 +178,10 @@ struct CommunityPluginListView: View {
 }
 
 fileprivate extension CommunityPluginListView {
+    private var isSearching: Bool {
+        !searchText.isEmpty || !searchTokens.isEmpty
+    }
+    
     private var presentedPreviews: [ PluginPreview ] {
         var result = previews
         if hideAddedPlugins {
