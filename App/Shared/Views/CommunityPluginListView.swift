@@ -8,26 +8,24 @@
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct CommunityPluginListView: View {
     @Environment(\.alert) private var alert
     @Environment(\.modelContext) private var modelContext
     
-    @State private var hideAddedPlugins: Bool = false
-    @State private var isFetching: Bool = true
-    @State private var previews: [ PluginPreview ] = [ ]
-    @State private var searchText: String = ""
-    @State private var searchTokens: [ SearchToken ] = [ ]
-    @State private var sorting: Sorting = .byName
+    @State private var viewModel = ViewModel()
     
     var body: some View {
-        let presentedPreviews = presentedPreviews
+        let presentedPreviews = viewModel.presentedPreviews
         ScrollView(.vertical) {
             LazyVGrid(columns: [ .init(.adaptive(minimum: 300, maximum: .infinity)) ]) {
                 Section {
-                    ForEach(presentedPreviews, content: card(of:))
+                    ForEach(presentedPreviews) { preview in
+                        card(of: preview)
+                    }
                 } footer: {
-                    if !isFetching && !isSearching {
-                        Text("CommunityPluginListView.Footer \(previews.count)")
+                    if !viewModel.isFetching && !viewModel.isSearching {
+                        Text("CommunityPluginListView.Footer \(viewModel.previews.count)")
                             .foregroundStyle(.secondary)
                             .font(.footnote)
                             .padding(.horizontal, 10)
@@ -36,21 +34,23 @@ struct CommunityPluginListView: View {
             }
         }
         .searchable(
-            text: $searchText, tokens: $searchTokens, prompt: Text("CommunityPluginListView.SearchPrompt")
+            text: $viewModel.searchText,
+            tokens: $viewModel.searchTokens,
+            prompt: Text("CommunityPluginListView.SearchPrompt")
         ) { token in
             Label(token.text, systemImage: token.icon)
         }
         .searchSuggestions {
-            if searchText == "#" {
+            if viewModel.searchText == "#" {
                 searchSuggestions
             }
         }
         .contentMargins(15, for: .scrollContent)
         .overlay(alignment: .center) {
-            if isFetching {
+            if viewModel.isFetching {
                 ProgressView()
             } else if presentedPreviews.isEmpty {
-                if isSearching {
+                if viewModel.isSearching {
                     ContentUnavailableView.search
                 }
             }
@@ -59,29 +59,36 @@ struct CommunityPluginListView: View {
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Menu("CommunityPluginsView.Option", systemImage: "slider.vertical.3") {
-                    Picker("CommunityPluginsView.Option.Sort", selection: $sorting) {
+                    Picker("CommunityPluginsView.Option.Sort", selection: $viewModel.sorting) {
                         ForEach(Sorting.allCases) { item in
                             Text(item.titleKey)
                         }
                     }
                     .pickerStyle(.inline)
-                    Toggle("CommunityPluginsView.Option.HideAddedPlugins", isOn: $hideAddedPlugins)
+                    Toggle(
+                        "CommunityPluginsView.Option.HideAddedPlugins",
+                        isOn: $viewModel.hideAddedPlugins
+                    )
                 }
             }
         }
         .task {
-            await tryFetchPreviews()
+            do {
+                try await viewModel.fetchPreviews()
+            } catch let error as LocalizedError {
+                alert?(.localized(error: error))
+            } catch {
+                alert?(.generic(error: error))
+            }
         }
-        .onChange(of: sorting, initial: false) {
-            previews.sort(by: sorting.method)
-        }
+        .onChange(of: viewModel.sorting, initial: false, viewModel.sort)
     }
     
     @ViewBuilder
     private var searchSuggestions: some View {
-        if !searchTokens.contains(where: { $0.target == .category }) {
+        if !viewModel.searchTokens.contains(where: { $0.target == .category }) {
             Section {
-                ForEach(availableCategories, id: \.self) { category in
+                ForEach(viewModel.availableCategories, id: \.self) { category in
                     let token = SearchToken(target: .category, text: category)
                     Label(category, systemImage: token.icon)
                         .searchCompletion(token)
@@ -90,9 +97,9 @@ struct CommunityPluginListView: View {
                 Text(SearchToken.Target.category.titleKey)
             }
         }
-        if !searchTokens.contains(where: { $0.target == .author }) {
+        if !viewModel.searchTokens.contains(where: { $0.target == .author }) {
             Section {
-                ForEach(availableAuthors, id: \.self) { author in
+                ForEach(viewModel.availableAuthors, id: \.self) { author in
                     let token = SearchToken(target: .author, text: author)
                     Label(author, systemImage: token.icon)
                         .searchCompletion(token)
@@ -111,11 +118,7 @@ struct CommunityPluginListView: View {
                     Label(preview.metadata.category.rawValue, systemImage: preview.metadata.category.icon)
                         .capsule(.pink)
                         .onTapGesture {
-                            if !searchTokens.contains(where: { $0.target == .category }) {
-                                searchTokens.append(
-                                    .init(target: .category, text: preview.metadata.category.rawValue)
-                                )
-                            }
+                            viewModel.addToken(for: .category, text: preview.metadata.category.rawValue)
                         }
                     if let version = preview.metadata.version {
                         Text(version)
@@ -142,9 +145,7 @@ struct CommunityPluginListView: View {
                         .italic()
                         .lineLimit(1, reservesSpace: true)
                         .onTapGesture {
-                            if !searchTokens.contains(where: { $0.target == .author }) {
-                                searchTokens.append(.init(target: .author, text: preview.author))
-                            }
+                            viewModel.addToken(for: .author, text: preview.author)
                         }
                 }
             }
@@ -155,7 +156,15 @@ struct CommunityPluginListView: View {
                 switch preview.state {
                 case .available:
                     Button("CommunityPluginsView.Add", systemImage: "plus.circle.fill") {
-                        Task { await trySave(preview) }
+                        Task {
+                            do {
+                                try await viewModel.save(preview, with: modelContext)
+                            } catch let error as LocalizedError {
+                                alert?(.localized(error: error))
+                            } catch {
+                                alert?(.generic(error: error))
+                            }
+                        }
                     }
                     .buttonStyle(.borderless)
                 case .saving:
@@ -174,58 +183,6 @@ struct CommunityPluginListView: View {
 #if os(macOS)
         .groupBoxStyle(.card)
 #endif
-    }
-}
-
-fileprivate extension CommunityPluginListView {
-    private var isSearching: Bool {
-        !searchText.isEmpty || !searchTokens.isEmpty
-    }
-    
-    private var presentedPreviews: [ PluginPreview ] {
-        var result = previews
-        if hideAddedPlugins {
-            result = result.filter { $0.state != .saved }
-        }
-        
-        if searchText.isEmpty && searchTokens.isEmpty { return result }
-        
-        // Make search
-        let words = searchText
-            .components(separatedBy: .whitespaces)
-            .filter { !$0.isEmpty }
-            .map { $0.lowercased() }
-        return previews.filter { item in
-            for token in searchTokens {
-                if !token.matches(item) {
-                    return false
-                }
-            }
-            guard !words.isEmpty else {
-                return true
-            }
-            for word in words {
-                if item.metadata.name.lowercased().contains(word) {
-                    return true
-                }
-                if let description = item.metadata.description, description.lowercased().contains(word) {
-                    return true
-                }
-            }
-            return false
-        }
-    }
-    
-    private var availableAuthors: [ String ] {
-        previews
-            .reduce(into: Set<String>()) { $0.insert(($1.author)) }
-            .sorted()
-    }
-    
-    private var availableCategories: [ String ] {
-        previews
-            .reduce(into: Set<String>()) { $0.insert($1.metadata.category.rawValue) }
-            .sorted()
     }
 }
 
@@ -300,6 +257,7 @@ fileprivate extension SearchToken.Target {
     }
 }
 
+
 @Observable
 fileprivate class PluginPreview : Identifiable {
     enum State {
@@ -326,50 +284,123 @@ fileprivate class PluginPreview : Identifiable {
     }
 }
 
-fileprivate extension CommunityPluginListView {
+@MainActor
+@Observable
+fileprivate class ViewModel {
+    var isFetching: Bool = true
+    
+    var hideAddedPlugins: Bool = false
+    var sorting: Sorting = .byName
+    
+    var previews: [ PluginPreview ] = [ ]
+    
+    var searchText: String = ""
+    var searchTokens: [ SearchToken ] = [ ]
+}
+
+fileprivate extension ViewModel {
+    func sort() { previews.sort(by: sorting.method) }
+}
+
+fileprivate extension ViewModel {
+    var presentedPreviews: [ PluginPreview ] {
+        var result = previews
+        if hideAddedPlugins {
+            result = result.filter { $0.state != .saved }
+        }
+        
+        if searchText.isEmpty && searchTokens.isEmpty { return result }
+        
+        // Make search
+        let words = searchText
+            .components(separatedBy: .whitespaces)
+            .filter { !$0.isEmpty }
+            .map { $0.lowercased() }
+        return previews.filter { item in
+            for token in searchTokens {
+                if !token.matches(item) {
+                    return false
+                }
+            }
+            guard !words.isEmpty else {
+                return true
+            }
+            for word in words {
+                if item.metadata.name.lowercased().contains(word) {
+                    return true
+                }
+                if let description = item.metadata.description, description.lowercased().contains(word) {
+                    return true
+                }
+            }
+            return false
+        }
+    }
+}
+
+fileprivate extension ViewModel {
+    var availableAuthors: [ String ] {
+        previews
+            .reduce(into: Set<String>()) { $0.insert(($1.author)) }
+            .sorted()
+    }
+    
+    var availableCategories: [ String ] {
+        previews
+            .reduce(into: Set<String>()) { $0.insert($1.metadata.category.rawValue) }
+            .sorted()
+    }
+    
+    var isSearching: Bool {
+        !searchText.isEmpty || !searchTokens.isEmpty
+    }
+    
+    func addToken(for target: SearchToken.Target, text: String) {
+        guard !searchTokens.contains(where: { $0.target == target }) else {
+            return
+        }
+        searchTokens.append(.init(target: target, text: text))
+    }
+}
+
+fileprivate extension ViewModel {
     private static var indexURL : URL {
         .init(string: "https://lucka-me.github.io/iitc-community-plugins-index/")!
     }
     private static var repository : String { "IITC-CE/Community-plugins" }
     
-    @MainActor
-    private func tryFetchPreviews() async {
+    func fetchPreviews() async throws {
         defer { isFetching = false }
-        do {
-            let index = try await URLSession.shared.decoded(
-                [ String : [ String ] ].self, from: Self.indexURL, by: JSONDecoder()
-            )
-            
-            previews = await withTaskGroup(of: PluginPreview?.self) { group in
-                for authorAndFilename in index {
-                    for filename in authorAndFilename.value {
-                        group.addTask {
-                            guard
-                                let metadata = try? await metadata(
-                                    of: authorAndFilename.key, filename: filename
-                                )
-                            else {
-                                return nil
-                            }
-                            return .init(
-                                author: authorAndFilename.key,
-                                filename: filename,
-                                isSaved: await ScriptManager.shared.isExistingPlugin(metadata.id),
-                                metadata: metadata
+        
+        let index = try await URLSession.shared.decoded(
+            [ String : [ String ] ].self, from: Self.indexURL, by: JSONDecoder()
+        )
+        
+        previews = await withTaskGroup(of: PluginPreview?.self) { group in
+            for authorAndFilename in index {
+                for filename in authorAndFilename.value {
+                    group.addTask {
+                        guard
+                            let metadata = try? await self.metadata(
+                                of: authorAndFilename.key, filename: filename
                             )
+                        else {
+                            return nil
                         }
+                        return .init(
+                            author: authorAndFilename.key,
+                            filename: filename,
+                            isSaved: await ScriptManager.shared.isExistingPlugin(metadata.id),
+                            metadata: metadata
+                        )
                     }
                 }
-                return await group
-                    .compactMap { $0 }
-                    .reduce(into: [ ]) { $0.append($1) }
             }
-            .sorted(by: sorting.method)
-        } catch let error as LocalizedError {
-            alert?(.localized(error: error))
-        } catch {
-            alert?(.generic(error: error))
+            return await group
+                .compactMap { $0 }
+                .reduce(into: [ ]) { $0.append($1) }
         }
+        .sorted(by: sorting.method)
     }
     
     private func metadata(of author: String, filename: String) async throws -> PluginMetadata? {
@@ -385,54 +416,48 @@ fileprivate extension CommunityPluginListView {
     }
 }
 
-fileprivate extension CommunityPluginListView {
-    @MainActor
-    func trySave(_ preview: PluginPreview) async {
+fileprivate extension ViewModel {
+    func save(_ preview: PluginPreview, with modelContext: ModelContext) async throws {
         preview.state = .saving
-        do {
-            let temporaryURL = try await GitHub.downloadRaw(
-                in: Self.repository,
-                branch: "master",
-                path: "dist/\(preview.author)/\(preview.filename)" + FileConstants.userScriptFilenameSuffix
-            )
-            
-            let fileManager = FileManager.default
-            var succeed = false
-            defer {
-                preview.state = succeed ? .saved : .available
-                if !succeed {
-                    try? fileManager.removeItem(at: temporaryURL)
-                }
+        var succeed = false
+        defer { preview.state = succeed ? .saved : .available }
+        
+        let temporaryURL = try await GitHub.downloadRaw(
+            in: Self.repository,
+            branch: "master",
+            path: "dist/\(preview.author)/\(preview.filename)" + FileConstants.userScriptFilenameSuffix
+        )
+        
+        let fileManager = FileManager.default
+        defer {
+            if !succeed {
+                try? fileManager.removeItem(at: temporaryURL)
             }
-            
-            guard
-                let externalURL = UserDefaults.shared.externalScriptsBookmarkURL,
-                externalURL.startAccessingSecurityScopedResource()
-            else {
-                return
-            }
-            defer {
-                externalURL.stopAccessingSecurityScopedResource()
-            }
-            
-            let destinationURL = externalURL
-                .appending(path: preview.filename)
-                .appendingPathExtension(FileConstants.userScriptExtension)
-            
-            try fileManager.moveItem(at: temporaryURL, to: destinationURL)
-            
-            let plugin = Plugin(
-                metadata: preview.metadata, isInternal: false, filename: preview.filename
-            )
-            modelContext.insert(plugin)
-            try modelContext.save()
-            
-            succeed = true
-        } catch let error as LocalizedError {
-            alert?(.localized(error: error))
-        } catch {
-            alert?(.generic(error: error))
         }
+
+        guard
+            let externalURL = UserDefaults.shared.externalScriptsBookmarkURL,
+            externalURL.startAccessingSecurityScopedResource()
+        else {
+            return
+        }
+        defer {
+            externalURL.stopAccessingSecurityScopedResource()
+        }
+        
+        let destinationURL = externalURL
+            .appending(path: preview.filename)
+            .appendingPathExtension(FileConstants.userScriptExtension)
+        
+        try fileManager.moveItem(at: temporaryURL, to: destinationURL)
+        
+        let plugin = Plugin(
+            metadata: preview.metadata, isInternal: false, filename: preview.filename
+        )
+        modelContext.insert(plugin)
+        try modelContext.save()
+        
+        succeed = true
     }
 }
 
