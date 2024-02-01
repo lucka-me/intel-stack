@@ -16,6 +16,24 @@ extension FileManager {
 }
 
 extension FileManager {
+    var internalScriptsDirectoryURL: URL {
+        applicationGroupContainerURL
+            .appending(path: "scripts", directoryHint: .isDirectory)
+    }
+    
+    var internalPluginsDirectoryURL: URL {
+        internalScriptsDirectoryURL
+            .appending(path: "plugins", directoryHint: .isDirectory)
+    }
+    
+    var mainScriptURL: URL {
+        internalScriptsDirectoryURL
+            .appending(path: FileConstants.mainScriptFilename)
+            .appendingPathExtension(FileConstants.userScriptExtension)
+    }
+}
+
+extension FileManager {
     func fileExists(at url: URL) -> Bool {
         fileExists(atPath: url.path(percentEncoded: false))
     }

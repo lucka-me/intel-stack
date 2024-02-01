@@ -81,9 +81,10 @@ struct IntelStackApp: App {
         }
         
         let fileManager = FileManager.default
+        let mainScriptURL = fileManager.mainScriptURL
         guard
-            fileManager.fileExists(at: FileConstants.mainScriptURL),
-            let content = try? String(contentsOf: FileConstants.mainScriptURL),
+            fileManager.fileExists(at: mainScriptURL),
+            let content = try? String(contentsOf: mainScriptURL),
             let metadata = try? UserScriptMetadataDecoder().decode(MainScriptMetadata.self, from: content)
         else {
             return

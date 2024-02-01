@@ -72,11 +72,13 @@ extension ScriptManager {
 extension ScriptManager {
     static func ensureInternalDirectories() throws {
         let fileManager = FileManager.default
-        if !fileManager.fileExists(at: FileConstants.internalScriptsDirectoryURL) {
-            try fileManager.createDirectory(at: FileConstants.internalScriptsDirectoryURL, withIntermediateDirectories: true)
+        let internalScriptsDirectoryURL = fileManager.internalScriptsDirectoryURL
+        if !fileManager.fileExists(at: internalScriptsDirectoryURL) {
+            try fileManager.createDirectory(at: internalScriptsDirectoryURL, withIntermediateDirectories: true)
         }
-        if !fileManager.fileExists(at: FileConstants.internalPluginsDirectoryURL) {
-            try fileManager.createDirectory(at: FileConstants.internalPluginsDirectoryURL, withIntermediateDirectories: true)
+        let internalPluginsDirectoryURL = fileManager.internalPluginsDirectoryURL
+        if !fileManager.fileExists(at: internalPluginsDirectoryURL) {
+            try fileManager.createDirectory(at: internalPluginsDirectoryURL, withIntermediateDirectories: true)
         }
     }
     
@@ -99,10 +101,11 @@ extension ScriptManager {
         let content = try String(contentsOf: temporaryURL)
         let _ = try UserScriptMetadataDecoder().decode(MainScriptMetadata.self, from: content)
         
-        if fileManager.fileExists(at: FileConstants.mainScriptURL) {
-            try fileManager.removeItem(at: FileConstants.mainScriptURL)
+        let mainScriptURL = fileManager.mainScriptURL
+        if fileManager.fileExists(at: mainScriptURL) {
+            try fileManager.removeItem(at: mainScriptURL)
         }
-        try fileManager.moveItem(at: temporaryURL, to: FileConstants.mainScriptURL)
+        try fileManager.moveItem(at: temporaryURL, to: mainScriptURL)
         succeed = true
     }
     
@@ -124,7 +127,7 @@ extension ScriptManager {
         let content = try String(contentsOf: temporaryURL)
         let metadata = try UserScriptMetadataDecoder().decode(PluginMetadata.self, from: content)
         
-        let destinationURL = FileConstants.internalPluginsDirectoryURL
+        let destinationURL = fileManager.internalPluginsDirectoryURL
             .appending(path: filename)
             .appendingPathExtension(FileConstants.userScriptExtension)
         if fileManager.fileExists(at: destinationURL) {
@@ -164,7 +167,7 @@ fileprivate extension ScriptManager {
 }
 
 fileprivate extension ScriptManager {
-    static let websiteBuildURL = URL(string: "https://iitc.app/build/")!
+    static var websiteBuildURL: URL { .init(string: "https://iitc.app/build/")! }
     
     private func updateExternal(plugin: Plugin, in externalURL: URL) async throws {
         // TODO: Use updateURL to fetch metadata
