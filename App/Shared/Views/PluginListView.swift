@@ -42,47 +42,7 @@ struct PluginListView: View {
 #if !os(visionOS)
         @Bindable var plugin = plugin
 #endif
-        GroupBox {
-            VStack(alignment: .leading) {
-                HStack(alignment: .firstTextBaseline) {
-                    if let version = plugin.version {
-                        Text(version)
-                            .monospaced()
-                            .capsule(.blue)
-                    }
-                    if plugin.isInternal {
-                        Text("PluginListView.Internal")
-                            .capsule(.purple)
-                    } else {
-                        Label("PluginListView.External", systemImage: "arrow.up.right")
-                            .capsule(.indigo)
-                            .onTapGesture {
-                                open(plugin)
-                            }
-                    }
-                }
-                .font(.caption)
-                .lineLimit(1)
-                
-                Spacer()
-                
-                Text(plugin.scriptDescription ?? .init(localized: "PluginListView.NoDescriptions"))
-                    .italic(plugin.scriptDescription == nil)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(3, reservesSpace: true)
-                
-                HStack {
-                    Spacer()
-                    Text("PluginListView.Author \(plugin.author ?? "")")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .italic()
-                        .lineLimit(1, reservesSpace: true)
-                        .opacity(plugin.author != nil ? 1.0 : 0.0)
-                }
-            }
-        } label: {
+        PluginCardView(description: plugin.scriptDescription) {
 #if os(visionOS)
             // Temporary fix for visionOS
             // - Toggle leads to UI freezing, always
@@ -106,20 +66,31 @@ struct PluginListView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
 #endif
             }
-            .lineLimit(2)
 #if os(macOS)
             .toggleStyle(.switch)
 #endif
 #endif
+        } labels: {
+            if let version = plugin.version {
+                Text(version)
+                    .monospaced()
+                    .capsule(.blue)
+            }
+            if plugin.isInternal {
+                Text("PluginListView.Internal")
+                    .capsule(.purple)
+            } else {
+                Label("PluginListView.External", systemImage: "arrow.up.right")
+                    .capsule(.indigo)
+                    .onTapGesture {
+                        open(plugin)
+                    }
+            }
+        } footer: {
+            Spacer()
+            Text("PluginListView.Author \(plugin.author ?? "")")
+                .opacity(plugin.author != nil ? 1.0 : 0.0)
         }
-        .fixedSize(horizontal: false, vertical: false)
-#if os(macOS)
-        .groupBoxStyle(.card)
-#elseif os(visionOS)
-        .onTapGesture {
-            plugin.enabled.toggle()
-        }
-#endif
     }
     
     private func open(_ plugin: Plugin) {

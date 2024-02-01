@@ -342,13 +342,29 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld community plugins in total.\nCommunity plugins are from [IITC-CE/Community-plugins](https://github.com/IITC-CE/Community-plugins).\nIntel Stack loads index from [lucka-me/iitc-community-plugins-index](https://github.com/lucka-me/iitc-community-plugins-index), which is updated daily automatically."
+            "value" : "%lld community plugins in total,\nthey are from [IITC-CE/Community-plugins](https://github.com/IITC-CE/Community-plugins).\nPlease notice that not all of them are for Ingress Intel, and some plugins contain [anti-features](https://github.com/IITC-CE/Community-plugins/blob/master/CONTRIBUTING.md#anti-features).\nIntel Stack loads index from [lucka-me/iitc-community-plugins-index](https://github.com/lucka-me/iitc-community-plugins-index), which is updated daily automatically."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "共%lld个社区插件。\n社区插件来自[IITC-CE/Community-plugins](https://github.com/IITC-CE/Community-plugins)。\nIntel Stack从[lucka-me/iitc-community-plugins-index](https://github.com/lucka-me/iitc-community-plugins-index)载入目录，此目录每日自动更新。"
+            "value" : "共%lld个社区插件，它们来自[IITC-CE/Community-plugins](https://github.com/IITC-CE/Community-plugins)。\n请注意并不是所有插件都可用于Ingress Intel，并且部分插件具有[负面特性](https://github.com/IITC-CE/Community-plugins/blob/master/CONTRIBUTING.md#anti-features)。\nIntel Stack从[lucka-me/iitc-community-plugins-index](https://github.com/lucka-me/iitc-community-plugins-index)载入目录，此目录每日自动更新。"
+          }
+        }
+      }
+    },
+    "CommunityPluginListView.Homepage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Homepage"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主页"
           }
         }
       }
@@ -381,6 +397,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请检查网络，但也可能是GitHub宕机。"
+          }
+        }
+      }
+    },
+    "CommunityPluginListView.PluginPreview.AntiFeature.Export" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "数据导出"
+          }
+        }
+      }
+    },
+    "CommunityPluginListView.PluginPreview.AntiFeature.HighLoad" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High Load"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高负载"
+          }
+        }
+      }
+    },
+    "CommunityPluginListView.PluginPreview.AntiFeature.Scraper" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scraper"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "爬虫"
           }
         }
       }
@@ -529,18 +593,50 @@
         }
       }
     },
-    "CommunityPluginsView.Option.HideAddedPlugins" : {
+    "CommunityPluginsView.Option.Hide" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hide added plugins"
+            "value" : "Hide Plugins"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "隐藏已添加的插件"
+            "value" : "隐藏插件"
+          }
+        }
+      }
+    },
+    "CommunityPluginsView.Option.Hide.AddedPlugins" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Added"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已添加"
+          }
+        }
+      }
+    },
+    "CommunityPluginsView.Option.Hide.AntiFeaturedPlugins" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "With anti-features"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "具有负面特性"
           }
         }
       }
@@ -753,6 +849,22 @@
         }
       }
     },
+    "PluginCardView.NoDescriptions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(No descriptions)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "（没有描述）"
+          }
+        }
+      }
+    },
     "PluginListView.Author %@" : {
       "localizations" : {
         "en" : {
@@ -829,22 +941,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "内部"
-          }
-        }
-      }
-    },
-    "PluginListView.NoDescriptions" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "(No descriptions)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "（没有描述）"
           }
         }
       }

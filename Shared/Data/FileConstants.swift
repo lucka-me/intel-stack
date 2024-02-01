@@ -15,14 +15,5 @@ struct FileConstants {
     static let scriptMetadataExtension = "meta.js"
     static let scriptMetadataFilenameSuffix = "." + scriptMetadataExtension
     
-    static let internalScriptsDirectoryURL = FileManager.default
-        .applicationGroupContainerURL
-        .appending(path: "scripts", directoryHint: .isDirectory)
-    static let internalPluginsDirectoryURL = internalScriptsDirectoryURL
-        .appending(path: "plugins", directoryHint: .isDirectory)
-    static let mainScriptURL = internalScriptsDirectoryURL
-        .appending(path: mainScriptFilename)
-        .appendingPathExtension(userScriptExtension)
-    
     private init() { }
 }

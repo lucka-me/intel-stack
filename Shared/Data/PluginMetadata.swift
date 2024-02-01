@@ -17,6 +17,8 @@ struct PluginMetadata : Decodable {
     var downloadURL: String?
     var updateURL: String?
     var version: String?
+    
+    var homepageURL: String?
 }
 
 extension Plugin {

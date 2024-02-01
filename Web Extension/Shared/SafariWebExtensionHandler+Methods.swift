@@ -16,9 +16,10 @@ extension SafariWebExtensionHandler {
         guard UserDefaults.shared.scriptsEnabled else { return [ : ] }
         
         let fileManager = FileManager.default
+        let mainScriptURL = fileManager.mainScriptURL
         guard
-            fileManager.fileExists(at: FileConstants.mainScriptURL),
-            let mainScriptContent = try? String(contentsOf: FileConstants.mainScriptURL),
+            fileManager.fileExists(at: mainScriptURL),
+            let mainScriptContent = try? String(contentsOf: mainScriptURL),
             let mainScriptMetadata = try? UserScriptMetadataDecoder()
                 .decode(MainScriptMetadata.self, from: mainScriptContent)
         else {
@@ -50,7 +51,7 @@ extension SafariWebExtensionHandler {
         for plugin in plugins {
             var fileURL: URL
             if plugin.isInternal {
-                fileURL = FileConstants.internalPluginsDirectoryURL
+                fileURL = fileManager.internalPluginsDirectoryURL
             } else if let externalURL {
                 fileURL = externalURL
             } else {
