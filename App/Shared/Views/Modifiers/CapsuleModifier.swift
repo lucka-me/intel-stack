@@ -20,6 +20,6 @@ fileprivate struct CapsuleModifier: ViewModifier {
         content
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(color.gradient, in: Capsule(style: .continuous))
+            .background(color.gradient.opacity(0.8), in: Capsule(style: .continuous))
     }
 }
