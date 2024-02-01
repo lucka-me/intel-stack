@@ -121,7 +121,7 @@ struct CommunityPluginListView: View {
     private func card(of preview: PluginPreview) -> some View {
         GroupBox {
             VStack(alignment: .leading) {
-                HStack(alignment: .firstTextBaseline) {
+                FlexHStack(alignment: .leading) {
                     Label(preview.metadata.category.rawValue, systemImage: preview.metadata.category.icon)
                         .capsule(.pink)
                         .onTapGesture {

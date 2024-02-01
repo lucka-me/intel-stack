@@ -44,7 +44,7 @@ struct PluginListView: View {
 #endif
         GroupBox {
             VStack(alignment: .leading) {
-                HStack(alignment: .firstTextBaseline) {
+                FlexHStack(alignment: .leading) {
                     if let version = plugin.version {
                         Text(version)
                             .monospaced()
