@@ -127,6 +127,16 @@ struct CommunityPluginListView: View {
                         .onTapGesture {
                             viewModel.addToken(for: .category, text: preview.metadata.category.rawValue)
                         }
+                    if
+                        let homepageURLString = preview.metadata.homepageURL,
+                        let homepageURL = URL(string: homepageURLString) {
+                        Link(destination: homepageURL) {
+                            Label("CommunityPluginListView.Homepage", systemImage: "house")
+                                .capsule(.orange)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    
                     if let version = preview.metadata.version {
                         Text(version)
                             .monospaced()

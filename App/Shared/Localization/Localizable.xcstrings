@@ -353,6 +353,22 @@
         }
       }
     },
+    "CommunityPluginListView.Homepage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Homepage"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "主页"
+          }
+        }
+      }
+    },
     "CommunityPluginListView.NoData" : {
       "localizations" : {
         "en" : {
