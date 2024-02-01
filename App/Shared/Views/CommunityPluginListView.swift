@@ -72,10 +72,18 @@ struct CommunityPluginListView: View {
                         }
                     }
                     .pickerStyle(.inline)
-                    Toggle(
-                        "CommunityPluginsView.Option.HideAddedPlugins",
-                        isOn: $viewModel.hideAddedPlugins
-                    )
+                    Menu("CommunityPluginsView.Option.Hide", systemImage: "eye.slash") {
+                        Toggle(
+                            "CommunityPluginsView.Option.Hide.AddedPlugins",
+                            systemImage: "square.and.arrow.down",
+                            isOn: $viewModel.hideAddedPlugins
+                        )
+                        Toggle(
+                            "CommunityPluginsView.Option.Hide.AntiFeaturedPlugins",
+                            systemImage: "exclamationmark.triangle",
+                            isOn: $viewModel.hideAntiFeaturedPlugins
+                        )
+                    }
                 }
             }
         }
@@ -123,16 +131,24 @@ struct CommunityPluginListView: View {
             VStack(alignment: .leading) {
                 FlexHStack(alignment: .leading) {
                     Label(preview.metadata.category.rawValue, systemImage: preview.metadata.category.icon)
-                        .capsule(.pink)
+                        .capsule(.gray)
                         .onTapGesture {
                             viewModel.addToken(for: .category, text: preview.metadata.category.rawValue)
                         }
+                    
+                    if let antiFeatures = preview.antiFeatures {
+                        ForEach(antiFeatures) { antiFeature in
+                            Label(antiFeature.titleKey, systemImage: "exclamationmark.triangle")
+                                .capsule(.red)
+                        }
+                    }
+                    
                     if
                         let homepageURLString = preview.metadata.homepageURL,
                         let homepageURL = URL(string: homepageURLString) {
                         Link(destination: homepageURL) {
                             Label("CommunityPluginListView.Homepage", systemImage: "house")
-                                .capsule(.orange)
+                                .capsule(.green)
                         }
                         .buttonStyle(.plain)
                     }
@@ -274,7 +290,6 @@ fileprivate extension SearchToken.Target {
     }
 }
 
-
 @Observable
 fileprivate class PluginPreview : Identifiable {
     enum State {
@@ -285,19 +300,44 @@ fileprivate class PluginPreview : Identifiable {
     
     let author: String
     let filename: String
+    
     let metadata: PluginMetadata
+    
+    let antiFeatures: [ AntiFeature ]?
     
     var state: State
     
-    init(author: String, filename: String, isSaved: Bool, metadata: PluginMetadata) {
+    init(author: String, index: PluginIndexItem, metadata: PluginMetadata, isSaved: Bool) {
         self.author = author
-        self.filename = filename
-        self.state = isSaved ? .saved : .available
+        self.filename = index.filename
         self.metadata = metadata
+        self.antiFeatures = index.antiFeatures
+        self.state = isSaved ? .saved : .available
     }
     
     var id: String {
         "\(author)/\(filename)"
+    }
+}
+
+fileprivate enum AntiFeature: String, Decodable, Identifiable {
+    case scraper
+    case highLoad
+    case export
+    
+    var id: Self { self }
+}
+
+fileprivate extension AntiFeature {
+    var titleKey: LocalizedStringKey {
+        switch self {
+        case .scraper:
+            "CommunityPluginListView.PluginPreview.AntiFeature.Scraper"
+        case .highLoad:
+            "CommunityPluginListView.PluginPreview.AntiFeature.HighLoad"
+        case .export:
+            "CommunityPluginListView.PluginPreview.AntiFeature.Export"
+        }
     }
 }
 
@@ -308,6 +348,7 @@ fileprivate class ViewModel {
     let fetchingProgress = Progress()
     
     var hideAddedPlugins: Bool = false
+    var hideAntiFeaturedPlugins: Bool = false
     var sorting: Sorting = .byName
     
     var previews: [ PluginPreview ] = [ ]
@@ -331,6 +372,9 @@ fileprivate extension ViewModel {
         var result = previews
         if hideAddedPlugins {
             result = result.filter { $0.state != .saved }
+        }
+        if hideAntiFeaturedPlugins {
+            result = result.filter { $0.antiFeatures == nil }
         }
         
         if searchText.isEmpty && searchTokens.isEmpty { return result }
@@ -417,9 +461,9 @@ fileprivate extension ViewModel {
                         }
                         return .init(
                             author: authorIndex.name,
-                            filename: pluginIndex.filename,
-                            isSaved: await ScriptManager.shared.isExistingPlugin(metadata.id),
-                            metadata: metadata
+                            index: pluginIndex,
+                            metadata: metadata,
+                            isSaved: await ScriptManager.shared.isExistingPlugin(metadata.id)
                         )
                     }
                 }
@@ -508,6 +552,7 @@ fileprivate struct AuthorIndexItem: Decodable {
 
 fileprivate struct PluginIndexItem: Decodable {
     var filename: String
+    var antiFeatures: [ AntiFeature ]?
 }
 
 fileprivate struct GitHub {
