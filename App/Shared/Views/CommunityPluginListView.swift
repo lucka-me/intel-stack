@@ -199,7 +199,11 @@ struct CommunityPluginListView: View {
                             }
                         }
                     }
+#if os(visionOS)
+                    .buttonStyle(.plain)
+#else
                     .buttonStyle(.borderless)
+#endif
                 case .saving:
                     Label("CommunityPluginsView.Saving", systemImage: "arrow.down.circle.dotted")
                         .foregroundStyle(.primary)
