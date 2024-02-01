@@ -127,62 +127,7 @@ struct CommunityPluginListView: View {
     
     @ViewBuilder
     private func card(of preview: PluginPreview) -> some View {
-        GroupBox {
-            VStack(alignment: .leading) {
-                FlexHStack(alignment: .leading) {
-                    Label(preview.metadata.category.rawValue, systemImage: preview.metadata.category.icon)
-                        .capsule(.teal)
-                        .onTapGesture {
-                            viewModel.addToken(for: .category, text: preview.metadata.category.rawValue)
-                        }
-                    
-                    if let antiFeatures = preview.antiFeatures {
-                        ForEach(antiFeatures) { antiFeature in
-                            Label(antiFeature.titleKey, systemImage: "exclamationmark.triangle")
-                                .capsule(.red)
-                        }
-                    }
-                    
-                    if
-                        let homepageURLString = preview.metadata.homepageURL,
-                        let homepageURL = URL(string: homepageURLString) {
-                        Link(destination: homepageURL) {
-                            Label("CommunityPluginListView.Homepage", systemImage: "house")
-                                .capsule(.green)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    
-                    if let version = preview.metadata.version {
-                        Text(version)
-                            .monospaced()
-                            .capsule(.blue)
-                    }
-                }
-                .font(.caption)
-                .lineLimit(1)
-                
-                Spacer()
-                
-                Text(preview.metadata.description ?? .init(localized: "PluginListView.NoDescriptions"))
-                    .italic(preview.metadata.description == nil)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(3, reservesSpace: true)
-                
-                HStack {
-                    Spacer()
-                    Text("PluginListView.Author \(preview.author)")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .italic()
-                        .lineLimit(1, reservesSpace: true)
-                        .onTapGesture {
-                            viewModel.addToken(for: .author, text: preview.author)
-                        }
-                }
-            }
-        } label: {
+        PluginCardView(description: preview.metadata.description) {
             HStack(alignment: .top) {
                 Text(preview.metadata.name)
                 Spacer()
@@ -215,11 +160,41 @@ struct CommunityPluginListView: View {
                 }
             }
             .labelStyle(.iconOnly)
+        } labels: {
+            Label(preview.metadata.category.rawValue, systemImage: preview.metadata.category.icon)
+                .capsule(.teal)
+                .onTapGesture {
+                    viewModel.addToken(for: .category, text: preview.metadata.category.rawValue)
+                }
+            
+            if let antiFeatures = preview.antiFeatures {
+                ForEach(antiFeatures) { antiFeature in
+                    Label(antiFeature.titleKey, systemImage: "exclamationmark.triangle")
+                        .capsule(.red)
+                }
+            }
+            
+            if
+                let homepageURLString = preview.metadata.homepageURL,
+                let homepageURL = URL(string: homepageURLString) {
+                Link(destination: homepageURL) {
+                    Label("CommunityPluginListView.Homepage", systemImage: "house")
+                        .capsule(.green)
+                }
+                .buttonStyle(.plain)
+            }
+            
+            if let version = preview.metadata.version {
+                Text(version)
+                    .monospaced()
+                    .capsule(.blue)
+            }
+        } footer: {
+            Text("PluginListView.Author \(preview.author)")
+                .onTapGesture {
+                    viewModel.addToken(for: .author, text: preview.author)
+                }
         }
-        .fixedSize(horizontal: false, vertical: false)
-#if os(macOS)
-        .groupBoxStyle(.card)
-#endif
     }
 }
 

@@ -849,6 +849,22 @@
         }
       }
     },
+    "PluginCardView.NoDescriptions" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(No descriptions)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "（没有描述）"
+          }
+        }
+      }
+    },
     "PluginListView.Author %@" : {
       "localizations" : {
         "en" : {
@@ -925,22 +941,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "内部"
-          }
-        }
-      }
-    },
-    "PluginListView.NoDescriptions" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "(No descriptions)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "（没有描述）"
           }
         }
       }
