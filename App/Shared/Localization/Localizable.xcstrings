@@ -342,13 +342,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld community plugins in total.\nCommunity plugins are from [IITC-CE/Community-plugins](https://github.com/IITC-CE/Community-plugins).\nIntel Stack loads index from [lucka-me/iitc-community-plugins-index](https://github.com/lucka-me/iitc-community-plugins-index), which is updated daily automatically."
+            "value" : "%lld community plugins in total.\nThese plugins are from [IITC-CE/Community-plugins](https://github.com/IITC-CE/Community-plugins), please notice that not all of them are for Ingress Intel.\nIntel Stack loads index from [lucka-me/iitc-community-plugins-index](https://github.com/lucka-me/iitc-community-plugins-index), which is updated daily automatically."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "共%lld个社区插件。\n社区插件来自[IITC-CE/Community-plugins](https://github.com/IITC-CE/Community-plugins)。\nIntel Stack从[lucka-me/iitc-community-plugins-index](https://github.com/lucka-me/iitc-community-plugins-index)载入目录，此目录每日自动更新。"
+            "value" : "共%lld个社区插件。\n这些插件来自[IITC-CE/Community-plugins](https://github.com/IITC-CE/Community-plugins)，请注意并不是所有插件都可用于Ingress Intel。\nIntel Stack从[lucka-me/iitc-community-plugins-index](https://github.com/lucka-me/iitc-community-plugins-index)载入目录，此目录每日自动更新。"
           }
         }
       }
