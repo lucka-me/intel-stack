@@ -131,7 +131,7 @@ struct CommunityPluginListView: View {
             VStack(alignment: .leading) {
                 FlexHStack(alignment: .leading) {
                     Label(preview.metadata.category.rawValue, systemImage: preview.metadata.category.icon)
-                        .capsule(.gray)
+                        .capsule(.teal)
                         .onTapGesture {
                             viewModel.addToken(for: .category, text: preview.metadata.category.rawValue)
                         }
