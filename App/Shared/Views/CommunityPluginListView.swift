@@ -515,7 +515,7 @@ fileprivate extension ViewModel {
 fileprivate extension ScriptManager {
     func isExistingPlugin(_ id: String) -> Bool {
         let descriptor = FetchDescriptor<Plugin>(predicate: #Predicate {
-            !$0.isInternal && $0.idendifier == id
+            !$0.isInternal && $0.identifier == id
         })
         guard let count = try? modelContext.fetchCount(descriptor) else {
             return false
