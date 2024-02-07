@@ -13,7 +13,8 @@ import SwiftData
 class Plugin {
     var uuid: UUID
     
-    var idendifier: String
+    @Attribute(originalName: "idendifier")  // A typo, consider to remove in future version
+    var identifier: String
     
     var enabled: Bool = false
     
@@ -31,14 +32,14 @@ class Plugin {
     
     init(
         uuid: UUID = .init(),
-        idendifier: String,
+        identifier: String,
         name: String,
         category: Category,
         isInternal: Bool,
         filename: String
     ) {
         self.uuid = uuid
-        self.idendifier = idendifier
+        self.identifier = identifier
         self.name = name
         self.categoryValue = category.rawValue
         self.isInternal = isInternal

@@ -24,7 +24,7 @@ struct PluginMetadata : Decodable {
 extension Plugin {
     convenience init(metadata: PluginMetadata, isInternal: Bool, filename: String) {
         self.init(
-            idendifier: metadata.id,
+            identifier: metadata.id,
             name: metadata.name,
             category: metadata.category,
             isInternal: isInternal,
@@ -43,7 +43,7 @@ extension Plugin {
     }
     
     func update(from metadata: PluginMetadata) {
-        self.idendifier = metadata.id
+        self.identifier = metadata.id
         self.category = metadata.category
         self.author = metadata.author
         self.scriptDescription = metadata.description
