@@ -112,7 +112,8 @@ extension ScriptManager {
     func downloadInternalPlugin(_ filename: String, from channel: BuildChannel) async throws {
         let downloadURL = Self.websiteBuildURL
             .appending(path: channel.rawValue)
-            .appending(path: FileConstants.mainScriptFilename)
+            .appending(path: "plugins")
+            .appending(path: filename)
             .appendingPathExtension("user.js")
         let temporaryURL = try await URLSession.shared.download(from: downloadURL)
         
