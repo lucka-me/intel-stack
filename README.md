@@ -12,13 +12,15 @@ IITC script and plugins manager designed for Safari.
 
 [![App Store](https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us)](https://apps.apple.com/app/id6467517367 "App Store")
 
-The packages are also available as archives of the [latest release](https://github.com/lucka-me/intel-stack/releases/latest "Latest release").
+The packages are also available as assets of the [latest release](https://github.com/lucka-me/intel-stack/releases/latest "Latest release").
+
+Beta builds are also available on [TestFlight](https://testflight.apple.com/join/p7c1zkJ0 "TestFlight").
 
 ### Requirements
 - iOS / iPadOS: 17.0 or above
 - macOS: Sonoma 14.0 or above
 - visionOS: 1.0 or above
-- Xcode (for build): 15.0 or above
+- Xcode (to build): 15.0 or above
 
 ## FAQ
 
