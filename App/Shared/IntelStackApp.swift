@@ -97,7 +97,9 @@ struct IntelStackApp: App {
         guard updateStatus == .idle else { return }
         updateStatus = .updating
         defer { updateStatus = .idle }
-        try await scriptManager.updateScripts(reporting: updateProgress)
+        try await scriptManager.updateScripts(
+            reporting: updateProgress, currentMainScriptVersion: mainScriptVersion
+        )
         updateMainScriptVersion()
     }
 }
