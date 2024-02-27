@@ -194,9 +194,9 @@ fileprivate extension ScriptManager {
     static var websiteBuildURL: URL { .init(string: "https://iitc.app/build/")! }
     
     private func updateExternal(plugin: Plugin, in externalURL: URL) async throws {
-        if let updateURL = plugin.updateURL {
+        if let currentVersion = plugin.version, let updateURL = plugin.updateURL {
             // Check version from update URL
-            guard await Self.checkUpdate(from: updateURL, currentVersion: plugin.version) else {
+            guard await Self.checkUpdate(from: updateURL, currentVersion: currentVersion) else {
                 return
             }
         }
@@ -241,20 +241,21 @@ fileprivate extension ScriptManager {
 }
 
 fileprivate extension ScriptManager {
-    static func checkUpdate(from url: URL, currentVersion: String?) async -> Bool {
+    static func checkUpdate(from url: URL, currentVersion: String) async -> Bool {
         // Allow all errors
         guard
             let data = try? await URLSession.shared.data(from: url),
-            let content = String(data: data, encoding: .utf8)
+            let content = String(data: data, encoding: .utf8),
+            let updateVersion = try? UserScriptMetadataDecoder()
+                .decode(VersionedMetadata.self, from: content)
+                .version
         else {
             return false
         }
-        let updateVersion = try? UserScriptMetadataDecoder()
-            .decode(VersionedMetadata.self, from: content).version
         return updateVersion != currentVersion
     }
 }
 
 fileprivate struct VersionedMetadata : Decodable {
-    var version: String?
+    var version: String
 }
