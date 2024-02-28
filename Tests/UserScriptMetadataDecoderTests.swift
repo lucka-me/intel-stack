@@ -60,7 +60,7 @@ final class UserScriptMetadataDecoderTests: XCTestCase {
         XCTAssertEqual(metadata.author, author)
         XCTAssertEqual(metadata.description, description)
         XCTAssertNil(metadata.downloadURL)
-        XCTAssertEqual(metadata.updateURL, updateURL)
+        XCTAssertEqual(metadata.updateURL, .init(string: updateURL)!)
         XCTAssertEqual(metadata.version, version)
     }
     

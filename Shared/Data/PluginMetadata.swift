@@ -14,8 +14,8 @@ struct PluginMetadata : Decodable {
     
     var author: String?
     var description: String?
-    var downloadURL: String?
-    var updateURL: String?
+    var downloadURL: URL?
+    var updateURL: URL?
     var version: String?
     
     var homepageURL: String?
@@ -34,12 +34,8 @@ extension Plugin {
         self.author = metadata.author
         self.scriptDescription = metadata.description
         self.version = metadata.version
-        if let downloadURL = metadata.downloadURL {
-            self.downloadURL = URL(string: downloadURL)
-        }
-        if let updateURL = metadata.updateURL {
-            self.updateURL = URL(string: updateURL)
-        }
+        self.downloadURL = metadata.downloadURL
+        self.updateURL = metadata.updateURL
     }
     
     func update(from metadata: PluginMetadata) {
@@ -48,11 +44,7 @@ extension Plugin {
         self.author = metadata.author
         self.scriptDescription = metadata.description
         self.version = metadata.version
-        if let downloadURL = metadata.downloadURL {
-            self.downloadURL = URL(string: downloadURL)
-        }
-        if let updateURL = metadata.updateURL {
-            self.updateURL = URL(string: updateURL)
-        }
+        self.downloadURL = metadata.downloadURL
+        self.updateURL = metadata.updateURL
     }
 }
