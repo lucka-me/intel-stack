@@ -16,11 +16,7 @@ extension ScriptManager {
 }
 
 extension ScriptManager {
-    func updateScripts(reporting progress: Progress, currentMainScriptVersion: String?) async throws {
-        defer {
-            progress.completedUnitCount = 0
-        }
-        
+    func updateScripts(reporting progress: Progress, currentMainScriptVersion: String?) async throws {        
         try Self.ensureInternalDirectories()
         
         let internalPlugins = try internalPluginNames
