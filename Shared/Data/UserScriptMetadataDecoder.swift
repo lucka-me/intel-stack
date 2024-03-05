@@ -169,13 +169,24 @@ fileprivate struct KeyedContainer<Key: CodingKey> : KeyedDecodingContainerProtoc
         try value(of: key)
     }
     
-    func decode<T>(_ type: T.Type, forKey key: Key) throws -> T where T : Decodable {
+    func decode<T : Decodable>(_ type: T.Type, forKey key: Key) throws -> T {
         let rawValue = try rawValue(of: key)
         switch type {
         case let aType as LosslessStringConvertible.Type:
             return aType.init(rawValue) as! T
         case let aType as any RawRepresentable<String>.Type:
             guard let value = aType.init(rawValue: rawValue) else {
+                throw DecodingError.typeMismatch(
+                    type,
+                    .init(
+                        codingPath: [ key ],
+                        debugDescription: "The raw value \(rawValue) can not be converted into \(type)"
+                    )
+                )
+            }
+            return value as! T
+        case let aType as URL.Type:
+            guard let value = aType.init(string: rawValue) else {
                 throw DecodingError.typeMismatch(
                     type,
                     .init(

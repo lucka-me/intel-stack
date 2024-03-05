@@ -16,11 +16,7 @@ extension ScriptManager {
 }
 
 extension ScriptManager {
-    func updateScripts(reporting progress: Progress) async throws {
-        defer {
-            progress.completedUnitCount = 0
-        }
-        
+    func updateScripts(reporting progress: Progress, currentMainScriptVersion: String?) async throws {        
         try Self.ensureInternalDirectories()
         
         let internalPlugins = try internalPluginNames
@@ -41,7 +37,7 @@ extension ScriptManager {
         let channel = UserDefaults.shared.buildChannel
         try await withThrowingTaskGroup(of: Void.self) { group in
             group.addTask {
-                try await Self.downloadMainScript(from: channel)
+                try await Self.downloadMainScript(from: channel, currentVersion: currentMainScriptVersion)
                 await MainActor.run { progress.completedUnitCount += 1 }
             }
             
@@ -82,13 +78,23 @@ extension ScriptManager {
         }
     }
     
-    static func downloadMainScript(from channel: BuildChannel) async throws {
-        let downloadURL = Self.websiteBuildURL
+    static func downloadMainScript(from channel: BuildChannel, currentVersion: String?) async throws {
+        let scriptURL = Self.websiteBuildURL
             .appending(path: channel.rawValue)
             .appending(path: FileConstants.mainScriptFilename)
-            .appendingPathExtension("user.js")
+        if let currentVersion {
+            // Check version from metadata
+            guard await checkUpdate(
+                from: scriptURL.appendingPathExtension(FileConstants.scriptMetadataExtension),
+                currentVersion: currentVersion
+            ) else {
+                return
+            }
+        }
 
-        let temporaryURL = try await URLSession.shared.download(from: downloadURL)
+        let temporaryURL = try await URLSession.shared.download(
+            from: scriptURL.appendingPathExtension(FileConstants.userScriptExtension)
+        )
         
         let fileManager = FileManager.default
         var succeed = false
@@ -110,12 +116,30 @@ extension ScriptManager {
     }
     
     func downloadInternalPlugin(_ filename: String, from channel: BuildChannel) async throws {
-        let downloadURL = Self.websiteBuildURL
+        let predicate = #Predicate<Plugin> {
+            $0.isInternal && $0.filename == filename
+        }
+        var descriptor = FetchDescriptor(predicate: predicate)
+        descriptor.fetchLimit = 1
+        let item = try modelContext.fetch(descriptor).first
+        
+        let pluginURL = Self.websiteBuildURL
             .appending(path: channel.rawValue)
             .appending(path: "plugins")
             .appending(path: filename)
-            .appendingPathExtension("user.js")
-        let temporaryURL = try await URLSession.shared.download(from: downloadURL)
+        if let currentVersion = item?.version {
+            // Check version from metadata
+            guard await Self.checkUpdate(
+                from: pluginURL.appendingPathExtension(FileConstants.scriptMetadataExtension),
+                currentVersion: currentVersion
+            ) else {
+                return
+            }
+        }
+        
+        let temporaryURL = try await URLSession.shared.download(
+            from: pluginURL.appendingPathExtension(FileConstants.userScriptExtension)
+        )
         
         let fileManager = FileManager.default
         var succeed = false
@@ -136,12 +160,7 @@ extension ScriptManager {
         }
         try fileManager.moveItem(at: temporaryURL, to: destinationURL)
         
-        let predicate = #Predicate<Plugin> {
-            $0.isInternal && $0.filename == filename
-        }
-        var descriptor = FetchDescriptor(predicate: predicate)
-        descriptor.fetchLimit = 1
-        if let item = try modelContext.fetch(descriptor).first {
+        if let item {
             item.update(from: metadata)
         } else {
             let item = Plugin(metadata: metadata, isInternal: true, filename: filename)
@@ -171,7 +190,13 @@ fileprivate extension ScriptManager {
     static var websiteBuildURL: URL { .init(string: "https://iitc.app/build/")! }
     
     private func updateExternal(plugin: Plugin, in externalURL: URL) async throws {
-        // TODO: Use updateURL to fetch metadata
+        if let currentVersion = plugin.version, let updateURL = plugin.updateURL {
+            // Check version from update URL
+            guard await Self.checkUpdate(from: updateURL, currentVersion: currentVersion) else {
+                return
+            }
+        }
+        
         guard let downloadURL = plugin.downloadURL else { return }
         let temporaryURL = try await URLSession.shared.download(from: downloadURL)
 
@@ -209,4 +234,24 @@ fileprivate extension ScriptManager {
             )
         }
     }
+}
+
+fileprivate extension ScriptManager {
+    static func checkUpdate(from url: URL, currentVersion: String) async -> Bool {
+        // Allow all errors
+        guard
+            let data = try? await URLSession.shared.data(from: url),
+            let content = String(data: data, encoding: .utf8),
+            let updateVersion = try? UserScriptMetadataDecoder()
+                .decode(VersionedMetadata.self, from: content)
+                .version
+        else {
+            return false
+        }
+        return updateVersion != currentVersion
+    }
+}
+
+fileprivate struct VersionedMetadata : Decodable {
+    var version: String
 }

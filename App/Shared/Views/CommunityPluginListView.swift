@@ -174,9 +174,7 @@ struct CommunityPluginListView: View {
                 }
             }
             
-            if
-                let homepageURLString = preview.metadata.homepageURL,
-                let homepageURL = URL(string: homepageURLString) {
+            if let homepageURL = preview.metadata.homepageURL {
                 Link(destination: homepageURL) {
                     Label("CommunityPluginListView.Homepage", systemImage: "house")
                         .capsule(.green)

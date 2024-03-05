@@ -95,9 +95,12 @@ struct IntelStackApp: App {
     @MainActor
     private func updatePlugins() async throws {
         guard updateStatus == .idle else { return }
+        updateProgress.completedUnitCount = 0
         updateStatus = .updating
         defer { updateStatus = .idle }
-        try await scriptManager.updateScripts(reporting: updateProgress)
+        try await scriptManager.updateScripts(
+            reporting: updateProgress, currentMainScriptVersion: mainScriptVersion
+        )
         updateMainScriptVersion()
     }
 }
