@@ -16,14 +16,13 @@ extension ScriptManager {
 }
 
 extension ScriptManager {
-    func updateScripts(reporting progress: Progress, currentMainScriptVersion: String?) async throws {        
+    func updateScripts(reporting progress: Progress, currentMainScriptVersion: String?) async throws {
         try Self.ensureInternalDirectories()
         
-        let internalPlugins = try internalPluginNames
-        
+        let channel = UserDefaults.shared.buildChannel
+        let internalPlugins = try await internalPluginNames(from: channel)
         let externalPlugins = try allUpdatableExternalPlugins
         
-        progress.completedUnitCount = 0
         progress.totalUnitCount = .init(1 + internalPlugins.count + externalPlugins.count)
         
         let externalURL = UserDefaults.shared.externalScriptsBookmarkURL
@@ -34,7 +33,6 @@ extension ScriptManager {
             }
         }
         
-        let channel = UserDefaults.shared.buildChannel
         try await withThrowingTaskGroup(of: Void.self) { group in
             group.addTask {
                 try await Self.downloadMainScript(from: channel, currentVersion: currentMainScriptVersion)
@@ -172,17 +170,25 @@ extension ScriptManager {
 }
 
 fileprivate extension ScriptManager {
-    var internalPluginNames: [ String ] {
-        get throws {
-            try JSONDecoder().decode(
-                [ String ].self,
-                from: try Data(
-                    contentsOf: Bundle.main.url(
-                        forResource: "InternalPlugins", withExtension: "json"
-                    )!
-                )
-            )
-        }
+    private func internalPluginNames(from channel: BuildChannel) async throws -> [ String ] {
+        // Fetch latest list from meta.json
+        // The description in OnboardingView is not so critical, we can update the text beside any app update
+        let metadata = try await URLSession.shared.decoded(
+            BuildMetadata.self,
+            from: Self.websiteBuildURL.appending(path: channel.rawValue).appending(path: "meta.json"),
+            by: JSONDecoder()
+        )
+        
+        return metadata.categories
+            .compactMap { $1.plugins }
+            .flatMap { plugins in
+                plugins.map {
+                    $0.filename.replacingOccurrences(
+                        of: FileConstants.userScriptFilenameSuffix,
+                        with: ""
+                    )
+                }
+            }
     }
 }
 
@@ -250,6 +256,18 @@ fileprivate extension ScriptManager {
         }
         return updateVersion != currentVersion
     }
+}
+
+fileprivate struct BuildMetadata : Decodable {
+    struct CategoryItem: Decodable {
+        var plugins: [ PluginItem ]?
+    }
+    
+    struct PluginItem: Decodable {
+        var filename: String
+    }
+    
+    var categories: [ String : CategoryItem ]
 }
 
 fileprivate struct VersionedMetadata : Decodable {
