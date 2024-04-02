@@ -705,6 +705,22 @@
         }
       }
     },
+    "ContentView.SearchPrompt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search Plugins"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索插件"
+          }
+        }
+      }
+    },
     "HTTPResponseError.InvalidHTTPResponse %lld" : {
       "localizations" : {
         "en" : {
@@ -945,18 +961,18 @@
         }
       }
     },
-    "SettingsView.About.Footer %@" : {
+    "PluginListView.Title.Search" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Made by Lucka with %@"
+            "value" : "Search"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Made by Lucka with %@"
+            "value" : "搜索"
           }
         }
       }

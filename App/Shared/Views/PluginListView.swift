@@ -27,6 +27,15 @@ struct PluginListView: View {
         self.title = category.rawValue
     }
     
+    init(searchText: String) {
+        self._plugins = Query(
+            filter: #Predicate { $0.name.localizedStandardContains(searchText) },
+            sort: \.name,
+            animation: .default
+        )
+        self.title = .init(localized: "PluginListView.Title.Search")
+    }
+    
     var body: some View {
         ScrollView(.vertical) {
             LazyVGrid(columns: [ .init(.adaptive(minimum: 300, maximum: .infinity)) ]) {
