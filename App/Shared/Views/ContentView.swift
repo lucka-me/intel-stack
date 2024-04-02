@@ -13,28 +13,42 @@ struct ContentView: View {
     
     @State private var columnVisibility = NavigationSplitViewVisibility.doubleColumn
     @State private var isOnboardingSheetPresented = false
+    @State private var searchText = ""
     @State private var sidebarSelection: SidebarView.Selection? = nil
     
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            SidebarView(selection: $sidebarSelection)
+            if !searchText.isEmpty && horizontalSizeClass == .compact {
+                PluginListView(searchText: searchText)
+            } else {
+                SidebarView(selection: $sidebarSelection)
 #if os(macOS)
-                .frame(minWidth: 200)
+                    .frame(minWidth: 200)
 #endif
+            }
         } detail: {
-            NavigationStack {
-                switch sidebarSelection {
-                case .settings:
-                    SettingsView()
-                case .plugins(let category):
-                    PluginListView(category: category)
-                case .communityPlugins:
-                    CommunityPluginListView()
-                case nil:
-                    Text("ContentView.EmptyHint")
+            if !searchText.isEmpty && horizontalSizeClass != .compact {
+                PluginListView(searchText: searchText)
+            } else {
+                NavigationStack {
+                    switch sidebarSelection {
+                    case .settings:
+                        SettingsView()
+                    case .plugins(let category):
+                        PluginListView(category: category)
+                    case .communityPlugins:
+                        CommunityPluginListView()
+                    case nil:
+                        Text("ContentView.EmptyHint")
+                    }
                 }
             }
         }
+        .searchable(
+            text: $searchText,
+            placement: .sidebar,
+            prompt: Text("ContentView.SearchPrompt")
+        )
         .alertable()
         .navigationSplitViewStyle(.balanced)
         .sheet(isPresented: $isOnboardingSheetPresented) {
