@@ -27,10 +27,10 @@ struct ContentView: View {
 #endif
             }
         } detail: {
-            if !searchText.isEmpty && horizontalSizeClass != .compact {
-                PluginListView(searchText: searchText)
-            } else {
-                NavigationStack {
+            NavigationStack {
+                if !searchText.isEmpty && horizontalSizeClass != .compact {
+                    PluginListView(searchText: searchText)
+                } else {
                     switch sidebarSelection {
                     case .settings:
                         SettingsView()
