@@ -174,7 +174,7 @@ fileprivate extension ScriptManager {
         // Fetch latest list from meta.json
         // The description in OnboardingView is not so critical, we can update the text beside any app update
         let metadata = try await URLSession.shared.decoded(
-            BuildMetadata.self,
+            BuildIndex.self,
             from: Self.websiteBuildURL.appending(path: channel.rawValue).appending(path: "meta.json"),
             by: JSONDecoder()
         )
@@ -258,7 +258,7 @@ fileprivate extension ScriptManager {
     }
 }
 
-fileprivate struct BuildMetadata : Decodable {
+fileprivate struct BuildIndex : Decodable {
     struct CategoryItem: Decodable {
         var plugins: [ PluginItem ]?
     }
