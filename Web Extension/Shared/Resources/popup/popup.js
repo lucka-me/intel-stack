@@ -1,3 +1,29 @@
+function presentAlert(content) {
+    const dialogNode = document.createElement("dialog");
+
+    const contentNode = document.createElement("p");
+    contentNode.textContent = content;
+    dialogNode.appendChild(contentNode);
+
+    {
+        const actionsForm = document.createElement("form");
+        actionsForm.method = "dialog";
+    
+        const closeButton = document.createElement("button");
+        dialogNode.autofocus = true;
+        closeButton.textContent = browser.i18n.getMessage("popup_alert_cancel");
+        actionsForm.appendChild(closeButton);
+
+        dialogNode.appendChild(actionsForm);
+    }
+
+    document.body.appendChild(dialogNode);
+
+    dialogNode.addEventListener("close", () => { document.body.removeChild(dialogNode); });
+
+    dialogNode.showModal();
+}
+
 function buildScriptsSection(scriptsEnabled, mainNode) {
     const sectionNode = document.createElement("section");
 
@@ -26,13 +52,26 @@ function buildScriptsSection(scriptsEnabled, mainNode) {
         toggleNode.className = "toggle";
         toggleNode.checked = scriptsEnabled;
         toggleNode.addEventListener("change", async (event) => {
-            const enable = event.currentTarget.checked;
+            if (event.target === null) {
+                return;
+            }
+            const enable = event.target.checked;
             const response = await browser.runtime.sendMessage({
                 method: "setScriptsEnabled",
                 arguments: { enable }
             });
-            if (!response || !response.succeed) {
-                event.currentTarget.checked = !checked;
+            if (!response) {
+                presentAlert(browser.i18n.getMessage("error_invalid_response"));
+                event.target.checked = !enable;
+                return;
+            }
+            if (response.error) {
+                presentAlert(response.error);
+                event.target.checked = !enable;
+                return;
+            }
+            if (!response.succeed) {
+                event.target.checked = !enable;
             }
         });
         rowNode.appendChild(toggleNode);
@@ -86,13 +125,26 @@ function buildSection(category, mainNode) {
         toggleNode.className = "toggle";
         toggleNode.checked = plugin.enabled;
         toggleNode.addEventListener("change", async (event) => {
-            const enable = event.currentTarget.checked;
+            if (event.target === null) {
+                return;
+            }
+            const enable = event.target.checked;
             const response = await browser.runtime.sendMessage({
                 method: "setPluginEnabled",
                 arguments: { uuid, enable }
             });
-            if (!response || !response.succeed) {
-                event.currentTarget.checked = !checked;
+            if (!response) {
+                presentAlert(browser.i18n.getMessage("error_invalid_response"));
+                event.target.checked = !enable;
+                return;
+            }
+            if (response.error) {
+                presentAlert(response.error);
+                event.target.checked = !enable;
+                return;
+            }
+            if (!response.succeed) {
+                event.target.checked = !enable;
             }
         });
         rowNode.appendChild(toggleNode);
@@ -104,10 +156,23 @@ function buildSection(category, mainNode) {
     mainNode.appendChild(sectionNode);
 }
 
+function setupWithError(error, mainNode) {
+    mainNode.classList.add("error");
+
+    const textNode = document.createElement("p");
+    textNode.textContent = error;
+
+    mainNode.appendChild(textNode);
+}
+
 async function setupContents() {
     const response = await browser.runtime.sendMessage({ method: "getPopupContentData" });
-    if (!response || !response.categories) {
-        console.error(`Invalid response: ${response}`);
+
+    const mainNode = document.createElement("main");
+    document.body.appendChild(mainNode);
+
+    if (!response) {
+        setupWithError(browser.i18n.getMessage("error_invalid_response"), mainNode);
         return;
     }
 
@@ -115,15 +180,17 @@ async function setupContents() {
         document.body.classList.add("desktop");
     }
 
-    const mainNode = document.createElement("main");
+    if (response.error) {
+        console.log(response);
+        setupWithError(response.error, mainNode);
+        return;
+    }
 
     buildScriptsSection(response.scriptsEnabled, mainNode);
 
     for (const category of response.categories) {
         buildSection(category, mainNode);
     }
-
-    document.body.appendChild(mainNode);
 }
 
 setupContents();

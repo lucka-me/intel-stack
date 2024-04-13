@@ -18,10 +18,16 @@ class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
         
         guard
             let requestItem = context.inputItems.first as? NSExtensionItem,
-            let message = requestItem.userInfo?[SFExtensionMessageKey] as? [ String : Any ],
-            let method = message["method"] as? String
+            let message = requestItem.userInfo?[SFExtensionMessageKey] as? [ String : Any ]
         else {
-            responseContent = [ "error" : "Unable to parse the request" ]
+            responseContent = [ "error" : String(localized: "SafariWebExtensionHandler.Error.NoMessage") ]
+            return
+        }
+        
+        guard let method = message["method"] as? String else {
+            responseContent = [
+                "error" : String(localized: "SafariWebExtensionHandler.Error.RequestContentMissing \("method")")
+            ]
             return
         }
         let arguments = message["arguments"] as? [ String : Any ]
@@ -33,19 +39,25 @@ class SafariWebExtensionHandler: NSObject, NSExtensionRequestHandling {
             responseContent = getPopupContentData()
         case "setPluginEnabled":
             guard let arguments else {
-                responseContent = [ "error" : "[arguments] is missing" ]
+                responseContent = [
+                    "error" : String(localized: "SafariWebExtensionHandler.Error.RequestContentMissing \("arguments")")
+                ]
                 break
             }
             responseContent = setPluginEnabled(with: arguments)
         case "setScriptsEnabled":
             guard let enable = arguments?["enable"] as? Bool else {
-                responseContent = [ "error" : "[arguments][enable] is missing" ]
+                responseContent = [
+                    "error" : String(localized: "SafariWebExtensionHandler.Error.RequestContentMissing \("arguments.enable")")
+                ]
                 break
             }
             UserDefaults.shared.scriptsEnabled = enable
             responseContent = [ "succeed" : true ]
         default:
-            responseContent = [ "error" : "Unknown method: \(method)" ]
+            responseContent = [
+                "error" : String(localized: "SafariWebExtensionHandler.Error.UnknownMethod \(method)")
+            ]
         }
     }
 }

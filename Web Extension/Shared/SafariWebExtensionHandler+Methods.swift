@@ -17,19 +17,36 @@ extension SafariWebExtensionHandler {
         
         let fileManager = FileManager.default
         let mainScriptURL = fileManager.mainScriptURL
-        guard
-            fileManager.fileExists(at: mainScriptURL),
-            let mainScriptContent = try? String(contentsOf: mainScriptURL),
-            let mainScriptMetadata = try? UserScriptMetadataDecoder()
+        
+        guard fileManager.fileExists(at: mainScriptURL) else {
+            return [
+                "error": String(localized: "SafariWebExtensionHandler.Error.MainScriptNotExists")
+            ]
+        }
+        
+        let mainScriptContent: String
+        let mainScriptMetadata: MainScriptMetadata
+        do {
+            mainScriptContent = try String(contentsOf: mainScriptURL)
+            mainScriptMetadata = try UserScriptMetadataDecoder()
                 .decode(MainScriptMetadata.self, from: mainScriptContent)
-        else {
-            return [ : ]
+        } catch let error as LocalizedError {
+            return [ "error": error.errorDescription ?? error.localizedDescription ]
+        } catch {
+            return [ "error": error.localizedDescription ]
         }
 
         let context = ModelContext(.default)
         var descriptor = FetchDescriptor(predicate: #Predicate<Plugin> { $0.enabled })
         descriptor.propertiesToFetch = [ \.name, \.scriptDescription, \.filename, \.isInternal, \.version ]
-        guard let plugins = try? context.fetch(descriptor) else { return [ : ] }
+        let plugins: [ Plugin ]
+        do {
+            plugins = try context.fetch(descriptor)
+        } catch let error as LocalizedError {
+            return [ "error": error.errorDescription ?? error.localizedDescription ]
+        } catch {
+            return [ "error": error.localizedDescription ]
+        }
         
         var scripts = [ CodeWrapper.wrap(code: mainScriptContent, metadata: mainScriptMetadata) ]
         
@@ -48,6 +65,7 @@ extension SafariWebExtensionHandler {
             }
         }
         
+        var warnings: [ String ] = [ ]
         for plugin in plugins {
             var fileURL: URL
             if plugin.isInternal {
@@ -63,8 +81,15 @@ extension SafariWebExtensionHandler {
             do {
                 let content = try String(contentsOf: fileURL)
                 scripts.append(CodeWrapper.wrap(code: content, plugin: plugin))
+            } catch let error as LocalizedError {
+                let description = error.errorDescription ?? error.localizedDescription
+                warnings.append(
+                    .init(localized: "SafariWebExtensionHandler.Error.UnableToLoadPlugin \(plugin.name) \(description)")
+                )
             } catch {
-                print(error)
+                warnings.append(
+                    .init(localized: "SafariWebExtensionHandler.Error.UnableToLoadPlugin \(plugin.name) \(error.localizedDescription)")
+                )
             }
         }
         
@@ -77,6 +102,9 @@ extension SafariWebExtensionHandler {
         response["device"] = "vision"
 #endif
         response["scripts"] = scripts
+        if !warnings.isEmpty {
+            response["warnings"] = warnings
+        }
         
         return response
     }
@@ -86,15 +114,41 @@ extension SafariWebExtensionHandler {
     func getPopupContentData() -> [ String : Any ] {
         let context = ModelContext(.default)
         
-        var response: [ String : Any ] = [
-            "scriptsEnabled" : UserDefaults.shared.scriptsEnabled
-        ]
+        var response: [ String : Any ] = [ : ]
         
-        let _ = try? ScriptManager.sync(with: context)
+#if os(macOS)
+        response["platform"] = "macOS"
+#endif
+        
+        do {
+            try ScriptManager.sync(with: context)
+        } catch let error as LocalizedError {
+            response["error"] = error.errorDescription ?? error.localizedDescription
+            return response
+        } catch {
+            response["error"] = error.localizedDescription
+            return response
+        }
         
         var descriptor = FetchDescriptor<Plugin>(sortBy: [ .init(\.name, order: .forward) ])
         descriptor.propertiesToFetch = [ \.uuid, \.name, \.categoryValue, \.enabled ]
-        guard let plugins = try? context.fetch(descriptor) else { return [ : ] }
+        
+        let plugins: [ Plugin ]
+        do {
+            plugins = try context.fetch(descriptor)
+        } catch let error as LocalizedError {
+            response["error"] = error.errorDescription ?? error.localizedDescription
+            return response
+        } catch {
+            response["error"] = error.localizedDescription
+            return response
+        }
+        
+        guard !plugins.isEmpty else {
+            response["error"] = String(localized: "SafariWebExtensionHandler.NoPlugin")
+            return response
+        }
+        
         let categoriedPlugins: [ String : [ Plugin ] ] = plugins.reduce(into: [ : ]) { result, item in
             var value = result[item.categoryValue] ?? [ ]
             value.append(item)
@@ -114,9 +168,7 @@ extension SafariWebExtensionHandler {
             ]
         }
         
-        #if os(macOS)
-        response["platform"] = "macOS"
-        #endif
+        response["scriptsEnabled"] = UserDefaults.shared.scriptsEnabled
         
         return response
     }
@@ -126,23 +178,39 @@ extension SafariWebExtensionHandler {
     func setPluginEnabled(with arguments: [ String : Any ]) -> [ String : Any ] {
         guard
             let uuidString = arguments["uuid"] as? String,
-            let uuid = UUID(uuidString: uuidString),
-            let enable = arguments["enable"] as? Bool
+            let uuid = UUID(uuidString: uuidString)
         else {
-            return [ : ]
+            return [
+                "error" : String(localized: "SafariWebExtensionHandler.Error.RequestContentMissing \("arguments.uuid")")
+            ]
+        }
+        guard let enable = arguments["enable"] as? Bool else {
+            return [
+                "error" : String(localized: "SafariWebExtensionHandler.Error.RequestContentMissing \("arguments.enable")")
+            ]
         }
         let context = ModelContext(.default)
         var descriptor = FetchDescriptor<Plugin>(predicate: #Predicate { $0.uuid == uuid })
         descriptor.fetchLimit = 1
         descriptor.propertiesToFetch = [ \.enabled ]
-        guard
-            let plugins = try? context.fetch(descriptor),
-            let plugin = plugins.first
-        else {
-            return [ : ]
+        
+        do {
+            let plugins = try context.fetch(descriptor)
+            
+            guard let plugin = plugins.first else {
+                return [
+                    "error" : String(localized: "SafariWebExtensionHandler.Error.PluginNotFound")
+                ]
+            }
+            
+            plugin.enabled = enable
+            
+            try context.save()
+        } catch let error as LocalizedError {
+            return [ "error" : error.errorDescription ?? error.localizedDescription ]
+        } catch {
+            return [ "error" : error.localizedDescription ]
         }
-        plugin.enabled = enable
-        try? context.save()
         
         return [ "succeed" : true ]
     }

@@ -977,6 +977,118 @@
         }
       }
     },
+    "SafariWebExtensionHandler.Error.MainScriptNotExists" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IITC main script does not exists, please open the Intel Stack app, follow the instruction to download main script and internal plugins."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IITC主脚本不存在，请打开Intel Stack应用，跟随介绍下载主脚本和内部插件。"
+          }
+        }
+      }
+    },
+    "SafariWebExtensionHandler.Error.NoMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No message in the request."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请求中没有消息。"
+          }
+        }
+      }
+    },
+    "SafariWebExtensionHandler.Error.PluginNotFound" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It seems the plugin does not exists."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个插件似乎不存在。"
+          }
+        }
+      }
+    },
+    "SafariWebExtensionHandler.Error.RequestContentMissing %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"%@\" is missing in the request."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请求中缺少“%@”。"
+          }
+        }
+      }
+    },
+    "SafariWebExtensionHandler.Error.UnableToLoadPlugin %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to load the plugin %1$@: %2$@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法加载插件“%1$@”：%2$@"
+          }
+        }
+      }
+    },
+    "SafariWebExtensionHandler.Error.UnknownMethod %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Method of the request is unknown: %@."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请求的方法未知：%@。"
+          }
+        }
+      }
+    },
+    "SafariWebExtensionHandler.NoPlugin" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No plugin exists, please open the Intel Stack app, follow the instruction to download main script and internal plugins."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有插件，请打开Intel Stack应用，跟随介绍下载主脚本和内部插件。"
+          }
+        }
+      }
+    },
     "SettingsView.About.IITCWebsite" : {
       "localizations" : {
         "en" : {
