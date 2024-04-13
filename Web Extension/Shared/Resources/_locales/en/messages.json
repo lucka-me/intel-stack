@@ -5,7 +5,13 @@
     "extension_description": {
         "message": "Manage IITC script and plugin"
     },
+    "popup_alert_cancel": {
+        "message": "OK"
+    },
     "popup_scripts_enabled": {
         "message": "Enabled"
+    },
+    "error_invalid_response": {
+        "message": "The response is unavailable."
     }
 }

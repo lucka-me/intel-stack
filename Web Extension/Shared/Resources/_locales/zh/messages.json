@@ -5,7 +5,13 @@
     "extension_description": {
         "message": "管理IITC脚本和插件"
     },
+    "popup_alert_cancel": {
+        "message": "OK"
+    },
     "popup_scripts_enabled": {
         "message": "启用"
+    },
+    "error_invalid_response": {
+        "message": "响应不可用。"
     }
 }

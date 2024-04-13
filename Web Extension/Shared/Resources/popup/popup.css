@@ -26,6 +26,37 @@ main {
     scroll-behavior: smooth;
 }
 
+main.error {
+    color: gray;
+    justify-content: center;
+    text-align: center;
+}
+
+dialog {
+    border: none;
+    border-radius: 0.6em;
+    padding: 0;
+}
+
+dialog > p {
+    margin: 0;
+    padding: 1.2em;
+    text-align: center;
+}
+
+dialog > form > button {
+    background: none;
+    border: none;
+    border-top: solid 1px gray;
+    padding: 0.6em;
+    width: 100%;
+}
+
+dialog::backdrop {
+    background-color: gray;
+    opacity: 0.5;
+}
+
 section {
     display: flex;
     flex-flow: column nowrap;

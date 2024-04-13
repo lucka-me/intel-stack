@@ -49,6 +49,7 @@ extension ScriptManager {
         try context.save()
     }
     
+    @discardableResult
     static func sync(with context: ModelContext = .init(.default)) throws -> URL? {
         guard let externalURL = UserDefaults.shared.externalScriptsBookmarkURL else {
             try context.delete(model: Plugin.self, where: Plugin.externalPredicate)

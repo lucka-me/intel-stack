@@ -1,9 +1,15 @@
 async function execute() {
     const response = await browser.runtime.sendMessage({ method: "getInjectionData" });
-    if (!response || !response.scripts) {
-        console.error(`Invalid response: ${response}`);
+    if (!response) {
+        alert(browser.i18n.getMessage("error_invalid_response"));
         return;
     }
+
+    if (response.error) {
+        alert(response.error);
+        return;
+    }
+
     if (response.scripts.length === 0) {
         return;
     }
@@ -19,6 +25,10 @@ async function execute() {
         const node = document.createElement("script");
         node.textContent = script;
         document.head.appendChild(node);
+    }
+
+    if (response.warnings) {
+        alert(response.warnings.join("\n"));
     }
 }
 
