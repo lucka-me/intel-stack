@@ -1,7 +1,5 @@
-async function forwardMessage(request, sender, sendResponse) {
-    const response = await browser.runtime.sendNativeMessage(request);
-    sendResponse(response);
-    return true;
+function forwardMessage(request, sender, sendResponse) {
+    return browser.runtime.sendNativeMessage(request);
 }
 
 browser.runtime.onMessage.addListener(forwardMessage);
