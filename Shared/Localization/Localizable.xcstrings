@@ -1089,6 +1089,22 @@
         }
       }
     },
+    "SettingsView.About.Footer %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made by [Lucka](https://t.me/SeeleUN) with %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made by [Lucka](https://t.me/SeeleUN) with %@"
+          }
+        }
+      }
+    },
     "SettingsView.About.IITCWebsite" : {
       "localizations" : {
         "en" : {
