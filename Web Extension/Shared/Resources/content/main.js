@@ -19,6 +19,7 @@ async function execute() {
     if ((response.device === 'iPad' || (response.device === 'vision'))) {
         extraScriptNode.dataset.renderPadding = 0.1;
     }
+    extraScriptNode.dataset.extraStyleURL = browser.runtime.getURL("content/extra.css");
     document.head.appendChild(extraScriptNode);
 
     for (const script of response.scripts) {

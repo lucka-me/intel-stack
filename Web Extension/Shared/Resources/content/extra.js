@@ -1,30 +1,35 @@
+const scriptDataset = document.currentScript.dataset;
+
 function setupBeforeBoot() {
     // Set the RENDERER_PADDING for iPadOS to fix the canvas size overflow
-    if ('renderPadding' in document.currentScript.dataset) {
-        window.RENDERER_PADDING = parseFloat(document.currentScript.dataset.renderPadding);
+    if ("renderPadding" in scriptDataset) {
+        window.RENDERER_PADDING = parseFloat(scriptDataset.renderPadding);
     }
 }
 
 function setupAfterBoot() {
-    if (!window.isSmartphone()) {
-        return;
+    if (window.isSmartphone()) {
+        const playerStatNode = document.getElementById("playerstat");
+        playerStatNode.style.display = "flex";
+
+        // Create a dismiss button for info screen
+        const closeButtonNode = document.createElement("span");
+        closeButtonNode.id = "extra-ios-close-info-screen";
+        closeButtonNode.textContent = "X";
+        closeButtonNode.title = "Close info screen";
+        closeButtonNode.addEventListener("click", () => { show("map"); });
+
+        playerStatNode.prepend(closeButtonNode);
     }
 
-    const playerStatNode = document.getElementById("playerstat");
-    playerStatNode.style.display = "flex";
-
-    // Create a dismiss button for info screen
-    const closeButtonNode = document.createElement("span");
-    closeButtonNode.textContent = "X";
-    closeButtonNode.title = "Close info screen";
-    closeButtonNode.style.border = "1px outset #20A8B1";
-    closeButtonNode.style.color = "#FFCE00";
-    closeButtonNode.style.fontSize = "16px";
-    closeButtonNode.style.padding = "4px";
-    closeButtonNode.style.margin = "3px 5px";
-    closeButtonNode.addEventListener("click", () => { show('map'); });
-
-    playerStatNode.prepend(closeButtonNode);
+    // Inject extra CSS
+    if ("extraStyleURL" in scriptDataset) {
+        const extraStyleNode = document.createElement("link");
+        extraStyleNode.rel = "stylesheet";
+        extraStyleNode.type = "text/css";
+        extraStyleNode.href = scriptDataset.extraStyleURL;
+        document.head.appendChild(extraStyleNode);
+    }
 }
 
 setupBeforeBoot();
