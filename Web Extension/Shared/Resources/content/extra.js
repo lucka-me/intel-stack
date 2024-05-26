@@ -1,15 +1,11 @@
-function sleep(interval) {
-    return new Promise(resolve => setTimeout(resolve, interval));
-}
-
-async function execute() {
+function setupBeforeBoot() {
+    // Set the RENDERER_PADDING for iPadOS to fix the canvas size overflow
     if ('renderPadding' in document.currentScript.dataset) {
         window.RENDERER_PADDING = parseFloat(document.currentScript.dataset.renderPadding);
     }
+}
 
-    while (!window.isSmartphone) {
-        await sleep(100);
-    }
+function setupAfterBoot() {
     if (!window.isSmartphone()) {
         return;
     }
@@ -31,4 +27,11 @@ async function execute() {
     playerStatNode.prepend(closeButtonNode);
 }
 
-execute();
+setupBeforeBoot();
+
+if (window.iitcLoaded) {
+    // Should never happens since the script is injected before IITC scripts
+    setupAfterBoot();
+} else {
+    window.addHook("iitcLoaded", setupAfterBoot);
+}

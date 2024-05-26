@@ -32,7 +32,7 @@
 
     "web_accessible_resources": [
         {
-            "resources": [ "content/prepare.js" ],
+            "resources": [ "content/extra.js" ],
             "matches": [ "https://intel.ingress.com/*" ]
         }
     ]
