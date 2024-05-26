@@ -1,0 +1,18 @@
+#playerstat > span#extra-ios-close-info-screen {
+    border: 1px outset #20A8B1;
+    color: #FFCE00;
+    font-size: 16px;
+    padding: 4px;
+    margin: 3px 5px;
+}
+
+/* Fix the layer panel with flexbox */
+.leaflet-control-layers-expanded > section.leaflet-control-layers-list {
+    display: flex;
+    max-height: 60vh;
+}
+
+/* Fix the confliction of top-right panel and highlight selector */
+.leaflet-top.leaflet-right:has(>.leaflet-control-layers-expanded) {
+    z-index: 3000;
+}
