@@ -12,6 +12,6 @@
         "message": "启用"
     },
     "error_invalid_response": {
-        "message": "响应不可用。"
+        "message": "响应不可用。请尝试在 Safari 设置中关闭并重新打开Intel Stack浏览器扩展。"
     }
 }

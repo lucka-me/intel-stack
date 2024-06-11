@@ -12,6 +12,6 @@
         "message": "Enabled"
     },
     "error_invalid_response": {
-        "message": "The response is unavailable."
+        "message": "The response is unavailable. Please try to disable & re-enable the Intel Stack extension from Safari settings."
     }
 }
