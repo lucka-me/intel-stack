@@ -230,13 +230,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The location to save external plugins is unavailable"
+            "value" : "The folder to save external plugins is unavailable"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "存储外部插件的位置不可用"
+            "value" : "存储外部插件的文件夹不可用"
           }
         }
       }
@@ -246,13 +246,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Please ensure the location is selected in Settings and existing."
+            "value" : "Please ensure the folder is selected in Settings and existing."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "请确保在设置页面设置了位置，并且这个位置存在。"
+            "value" : "请确保在设置页面设置了文件夹，并且这个文件夹存在。"
           }
         }
       }
@@ -1206,13 +1206,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Change Location"
+            "value" : "Change Folder"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "更换位置"
+            "value" : "更改文件夹"
           }
         }
       }
@@ -1220,15 +1220,39 @@
     "SettingsView.ExternalScripts.Footer" : {
       "localizations" : {
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Intel Stack will load user scripts from the location."
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Intel Stack will load user scripts from the folder.\nAfter selecting or changing the folder, please enable IITC and open Ingress Intel webpage once before the next reboot."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Intel Stack will load user scripts from the folder."
+                }
+              }
+            }
           }
         },
         "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Intel Stack会从选择的位置载入用户脚本。"
+          "variations" : {
+            "device" : {
+              "mac" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Intel Stack会从选择的文件夹载入用户脚本。\n如果您选择或更改了文件夹，请在下次重新启动此设备之前开启IITC并于Safari浏览器中访问一次Intel网页。"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Intel Stack会从选择的文件夹载入用户脚本。"
+                }
+              }
+            }
           }
         }
       }
@@ -1238,13 +1262,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Select Location"
+            "value" : "Select Folder"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "选择位置"
+            "value" : "选择文件夹"
           }
         }
       }
