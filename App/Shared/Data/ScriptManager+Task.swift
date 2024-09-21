@@ -13,11 +13,9 @@ extension ScriptManager {
         case release = "release"
         case beta = "beta"
     }
-}
 
-extension ScriptManager {
-    func updateScripts(reporting progress: Progress, currentMainScriptVersion: String?) async throws {
-        try Self.ensureInternalDirectories()
+    nonisolated func updateScripts(reporting progress: Progress, currentMainScriptVersion: String?) async throws {
+        try await ensureInternalDirectories()
         
         let externalURL = UserDefaults.shared.externalScriptsBookmarkURL
         var accessingSecurityScopedResource = false
@@ -27,11 +25,11 @@ extension ScriptManager {
             }
         }
         
-        let internalPlugins = try fetchInternalPlugins()
+        let internalPlugins = try await fetchInternalPlugins()
         
         let externalPlugins: [ ExternalPluginUpdateInformation ]
         if let externalURL {
-            externalPlugins = try fetchUpdatableExternalPlugins(externalURL: externalURL)
+            externalPlugins = try await fetchUpdatableExternalPlugins(externalURL: externalURL)
         } else {
             externalPlugins = [ ]
         }
@@ -72,12 +70,23 @@ extension ScriptManager {
             try await group.waitForAll()
         }
         
-        try modelContext.save()
+        try await save()
     }
 }
 
-extension ScriptManager {
-    static func ensureInternalDirectories() throws {
+fileprivate extension ScriptManager {
+    typealias ExternalPluginUpdateInformation = (
+        uuid: UUID, currentVersion: String?, updateURL: URL?, downloadURL: URL, destination: URL
+    )
+    typealias InternalPluginUpdateInformation = (filename: String, currentVersion: String?)
+    
+    struct VersionedMetadata : Decodable {
+        var version: String
+    }
+    
+    static var websiteBuildURL: URL { .init(string: "https://iitc.app/build/")! }
+
+    func ensureInternalDirectories() throws {
         let fileManager = FileManager.default
         let internalScriptsDirectoryURL = fileManager.internalScriptsDirectoryURL
         if !fileManager.fileExists(at: internalScriptsDirectoryURL) {
@@ -88,19 +97,6 @@ extension ScriptManager {
             try fileManager.createDirectory(at: internalPluginsDirectoryURL, withIntermediateDirectories: true)
         }
     }
-}
-
-fileprivate struct VersionedMetadata : Decodable {
-    var version: String
-}
-
-fileprivate extension ScriptManager {
-    typealias ExternalPluginUpdateInformation = (
-        uuid: UUID, currentVersion: String?, updateURL: URL?, downloadURL: URL, destination: URL
-    )
-    typealias InternalPluginUpdateInformation = (filename: String, currentVersion: String?)
-    
-    static var websiteBuildURL: URL { .init(string: "https://iitc.app/build/")! }
     
     func fetchInternalPlugins() throws -> [ InternalPluginUpdateInformation ] {
         try JSONDecoder().decode(

@@ -11,3 +11,9 @@ import SwiftData
 actor ScriptManager {
     static let shared = ScriptManager(modelContainer: .default)
 }
+
+extension ScriptManager {
+    func save() throws {
+        try modelContext.save()
+    }
+}
