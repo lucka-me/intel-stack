@@ -153,6 +153,7 @@ struct SidebarView: View {
                 }
                 .padding(8)
             }
+            .background(.regularMaterial)
         }
 #endif
     }

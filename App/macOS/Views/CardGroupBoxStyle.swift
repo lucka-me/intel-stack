@@ -15,7 +15,7 @@ struct CardGroupBoxStyle : GroupBoxStyle {
             configuration.content
         }
         .padding(12)
-        .background(Material.bar, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .background(Material.regular, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 }
 
