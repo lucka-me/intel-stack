@@ -2,7 +2,7 @@
 
 ![App Icon](App/Shared/Assets.xcassets/AppIcon.appiconset/macOS_128.png)
 
-[![Lines of code](https://aschey.tech/tokei/github/lucka-me/intel-stack)](# "Repository")
+[![](https://tokei.rs/b1/github/lucka-me/intel-stack)](https://github.com/lucka-me/intel-stack)
 
 IITC script and plugins manager designed for Safari.
 
