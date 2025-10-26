@@ -1,0 +1,3 @@
+Build #30
+- Changed: Build with latest SDK and Swift 6
+- Changed: Tweaked UI for latest OS
